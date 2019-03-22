@@ -14,5 +14,5 @@ names(trees) <- tree_names
 # )
 #
 plan <- drake_plan(
-   hisse_out = target(DoSingleRun(dir, nturnover=turnover_states, neps_same=neps_same_states, root_type=root_type_states), transform = cross(dir = !!tree_names, turnover_states=!!sequence(10), neps_same_states=c(TRUE,FALSE), root_type_states=!!c('madfitz')))
+   hisse_out = target(DoSingleRun(dir, nturnover=turnover_states, neps_same=neps_same_states, root_type=root_type_states), transform = cross(dir = !!tree_names, turnover_states=!!sequence(10), neps_same_states=c(TRUE), root_type_states=!!c('madfitz')))
 )
