@@ -7,10 +7,12 @@ for (i in seq_along(tree_names)) {
 }
 names(trees) <- tree_names
 
-
-drake_plan(x = target(get_data(y), transform = map(y = c("a", "b", "c"))))
+# # Works but single variable
+# plan <- drake_plan(
+#   #hisse_out = DoSingleRun("Rabosky2014_DD_k1_1")
+#    hisse_out = target(DoSingleRun(dir), transform = map(dir = !!tree_names))
+# )
 
 plan <- drake_plan(
-  #hisse_out = DoSingleRun("Rabosky2014_DD_k1_1")
-   hisse_out = target(DoSingleRun(dir), transform = map(dir = tree_names))
+   hisse_out = target(DoSingleRun(dir, nturnover=turnover_states, neps_same=neps_same_states, root_type=root_type_states), transform = cross(dir = !!tree_names, turnover_states=!!sequence(10), neps_same_states=c(TRUE,FALSE), root_type_states=!!c('madfitz')))
 )
