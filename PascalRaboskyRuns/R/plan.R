@@ -8,10 +8,9 @@ for (i in seq_along(tree_names)) {
 names(trees) <- tree_names
 
 
+drake_plan(x = target(get_data(y), transform = map(y = c("a", "b", "c"))))
+
 plan <- drake_plan(
   #hisse_out = DoSingleRun("Rabosky2014_DD_k1_1")
-   hisse_out = target(
-     DoSingleRun(phy=phy[[1]], neps=neps),
-     transform = cross(phy=trees, neps=c(2))
-   )
+   hisse_out = target(DoSingleRun(dir), transform = map(dir = tree_names))
 )

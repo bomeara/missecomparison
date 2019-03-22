@@ -1,8 +1,8 @@
-DoSingleRun <- function(phy, nturnover=2, neps=2) {
+DoSingleRun <- function(dir, nturnover=2, neps=2) {
 #	print(system(paste0("ls data/pascal_rabosky_dryad/trees/", dir)))
 #	print(paste0("data/pascal_rabosky_dryad/trees/", dir, "/", dir, ".tre"))
 #	phy <- NULL
-#	try(phy <- ape::read.tree(paste0("data/pascal_rabosky_dryad/trees/", dir, "/", dir, ".tre")))
+try(phy <- ape::read.tree(paste0("data/pascal_rabosky_dryad/trees/", dir, "/", dir, ".tre")))
 	if(!is.null(phy)) {
 	#print(phy)
 		max_length <- max(nturnover, neps)
