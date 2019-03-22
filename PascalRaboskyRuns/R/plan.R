@@ -7,6 +7,8 @@ for (i in seq_along(tree_names)) {
 }
 names(trees) <- tree_names
 
+print(paste0("There are ", length(trees), " to analyze"))
+
 # # Works but single variable
 # plan <- drake_plan(
 #   #hisse_out = DoSingleRun("Rabosky2014_DD_k1_1")
@@ -18,5 +20,5 @@ names(trees) <- tree_names
 # )
 
 plan <- drake_plan(
-   hisse_out = target(DoSingleRun(dir=tree_names[tree_index], phy=trees[[tree_index]], nturnover=turnover_states, neps_same=neps_same_states, root_type=root_type_states), transform = cross(tree_index=!!sequence(length(trees)), turnover_states=!!sequence(10), neps_same_states=c(TRUE), root_type_states=!!c('madfitz')))
+   hisse_out = target(DoSingleRun(dir=tree_names[tree_index], phy=trees[[tree_index]], nturnover=turnover_states, neps_same=neps_same_states, root_type=root_type_states), transform = cross(tree_index=!!sequence(length(trees)), turnover_states=!!sequence(12), neps_same_states=c(TRUE), root_type_states=!!c('madfitz')))
 )
