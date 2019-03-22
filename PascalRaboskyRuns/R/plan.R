@@ -1,4 +1,3 @@
 plan <- drake_plan(
-  phy = ape::rcoal(30),
-  hisse_out = DoSingleRun(phy)
+  hisse_out = DoSingleRun(dir__)
 )

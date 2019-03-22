@@ -1,4 +1,5 @@
-DoSingleRun <- function(phy, nturnover=2, neps=2) {
+DoSingleRun <- function(dir, nturnover=2, neps=2) {
+	phy <- ape::read.tree(paste0("data/pascal_rabosky_dryad/trees/", dir, "/", dir, ".tre"))
 	max_length <- max(nturnover, neps)
 	turnover <- sequence(nturnover)
 	eps <- sequence(neps)
