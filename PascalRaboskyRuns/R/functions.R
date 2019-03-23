@@ -36,7 +36,7 @@ DoSingleRun <- function(dir, phy, nturnover=2, neps_same=TRUE, root_type="madfit
 		summary_df$AIC <- hisse_result$AIC
 		summary_df$AICc <- hisse_result$AICc
 		summary_df$root_type <- hisse_result$root.type
-		summary_df$elapsed_mins <- as.numeric(difftime(Sys.time, start_time, units="mins"))
+		summary_df$elapsed_mins <- as.numeric(difftime(Sys.time(), start_time, units="mins"))
 		#return(list(hisse_result=hisse_result, hisse_recon=hisse_recon, summary_df=summary_df))
 		return(summary_df)
 	} else {
