@@ -26,5 +26,5 @@ future::plan(cluster, workers = all_nodes)
 make(
   plan, # defined in R/plan.R
   verbose = 2,
-  parallelism = "future", jobs = length(all_nodess)
+  parallelism = "future", jobs = length(all_nodes)
 )
