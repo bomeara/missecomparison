@@ -7,12 +7,14 @@ config <- drake_config(plan)
 vis_drake_graph(config)
 
 #future::plan(future::multiprocess)
-future::plan(cluster, workers = c("omearaclustera.nomad.utk.edu", "localhost"))
+
+good_clusters = c("a", "b", "c", "e", "i", "h", "l")
+future::plan(cluster, workers = c(paste0("omearacluster", good_clusters , ".nomad.utk.edu")))
 
 
 
 make(
   plan, # defined in R/plan.R
   verbose = 2,
-  parallelism = "future", jobs = 2
+  parallelism = "future", jobs = length(good_clusters)
 )
