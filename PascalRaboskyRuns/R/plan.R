@@ -33,5 +33,5 @@ plan <- drake_plan(
       dplyr::bind_rows(hisse_out, .id = "id"),
       transform = combine(hisse_out)
    ),
-   export_csv = write.csv(combined_df, file=file_out("misseruns.csv")
+   export_csv = write.csv(combined_df, file=file_out("misseruns.csv"))
 )
