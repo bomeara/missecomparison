@@ -28,10 +28,9 @@ print(paste0("There are ", length(trees), " to analyze"))
 
 
 plan <- drake_plan(
-   hisse_out = target(DoSingleRun(dir=tree_names[tree_index], phy=trees[[tree_index]], nturnover=turnover_states, neps_same=neps_same_states, root_type=root_type_states), transform = cross(tree_index=!!sequence(3), turnover_states=!!sequence(1), neps_same_states=c(TRUE), root_type_states=!!c('madfitz'))),
+   hisse_out = target(DoSingleRun(dir=tree_names[tree_index], phy=trees[[tree_index]], nturnover=turnover_states, neps_same=neps_same_states, root_type=root_type_states), transform = cross(tree_index=!!sequence(length(tree_names)), turnover_states=!!sequence(12), neps_same_states=!!c(TRUE, FALSE), root_type_states=!!c('madfitz'))),
    combined_df = target(
       dplyr::bind_rows(hisse_out, .id = "id"),
       transform = combine(hisse_out)
-   ),
-   export_csv = write.csv(combined_df, file=file_out("misseruns.csv"))
+   )
 )
