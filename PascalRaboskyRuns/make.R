@@ -10,7 +10,7 @@ source("R/plan.R")      # creates the drake plan
 
 good_cluster_nodes = c("a", "b", "c", "e", "i", "h", "l")
 all_nodes <- c()
-free_nodes <- 4
+free_nodes <- 10
 for (i in seq_along(good_cluster_nodes)) {
   if(good_cluster_nodes[i] %in% c("a", "b")) {
     all_nodes <- append(all_nodes, rep(paste0("omearacluster", good_cluster_nodes[i] , ".nomad.utk.edu"), 16-free_nodes))
