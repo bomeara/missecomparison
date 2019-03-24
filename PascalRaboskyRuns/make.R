@@ -13,9 +13,9 @@ all_nodes <- c()
 free_nodes <- 10
 for (i in seq_along(good_cluster_nodes)) {
   if(good_cluster_nodes[i] %in% c("a", "b")) {
-    all_nodes <- append(all_nodes, rep(paste0("omearacluster", good_cluster_nodes[i] , ".nomad.utk.edu"), 1))
+    all_nodes <- append(all_nodes, rep(paste0("omearacluster", good_cluster_nodes[i] , ".nomad.utk.edu"), 4))
   } else {
-    all_nodes <- append(all_nodes, rep(paste0("omearacluster", good_cluster_nodes[i] , ".nomad.utk.edu"), 1))
+    all_nodes <- append(all_nodes, rep(paste0("omearacluster", good_cluster_nodes[i] , ".nomad.utk.edu"), 4))
   }
 }
 
