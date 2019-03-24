@@ -10,5 +10,5 @@ while (1<2) {
   write.csv(result.df, file="result.csv")
   system(paste0('git commit -m"updating with ', length(drake::cached()), ' runs done" result.csv'))
   try(system("git push"))
-  Sys.sleep(60*60)
+  Sys.sleep(60*17)
 }
