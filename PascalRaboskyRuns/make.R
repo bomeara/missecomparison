@@ -8,16 +8,17 @@ source("R/plan.R")      # creates the drake plan
 
 #future::plan(future::multiprocess)
 
-good_cluster_nodes = c("a", "b", "c", "e", "i", "h", "l")
-all_nodes <- c()
-free_nodes <- 10
-for (i in seq_along(good_cluster_nodes)) {
-  if(good_cluster_nodes[i] %in% c("a", "b")) {
-    all_nodes <- append(all_nodes, rep(paste0("omearacluster", good_cluster_nodes[i] , ".nomad.utk.edu"), 1))
-  } else {
-    all_nodes <- append(all_nodes, rep(paste0("omearacluster", good_cluster_nodes[i] , ".nomad.utk.edu"), 1))
-  }
-}
+good_cluster_nodes = c(paste0("omearacluster",c("a", "b", "c", "e", "i", "h", "l"), ".nomad.utk.edu"), "omearashiny1.desktop.utk.edu", "omearalab22.nomad.utk.edu")
+all_nodes <- good_cluster_nodes
+# all_nodes <- c()
+# free_nodes <- 10
+# for (i in seq_along(good_cluster_nodes)) {
+#   if(good_cluster_nodes[i] %in% c("a", "b")) {
+#     all_nodes <- append(all_nodes, rep(paste0("omearacluster", good_cluster_nodes[i] , ".nomad.utk.edu"), 1))
+#   } else {
+#     all_nodes <- append(all_nodes, rep(paste0("omearacluster", good_cluster_nodes[i] , ".nomad.utk.edu"), 1))
+#   }
+# }
 
 future::plan(cluster, workers = all_nodes)
 
