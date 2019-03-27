@@ -57,6 +57,8 @@ RMSE.results <- data.frame(matrix(nrow=length(approaches), ncol=length(parameter
 rownames(RMSE.results) <- approaches
 colnames(RMSE.results) <- parameters
 
+absoluteError.results <- RMSE.results
+
 # get rid of NAs and weird values for now
 rates.cleaned <- rates.combined
 rates.cleaned <- rates.cleaned[!is.na(rates.cleaned$netDivBAMM),]
@@ -70,32 +72,8 @@ for (approach.index in seq_along(approaches)) {
     if(estimate_name %in% colnames(rates.cleaned)) {
       estimate <- rates.cleaned[,estimate_name]
       RMSE.results[approach.index, parameter.index] <- Metrics::rmse(estimate, truth)
+      absoluteError.results[approach.index, parameter.index] <- mean(abs(estimate-truth))
+
     }
   }
-}
-
-
-lambda.to.compare <- c("lambdaTB", "lambdaND", "lambdaDR", "lambdaBAMM", "netDivBAMM", "tipLambdaMiSSE",  "tipNetDivMiSSE")
-lambdasRMSE.all <- rep(NA, length(lambda.to.compare))
-rates.combined.no.na <- rates.combined[!is.na(rates.combined$lambdaBAMM),]
-names(lambdasRMSE.all) <- lambda.to.compare
-for (i in seq_along(lambda.to.compare)) {
-  lambdasRMSE.all[i] <- Metrics::rmse(rates.combined.no.na[,lambda.to.compare[i]], rates.combined.no.na$tipLambdaTRUE)
-}
-
-netdivRMSE.all <- rep(NA, length(lambda.to.compare))
-rates.combined.no.na <- rates.combined[!is.na(rates.combined$lambdaBAMM),]
-names(netdivRMSE.all) <- lambda.to.compare
-for (i in seq_along(lambda.to.compare)) {
-  netdivRMSE.all[i] <- Metrics::rmse(rates.combined.no.na[,lambda.to.compare[i]], rates.combined.no.na$tipNetDivTRUE)
-}
-
-print(t(t(round(netdivRMSE.all,3))))
-
-
-
-lambdasRMSE <- rep(NA, length(lambda.to.compare))
-names(lambdasRMSE) <- lambda.to.compare
-for (i in seq_along(lambda.to.compare)) {
- lambdasRMSE[i] <- Metrics::rmse(rates.combined[,lambda.to.compare[i]], rates.combined$tipLambdaTRUE)
 }
