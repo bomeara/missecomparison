@@ -57,7 +57,9 @@ RMSE.results <- data.frame(matrix(nrow=length(approaches), ncol=length(parameter
 rownames(RMSE.results) <- approaches
 colnames(RMSE.results) <- parameters
 
-absoluteError.results <- RMSE.results
+absoluteError.mean.results <- RMSE.results
+absoluteError.median.results <- RMSE.results
+
 
 # get rid of NAs and weird values for now
 rates.cleaned <- rates.combined
@@ -72,8 +74,13 @@ for (approach.index in seq_along(approaches)) {
     if(estimate_name %in% colnames(rates.cleaned)) {
       estimate <- rates.cleaned[,estimate_name]
       RMSE.results[approach.index, parameter.index] <- Metrics::rmse(estimate, truth)
-      absoluteError.results[approach.index, parameter.index] <- mean(abs(estimate-truth))
+      absoluteError.mean.results[approach.index, parameter.index] <- mean(abs(estimate-truth))
+      absoluteError.median.results[approach.index, parameter.index] <- median(abs(estimate-truth))
 
     }
   }
 }
+
+print(round(RMSE.results,3))
+print(round(absoluteError.mean.results,3))
+print(round(absoluteError.median.results,3))
