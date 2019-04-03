@@ -16,6 +16,12 @@ DoSingleRun <- function(dir, phy, root_type="madfitz") {
 	  #dir <- name(phy)
 		#eps <- ifelse(neps_same, turnover, rep(1, nturnover))
 		hisse_result_all <- hisse::MiSSEGreedy(phy, f=1, root.type=root_type)
+		AIC_weights <- hisse::GetAICWeights(hisse_result_all)
+		delta_AIC <- sapply(hisse_result_all, "[[", "AIC") - min(sapply(hisse_result_all, "[[", "AIC"))
+
+		AICc_weights <- hisse::GetAICWeights(hisse_result_all, "AICc")
+		delta_AICc <- sapply(hisse_result_all, "[[", "AICc") - min(sapply(hisse_result_all, "[[", "AICc"))
+
 		model_fit_time <- as.numeric(difftime(Sys.time(), start_time, units="mins"))
 		for(model_index in sequence(length(hisse_result_all))) {
 			start_time <- Sys.time()
@@ -36,6 +42,10 @@ DoSingleRun <- function(dir, phy, root_type="madfitz") {
 			summary_df_local$neps <- neps
 			summary_df_local$AIC <- hisse_result_all[[model_index]]$AIC
 			summary_df_local$AICc <- hisse_result_all[[model_index]]$AICc
+			summary_df_local$AIC_weight <- AIC_weights[model_index]
+			summary_df_local$AICc_weight <- AICc_weights[model_index]
+			summary_df_local$deltaAIC <- delta_AIC[model_index]
+			summary_df_local$deltaAICc <- delta_AICc[model_index]
 			summary_df_local$root_type <- hisse_result_all[[model_index]]$root.type
 			summary_df_local$elapsed_mins_recon <- as.numeric(difftime(Sys.time(), start_time, units="mins"))
 			summary_df_local$elapsed_mins_params_all_models_together <- model_fit_time
