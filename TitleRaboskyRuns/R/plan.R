@@ -28,7 +28,7 @@ print(paste0("There are ", length(trees), " to analyze"))
 
 
 plan <- drake_plan(
-   hisse_out = target(DoSingleRun(dir=tree_names[tree_index], phy=trees[[tree_index]], nturnover=turnover_states, neps_same=neps_same_states, root_type=root_type_states), transform = cross(tree_index=!!sequence(length(tree_names)),  root_type_states=!!c('madfitz'))),
+   hisse_out = target(DoSingleRun(dir=tree_names[tree_index], phy=trees[[tree_index]], root_type=root_type_states), transform = cross(tree_index=!!sequence(length(tree_names)),  root_type_states=!!c('madfitz'))),
    combined_df = target(
       dplyr::bind_rows(hisse_out, .id = "id"),
       transform = combine(hisse_out)
