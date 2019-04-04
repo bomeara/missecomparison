@@ -8,7 +8,9 @@ source("R/plan.R")      # creates the drake plan
 
 #future::plan(future::multiprocess)
 
-good_cluster_nodes = c(paste0("omearacluster",c("a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l"), ".nomad.utk.edu"), paste0("omearalab",c(7,8,9,11,18,22), ".nomad.utk.edu"), "omearashiny1.desktop.utk.edu")
+#good_cluster_nodes = c(paste0("omearacluster",c("a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l"), ".nomad.utk.edu"), paste0("omearalab",c(7,8,9,11,18,22), ".nomad.utk.edu"), "omearashiny1.desktop.utk.edu")
+good_cluster_nodes = c(paste0("omearacluster",c("a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l"), ".nomad.utk.edu"), paste0("omearalab",c(9,11,22), ".nomad.utk.edu"), "omearashiny1.desktop.utk.edu") #removing 7,8, 18, since they often went unreachable
+
 all_nodes <- good_cluster_nodes
 # all_nodes <- c()
 # free_nodes <- 10
