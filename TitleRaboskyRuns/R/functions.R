@@ -61,3 +61,25 @@ DoSingleRun <- function(dir, phy, root_type="madfitz") {
 		return(list(failure=dir))
 	}
 }
+
+WrapSingleRunCondor <- function(dir, phy, root_type="madfitz") {
+	file_root <- paste0(gsub("/","",dir), "_", gsub("/","",phy))
+	executable <- paste0("#! /bin/sh", "\n", "R CMD BATCH batch_", file_root, ".R")
+	cat(executable, file=paste0("exec_",file_root,".sh"))
+	system(paste0("chmod u+x ", paste0("exec_",file_root,".sh")))
+
+	submit_script <- paste0("executable=", paste0("exec_",file_root,".sh"),"\n",
+		"universe=vanilla\n",
+		"output=results.output.", file_root, "\n",
+		"error=results.error.", file_root, "\n",
+		"transfer_input_files=batch_", , file_root, ".R", "\n",
+		"notification=never\nshould_transfer_files=YES\nwhen_to_transfer_output=ON_EXIT\n"
+	)
+	cat(submit_script, file=paste0("job_", file_root))
+
+	R_script <- paste0("library(hisse)\n",
+		# call in DoSingleRun, have it return stuff
+	)
+
+
+}
