@@ -15,8 +15,8 @@ DoSingleRun <- function(dir, phy, root_type="madfitz", turnover.upper=100) {
 	#print(phy)
 	  #dir <- name(phy)
 		#eps <- ifelse(neps_same, turnover, rep(1, nturnover))
-		hisse_result_all <- hisse::MiSSEGreedy(phy, f=1, root.type=root_type, turnover.upper=turnover.upper)
-		AIC_weights <- hisse::GetAICWeights(hisse_result_all)
+		hisse_result_all <- hisse::MiSSEGreedy(phy, f=1, root.type=root_type, turnover.upper=turnover.upper, chunk.size=6)
+		AIC_weights <- hisse::GetAICWeights(hisse_result_all, criterion="AIC")
 		delta_AIC <- sapply(hisse_result_all, "[[", "AIC") - min(sapply(hisse_result_all, "[[", "AIC"))
 
 		AICc_weights <- hisse::GetAICWeights(hisse_result_all, "AICc")
