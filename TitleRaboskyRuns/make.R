@@ -6,7 +6,7 @@ source("R/plan.R")      # creates the drake plan
 #config <- drake_config(plan)
 #vis_drake_graph(config)
 
-future::plan(future::multiprocess)
+future::plan(future::multicore)
 
 #good_cluster_nodes = c(paste0("omearacluster",c("a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l"), ".nomad.utk.edu"), paste0("omearalab",c(7,8,9,11,18,22), ".nomad.utk.edu"), "omearashiny1.desktop.utk.edu")
 
