@@ -28,7 +28,8 @@ print(paste0("There are ", length(trees), " to analyze"))
 
 
 plan <- drake_plan(
-   hisse_out = target(DoSingleRun(dir=tree_names[tree_index], phy=trees[[tree_index]], root_type=root_type_states), transform = cross(tree_index=!!sequence(length(tree_names)),  root_type_states=!!c('madfitz'))),
+   possible_combos = hisse::generateMiSSEGreedyCombinations(max.param=50, vary.both=TRUE)
+   hisse_out = target(DoSingleRun(dir=tree_names[tree_index], phy=trees[[tree_index]], root_type=root_type_states, possibilities=possible_combos, tree_index=tree_index), transform = cross(tree_index=!!sequence(length(tree_names)),  root_type_states=!!c('madfitz'))),
    combined_df = target(
       dplyr::bind_rows(hisse_out, .id = "id"),
       transform = combine(hisse_out)

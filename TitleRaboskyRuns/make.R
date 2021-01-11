@@ -6,7 +6,7 @@ source("R/plan.R")      # creates the drake plan
 #config <- drake_config(plan)
 #vis_drake_graph(config)
 
-future::plan(future::multicore)
+#future::plan(future::multicore)
 
 #good_cluster_nodes = c(paste0("omearacluster",c("a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l"), ".nomad.utk.edu"), paste0("omearalab",c(7,8,9,11,18,22), ".nomad.utk.edu"), "omearashiny1.desktop.utk.edu")
 
@@ -15,10 +15,10 @@ future::plan(future::multicore)
 
 #good_cluster_nodes = c("omearaclusterc.nomad.utk.edu", "omearaclusterf.nomad.utk.edu", "omearalab22.nomad.utk.edu") #not running condor at the moment
 
-#good_cluster_nodes = c("omearaclusterd.local", "omearaclusterb.local", "omearatc1.local", "omearatc2.local", "omearaclustere.local", "omearaclusterl.local", "omearaclusterg.local") #not running condor at the moment
+good_cluster_nodes = c("omearaclusterd.local", "omearaclusterb.local", "omearatc1.local", "omearatc2.local", "omearaclustere.local", "omearaclusterl.local", "omearaclusterg.local") #not running condor at the moment
 
 
-#all_nodes <- good_cluster_nodes
+all_nodes <- good_cluster_nodes
 # all_nodes <- c()
 # free_nodes <- 10
 # for (i in seq_along(good_cluster_nodes)) {
@@ -29,12 +29,12 @@ future::plan(future::multicore)
 #   }
 # }
 
-#future::plan(cluster, workers = all_nodes)
+future::plan(cluster, workers = all_nodes)
 
 
 
 make(
   plan, # defined in R/plan.R
   verbose = 2,
-  parallelism = "future", jobs = parallel::detectCores()
+  parallelism = "future", jobs = length(all_nodes)
 )

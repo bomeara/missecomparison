@@ -3,8 +3,10 @@
 #' @param dir Where the phylo object resides
 #' @param phy The phylo object
 #' @param root_type The type to use at the root
+#' @param possibilities The possible_combos object
+#' @param tree_index which tree is being used
 
-DoSingleRun <- function(dir, phy, root_type="madfitz", turnover.upper=100) {
+DoSingleRun <- function(dir, phy, root_type="madfitz", possibilities, tree_index) {
 #	print(system(paste0("ls data/title_rabosky_dryad/trees/", dir)))
 #	print(paste0("data/title_rabosky_dryad/trees/", dir, "/", dir, ".tre"))
 #	phy <- NULL
@@ -15,7 +17,7 @@ DoSingleRun <- function(dir, phy, root_type="madfitz", turnover.upper=100) {
 	#print(phy)
 	  #dir <- name(phy)
 		#eps <- ifelse(neps_same, turnover, rep(1, nturnover))
-		hisse_result_all <- hisse::MiSSEGreedy(phy, f=1, root.type=root_type, turnover.upper=turnover.upper, chunk.size=6)
+		hisse_result_all <- hisse::MiSSEGreedy(phy, f=1, root.type=root_type, possible_combos=possibilities, chunk.size=6, n.cores=parallel::detectCores(), save.file=paste0(unname(Sys.info()["nodename"]), "_",tree_index, ".rda"))
 		AIC_weights <- hisse::GetAICWeights(hisse_result_all, criterion="AIC")
 		delta_AIC <- sapply(hisse_result_all, "[[", "AIC") - min(sapply(hisse_result_all, "[[", "AIC"))
 
