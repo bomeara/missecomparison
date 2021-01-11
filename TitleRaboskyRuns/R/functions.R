@@ -17,7 +17,7 @@ DoSingleRun <- function(dir, phy, root_type="madfitz", possibilities, tree_index
 	#print(phy)
 	  #dir <- name(phy)
 		#eps <- ifelse(neps_same, turnover, rep(1, nturnover))
-		hisse_result_all <- hisse::MiSSEGreedy(phy, f=1, root.type=root_type, possible_combos=possibilities, chunk.size=6, n.cores=parallel::detectCores(), save.file=paste0(unname(Sys.info()["nodename"]), "_",tree_index, ".rda"))
+		hisse_result_all <- hisse::MiSSEGreedy(phy, f=1, root.type=root_type, possible.combos=possibilities, chunk.size=6, n.cores=parallel::detectCores(), save.file=paste0(unname(Sys.info()["nodename"]), "_",tree_index, ".rda"))
 		AIC_weights <- hisse::GetAICWeights(hisse_result_all, criterion="AIC")
 		delta_AIC <- sapply(hisse_result_all, "[[", "AIC") - min(sapply(hisse_result_all, "[[", "AIC"))
 
