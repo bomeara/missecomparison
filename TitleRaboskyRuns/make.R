@@ -13,7 +13,10 @@ source("R/plan.R")      # creates the drake plan
 
 #good_cluster_nodes = c(paste0("omearacluster",c("a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l"), ".nomad.utk.edu"), paste0("omearalab",c(9,11,22), ".nomad.utk.edu"), "omearashiny1.desktop.utk.edu") #removing 7,8, 18, since they often went unreachable
 
-good_cluster_nodes = c("omearaclusterc.nomad.utk.edu", "omearaclusterf.nomad.utk.edu", "omearalab22.nomad.utk.edu") #not running condor at the moment
+#good_cluster_nodes = c("omearaclusterc.nomad.utk.edu", "omearaclusterf.nomad.utk.edu", "omearalab22.nomad.utk.edu") #not running condor at the moment
+
+good_cluster_nodes = c("omearaclusterd.local", "omearaclusterb.local", "omearatc1.local", "omearatc2.local", "omearaclustere.local", "omearaclusterl.local", "omearaclusterg.local") #not running condor at the moment
+
 
 all_nodes <- good_cluster_nodes
 # all_nodes <- c()
