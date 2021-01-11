@@ -36,5 +36,5 @@ future::plan(future::multiprocess)
 make(
   plan, # defined in R/plan.R
   verbose = 2,
-  parallelism = "future", jobs = length(all_nodes)
+  parallelism = "future", jobs = parallel::detectCores()
 )
