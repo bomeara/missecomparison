@@ -29,14 +29,14 @@ all_nodes <- good_cluster_nodes
 #   }
 # }
 
-future::plan(cluster, workers = all_nodes)
-#future::plan(future::multicore)
+#future::plan(cluster, workers = all_nodes)
+future::plan(future::multicore)
 
 
 make(
   plan, # defined in R/plan.R
   verbose = 2,
-  parallelism = "future", jobs = length(all_nodes)
-  #parallelism = "future", jobs = parallel::detectCores()
+  #parallelism = "future", jobs = length(all_nodes)
+  parallelism = "future", jobs = parallel::detectCores()
 
 )
