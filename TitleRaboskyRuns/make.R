@@ -37,6 +37,6 @@ make(
   plan, # defined in R/plan.R
   verbose = 2,
   #parallelism = "future", jobs = length(all_nodes)
-  parallelism = "future", jobs = parallel::detectCores()
+  parallelism = "future", jobs = 1
 
 )

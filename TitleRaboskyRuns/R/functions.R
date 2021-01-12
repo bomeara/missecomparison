@@ -30,7 +30,7 @@ DoSingleRun <- function(dir, phy, root_type="madfitz", possibilities, tree_index
 			nturnover <- length(unique(hisse_result_all[[model_index]]$turnover))
 			neps <- length(unique(hisse_result_all[[model_index]]$eps))
 
-			hisse_recon <- hisse::MarginReconMiSSE(phy=hisse_result_all[[model_index]]$phy, f=1, hidden.states=nturnover, pars=hisse_result_all[[model_index]]$solution, aic=hisse_result_all[[model_index]]$AIC, root.type=root_type, get.tips.only=TRUE)
+			hisse_recon <- hisse::MarginReconMiSSE(phy=hisse_result_all[[model_index]]$phy, f=1, hidden.states=nturnover, pars=hisse_result_all[[model_index]]$solution, AIC=hisse_result_all[[model_index]]$AIC, root.type=root_type, get.tips.only=TRUE)
 			tip_mat_transformed <- hisse_recon$tip.mat[,-1]
 			if(max(tip_mat_transformed) == 0) {
 				tip_mat_transformed[,1] <- 1 #deal with misse bug of no weight if no hidden
