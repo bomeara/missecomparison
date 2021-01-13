@@ -5,6 +5,11 @@ setwd("/share/missecomparison/TitleRaboskyRuns")
 
 source("R/packages.R")
 source("R/functions.R")
+
+library(foreach)
+library(doParallel)
+registerDoParallel(parallel::detectCores())
+
 Sys.setenv('R_MAX_VSIZE'=32000000000)
 
 set.seed(as.integer(round(runif(1, min=1, max=1e5)) + sqrt(as.numeric(gsub("\\.", "", as.character(ipify::get_ip()))))))
@@ -19,15 +24,16 @@ for (i in seq_along(tree_names)) {
 names(trees) <- tree_names
 
 
-possible_combos = hisse::generateMiSSEGreedyCombinations(max.param=50, vary.both=TRUE)
 
 tree_indices <- sample(sequence(length(tree_names)), replace=FALSE) # randomize order
 
 results <- list()
-for (i in seq_along(tree_indices)) {
+#for (i in seq_along(tree_indices)) {
+foreach (i=seq_along(tree_indices), .combine=combine) %dopar% { 
 	tree_index <- tree_indices[i]
 	print(paste0(Sys.info()['nodename'], " tree ", tree_index))
 	local_result <- NULL
+	possible_combos = hisse::generateMiSSEGreedyCombinations(max.param=round(ape::Ntip(trees[[tree_index]])/10), vary.both=TRUE)
 	try(local_result <- DoSingleRun(dir=tree_names[tree_index], phy=trees[[tree_index]], root_type="madfitz", possibilities=possible_combos, tree_index=tree_index))
 	if(!is.null(local_result)) {
 		results[[i]] <- local_result
