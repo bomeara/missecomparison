@@ -29,7 +29,9 @@ all_nodes <- good_cluster_nodes
 #   }
 # }
 
-future::plan(cluster, workers = all_nodes)
+
+cl <- parallel::makeCluster(all_nodes)
+future::plan(cluster, workers = cl)
 #future::plan(future::multicore)
 
 
