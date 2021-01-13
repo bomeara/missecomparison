@@ -27,6 +27,10 @@ results <- list()
 for (i in seq_along(tree_indices)) {
 	tree_index <- tree_indices[i]
 	print(paste0(Sys.info()['nodename'], " tree ", tree_index))
-	results[[i]] <- DoSingleRun(dir=tree_names[tree_index], phy=trees[[tree_index]], root_type="madfitz", possibilities=possible_combos, tree_index=tree_index)
-	save(results, tree_indices, file=paste0("manual", Sys.info()['nodename'], ".rda"))
+	local_result <- NULL
+	try(local_result <- DoSingleRun(dir=tree_names[tree_index], phy=trees[[tree_index]], root_type="madfitz", possibilities=possible_combos, tree_index=tree_index))
+	if(!is.null(local_result)) {
+		results[[i]] <- local_result
+		save(results, tree_indices, file=paste0("manual", Sys.info()['nodename'], ".rda"))
+	}
 }
