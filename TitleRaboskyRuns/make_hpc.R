@@ -10,5 +10,5 @@ cl <- makeClusterPSOCK(workers)
 future::plan(cluster, workers=cl)
 
 
-make(plan_hpc, parallelism = "future", jobs = 120)
+make(plan_hpc, parallelism = "future", jobs = 120, verbose=4)
 
