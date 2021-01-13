@@ -30,7 +30,7 @@ all_nodes <- good_cluster_nodes
 # }
 
 
-cl <- parallel::makeCluster(all_nodes)
+cl <- parallel::makeCluster(all_nodes, rscript="/usr/bin/Rscript")
 future::plan(cluster, workers = cl)
 #future::plan(future::multicore)
 
