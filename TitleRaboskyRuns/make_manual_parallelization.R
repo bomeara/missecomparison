@@ -25,6 +25,8 @@ tree_indices <- sample(sequence(length(tree_names)), replace=FALSE) # randomize 
 
 results <- list()
 for (i in seq_along(tree_indices)) {
+	tree_index <- tree_indices[i]
+	print(paste0(Sys.info()['nodename'], " tree ", tree_index))
 	results[[i]] <- DoSingleRun(dir=tree_names[tree_index], phy=trees[[tree_index]], root_type=root_type_states, possibilities=possible_combos, tree_index=tree_index)
 	save(results, tree_indices, file=paste0("manual", Sys.info()['nodename'], ".rda"))
 }
