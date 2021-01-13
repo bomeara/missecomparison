@@ -5,7 +5,7 @@ source("R/plan.R")      # creates the drake plan
 
 
 workers <- c(rep(c("omearaclustera.local", "omearaclusterb.local", "omearaclusterl.local", "omearaclusterg.local"), 24), rep(c("omearatc1.local", "omearatc2.local"),12))
-cl <- makeClusterPSOCK(workers)
+cl <- parallel::makeClusterPSOCK(workers)
 
 future::plan(cluster, workers=cl)
 
