@@ -1,3 +1,8 @@
+# ansible linux -a 'nohup Rscript /share/missecomparison/TitleRaboskyRuns/make_manual_parallelization.R &'
+
+setwd("/share/missecomparison/TitleRaboskyRuns")
+
+
 source("R/packages.R")
 source("R/functions.R")
 Sys.setenv('R_MAX_VSIZE'=32000000000)
