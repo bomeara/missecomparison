@@ -17,7 +17,7 @@ DoSingleRun <- function(dir, phy, root_type="madfitz", possibilities, tree_index
 	#print(phy)
 	  #dir <- name(phy)
 		#eps <- ifelse(neps_same, turnover, rep(1, nturnover))
-		cat(paste0("Starting tree ", tree_index), file=paste0(unname(Sys.info()["nodename"]), "_",tree_index, ".log"), append=FALSE)
+		cat(paste0("Starting tree ", tree_index, " ntip is ", ape::Ntip(phy)), file=paste0(unname(Sys.info()["nodename"]), "_",tree_index, ".log"), append=FALSE)
 		hisse_result_all <- hisse::MiSSEGreedy(phy, f=1, root.type=root_type, possible.combos=possibilities, chunk.size=2, n.cores=1, save.file=paste0(unname(Sys.info()["nodename"]), "_",tree_index, ".rda"), stop.deltaAICc=1000, sann=TRUE)
 		cat(paste0("Finished fit to tree ", tree_index), file=paste0(unname(Sys.info()["nodename"]), "_",tree_index, ".log"), append=TRUE)
 
