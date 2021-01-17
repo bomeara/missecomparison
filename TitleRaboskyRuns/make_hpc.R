@@ -4,11 +4,12 @@ source("R/plan.R")      # creates the drake plan
 
 
 
-workers <- c(rep(c("omearaclustera.local", "omearaclusterb.local", "omearaclusterl.local", "omearaclusterg.local"), 24), rep(c("omearatc1.local", "omearatc2.local"),12))
+workers <- c(rep(c("omearaclustera.local", "omearaclusterb.local", "omearaclusterl.local", "omearaclusterg.local"), 23), rep(c("omearatc1.local", "omearatc2.local"),11))
+workers <- sample(workers, length(workers), replace=FALSE)
 cl <- parallel::makeCluster(workers)
 
 future::plan(cluster, workers=cl)
 
 
-make(plan_hpc, parallelism = "future", jobs = 120, verbose=4)
+make(plan_hpc, parallelism = "future", jobs = 114, verbose=4)
 

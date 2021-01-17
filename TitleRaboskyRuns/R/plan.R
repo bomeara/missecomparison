@@ -45,3 +45,13 @@ plan_mac <- drake_plan(
       transform = combine(hisse_out)
    )
 )
+
+
+plan_hpc <- drake_plan(
+   possible_combos = hisse::generateMiSSEGreedyCombinations(max.param=10, vary.both=TRUE),
+   hisse_out = target(DoSingleRun(dir=tree_names[tree_index], phy=trees[[tree_index]], root_type=root_type_states, possibilities=possible_combos, tree_index=tree_index, n.cores=1), transform = cross(tree_index=!!sequence(length(tree_names)),  root_type_states=!!c('madfitz'))),
+   combined_df = target(
+      dplyr::bind_rows(hisse_out, .id = "id"),
+      transform = combine(hisse_out)
+   )
+)
