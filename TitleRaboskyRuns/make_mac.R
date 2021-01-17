@@ -2,6 +2,7 @@ source("R/packages.R")  # loads packages
 source("R/functions.R") # defines the create_plot() function
 source("R/plan.R")      # creates the drake plan
 
+drake::drake_cache("/Users/bomeara/Documents/MyDocuments/GitClones/missecomparison/TitleRaboskyRuns/.drake")$unlock()
 
 #config <- drake_config(plan)
 #vis_drake_graph(config)
@@ -39,6 +40,6 @@ make(
   plan_mac, # defined in R/plan.R
   verbose = 2,
   #parallelism = "future", jobs = length(all_nodes)
-  parallelism = "future", jobs = 6
+  parallelism = "future", jobs = 3
 
 )
