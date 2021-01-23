@@ -30,13 +30,17 @@ tree_indices <- sample(sequence(length(tree_names)), replace=FALSE) # randomize 
 results <- list()
 #for (i in seq_along(tree_indices)) {
 foreach (i=seq_along(tree_indices), .combine=combine) %dopar% { 
+	done_runs <- list.files(pattern=".rda")		
 	tree_index <- tree_indices[i]
-	print(paste0(Sys.info()['nodename'], " tree ", tree_index))
-	local_result <- NULL
-	possible_combos = hisse::generateMiSSEGreedyCombinations(max.param=round(ape::Ntip(trees[[tree_index]])/10), vary.both=TRUE)
-	try(local_result <- DoSingleRun(dir=tree_names[tree_index], phy=trees[[tree_index]], root_type="madfitz", possibilities=possible_combos, tree_index=tree_index, n.cores=1))
-	if(!is.null(local_result)) {
-		results[[i]] <- local_result
-		save(results, tree_indices, file=paste0("manual", Sys.info()['nodename'], ".rda"))
+
+	if(!any(grepl(paste0("_", tree_index, "\\."), done_runs))) { # so we skip ones already done
+		print(paste0(Sys.info()['nodename'], " tree ", tree_index))
+		local_result <- NULL
+		possible_combos = hisse::generateMiSSEGreedyCombinations(max.param=round(ape::Ntip(trees[[tree_index]])/10), vary.both=TRUE)
+		try(local_result <- DoSingleRun(dir=tree_names[tree_index], phy=trees[[tree_index]], root_type="madfitz", possibilities=possible_combos, tree_index=tree_index, n.cores=1))
+		if(!is.null(local_result)) {
+			results[[i]] <- local_result
+			save(results, tree_indices, file=paste0("manual", Sys.info()['nodename'], ".rda"))
+		}
 	}
 }
