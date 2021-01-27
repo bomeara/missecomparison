@@ -38,6 +38,7 @@ foreach (i=seq_along(tree_indices), .combine=combine) %dopar% {
 		local_result <- NULL
 		possible_combos = hisse::generateMiSSEGreedyCombinations(max.param=round(ape::Ntip(trees[[tree_index]])/10), vary.both=TRUE)
 		try(local_result <- DoSingleRun(dir=tree_names[tree_index], phy=trees[[tree_index]], root_type="madfitz", possibilities=possible_combos, tree_index=tree_index, n.cores=1))
+		save(local_result, file=paste0("results/",unname(Sys.info()["nodename"]), "_",tree_index, "_local_result_newrun.rda"))
 		if(!is.null(local_result)) {
 			results[[i]] <- local_result
 			save(results, tree_indices, file=paste0("manual", Sys.info()['nodename'], "_newrun.rda"))
