@@ -17,9 +17,9 @@ DoSingleRun <- function(dir, phy, root_type="madfitz", possibilities, tree_index
 	#print(phy)
 	  #dir <- name(phy)
 		#eps <- ifelse(neps_same, turnover, rep(1, nturnover))
-		cat(paste0("Starting tree ", tree_index, " ntip is ", ape::Ntip(phy)), file=paste0(unname(Sys.info()["nodename"]), "_",tree_index, "_newrun.log"), append=FALSE)
-		hisse_result_all <- hisse::MiSSEGreedy(phy, f=1, root.type=root_type, possible.combos=possibilities, chunk.size=2, n.cores=n.cores, save.file=paste0(unname(Sys.info()["nodename"]), "_",tree_index, ".rda"), stop.deltaAICc=1000, sann=TRUE)
-		cat(paste0("Finished fit to tree ", tree_index), file=paste0(unname(Sys.info()["nodename"]), "_",tree_index, "_newrun.log"), append=TRUE)
+		cat(paste0("Starting tree ", tree_index, " ntip is ", ape::Ntip(phy)), file=paste0("results/",unname(Sys.info()["nodename"]), "_",tree_index, "_newrun.log"), append=FALSE)
+		hisse_result_all <- hisse::MiSSEGreedy(phy, f=1, root.type=root_type, possible.combos=possibilities, chunk.size=2, n.cores=n.cores, save.file=paste0("results/",unname(Sys.info()["nodename"]), "_",tree_index, ".rda"), stop.deltaAICc=1000, sann=TRUE)
+		cat(paste0("Finished fit to tree ", tree_index), file=paste0("results/",unname(Sys.info()["nodename"]), "_",tree_index, "_newrun.log"), append=TRUE)
 
 		AIC_weights <- hisse::GetAICWeights(hisse_result_all, criterion="AIC")
 		delta_AIC <- sapply(hisse_result_all, "[[", "AIC") - min(sapply(hisse_result_all, "[[", "AIC"))
@@ -30,7 +30,7 @@ DoSingleRun <- function(dir, phy, root_type="madfitz", possibilities, tree_index
 		model_fit_time <- as.numeric(difftime(Sys.time(), start_time, units="mins"))
 		for(model_index in sequence(length(hisse_result_all))) {
 			if(delta_AICc[model_index]<20) {
-				cat(paste0("Doing recon on model ", model_index, " at ", Sys.time(), "\n"), file=paste0(unname(Sys.info()["nodename"]), "_",tree_index, "_newrun.log"), append=TRUE)
+				cat(paste0("Doing recon on model ", model_index, " at ", Sys.time(), "\n"), file=paste0("results/",unname(Sys.info()["nodename"]), "_",tree_index, "_newrun.log"), append=TRUE)
 
 				start_time <- Sys.time()
 				nturnover <- length(unique(hisse_result_all[[model_index]]$turnover))
@@ -58,7 +58,7 @@ DoSingleRun <- function(dir, phy, root_type="madfitz", possibilities, tree_index
 				summary_df_local$elapsed_mins_recon <- as.numeric(difftime(Sys.time(), start_time, units="mins"))
 				summary_df_local$elapsed_mins_params_all_models_together <- model_fit_time
 				#return(list(hisse_result=hisse_result, hisse_recon=hisse_recon, summary_df=summary_df))
-				save(summary_df_local, hisse_recon, file=paste0(unname(Sys.info()["nodename"]), "_recon_",tree_index, "_newrun.rda"))
+				save(summary_df_local, hisse_recon, file=paste0("results/", unname(Sys.info()["nodename"]), "_recon_",tree_index, "_newrun.rda"))
 				if(nrow(summary_df)==0) {
 					summary_df <- summary_df_local
 				} else {
