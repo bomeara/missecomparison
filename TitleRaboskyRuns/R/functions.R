@@ -19,7 +19,7 @@ DoSingleRun <- function(dir, phy, root_type="madfitz", possibilities, tree_index
 		#eps <- ifelse(neps_same, turnover, rep(1, nturnover))
 		cat(paste0("Starting tree ", tree_index, " ntip is ", ape::Ntip(phy)), file=paste0("results/",unname(Sys.info()["nodename"]), "_",tree_index, "_newrun.log"), append=FALSE)
 
-		output_files <- list.files("results", pattern=paste0("_",tree_index, ".rda"))
+		output_files <- list.files("results", pattern=paste0("_",tree_index, ".rda"), full.names=TRUE)
 		output_files <- output_files[!grepl("recon", output_files)]
 		if(length(output_files)>=1) {
 			load(output_files[1])
