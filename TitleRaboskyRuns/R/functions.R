@@ -18,8 +18,16 @@ DoSingleRun <- function(dir, phy, root_type="madfitz", possibilities, tree_index
 	  #dir <- name(phy)
 		#eps <- ifelse(neps_same, turnover, rep(1, nturnover))
 		cat(paste0("Starting tree ", tree_index, " ntip is ", ape::Ntip(phy)), file=paste0("results/",unname(Sys.info()["nodename"]), "_",tree_index, "_newrun.log"), append=FALSE)
-		hisse_result_all <- hisse::MiSSEGreedy(phy, f=1, root.type=root_type, possible.combos=possibilities, chunk.size=2, n.cores=n.cores, save.file=paste0("results/",unname(Sys.info()["nodename"]), "_",tree_index, ".rda"), stop.deltaAICc=1000, sann=TRUE)
-		cat(paste0("Finished fit to tree ", tree_index), file=paste0("results/",unname(Sys.info()["nodename"]), "_",tree_index, "_newrun.log"), append=TRUE)
+
+		output_files <- list.files("results", pattern=paste0("_",tree_index, ".rda"))
+		output_files <- output_files[!grepl("recon", output_files)]
+		if(length(output_files)>=1) {
+			load(output_files[1])
+			hisse_result_all <- misse.list
+		} else {
+			hisse_result_all <- hisse::MiSSEGreedy(phy, f=1, root.type=root_type, possible.combos=possibilities, chunk.size=2, n.cores=n.cores, save.file=paste0("results/",unname(Sys.info()["nodename"]), "_",tree_index, ".rda"), stop.deltaAICc=1000, sann=TRUE)
+			cat(paste0("Finished fit to tree ", tree_index), file=paste0("results/",unname(Sys.info()["nodename"]), "_",tree_index, "_newrun.log"), append=TRUE)
+		}
 
 		AIC_weights <- hisse::GetAICWeights(hisse_result_all, criterion="AIC")
 		delta_AIC <- sapply(hisse_result_all, "[[", "AIC") - min(sapply(hisse_result_all, "[[", "AIC"))
@@ -58,14 +66,16 @@ DoSingleRun <- function(dir, phy, root_type="madfitz", possibilities, tree_index
 				summary_df_local$elapsed_mins_recon <- as.numeric(difftime(Sys.time(), start_time, units="mins"))
 				summary_df_local$elapsed_mins_params_all_models_together <- model_fit_time
 				#return(list(hisse_result=hisse_result, hisse_recon=hisse_recon, summary_df=summary_df))
-				save(summary_df_local, hisse_recon, file=paste0("results/", unname(Sys.info()["nodename"]), "_recon_",tree_index, "_newrun.rda"))
+				save(summary_df_local, hisse_recon, file=paste0("results/", unname(Sys.info()["nodename"]), "_model_", model_index, "_recon_",tree_index, "_newrun.rda"))
 				if(nrow(summary_df)==0) {
 					summary_df <- summary_df_local
 				} else {
 					summary_df <- rbind(summary_df, summary_df_local)
 				}
+				save(summary_df, hisse_result_all, AICc_weights, delta_AICc, file=paste0("results/", unname(Sys.info()["nodename"]), "_running_recon_",tree_index, "_newrun.rda"))
 			}
 		}
+		save(summary_df, hisse_result_all, AICc_weights, delta_AICc, file=paste0("results/", unname(Sys.info()["nodename"]), "_done_recon_",tree_index, "_newrun.rda"))
 		return(summary_df)
 	} else {
 		return(list(failure=dir))
