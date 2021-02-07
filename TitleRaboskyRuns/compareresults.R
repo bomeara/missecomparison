@@ -1,12 +1,40 @@
 rm(list=ls())
 library(Metrics)
+library(tidyverse)
+library(magrittr)
+library(stats)
 
 treeTipMerge <- function(x) {
   x$treeTipString <- paste0(x$treeName, "_", x$tipName)
   return(x)
 }
 
-rates.ours <- treeTipMerge(read.csv("result.csv", stringsAsFactors=FALSE))
+all_results <- data.frame()
+model_average_results <- data.frame()
+dones <- list.files("results", pattern="done", full.names=TRUE)
+for (i in seq_along(dones)) {
+	print(paste0("Loading ", i, " of ", length(dones)))
+	try(load(dones[i]))
+	if(exists("summary_df")) {
+		all_results <- rbind(all_results, summary_df)
+		local_weighted <- summary_df %>% group_by(treeName, taxon_id_in_phy, tipName) %>% summarise(
+			turnover = weighted.mean(turnover, AICc_weight),
+			extinction.fraction = weighted.mean(extinction.fraction, AICc_weight),
+			net.div = weighted.mean(net.div, AICc_weight), 
+			speciation = weighted.mean(speciation, AICc_weight),
+			extinction = weighted.mean(extinction, AICc_weight)
+		)
+		model_average_results <- rbind(model_average_results, local_weighted)
+
+		rm(summary_df)
+		rm(local_weighted)
+	}
+
+}
+#rates.ours <- treeTipMerge(read.csv("result.csv", stringsAsFactors=FALSE))
+rates.ours <- treeTipMerge(all_results)
+rates.ours.model.average <- treeTipMerge(model_average_results)
+
 rates.theirs <- treeTipMerge(read.csv("data/title_rabosky_dryad/tipRates_dryad/dataFiles/estimatedTipRates.csv", stringsAsFactors=FALSE))
 rates.true <- treeTipMerge(read.csv("data/title_rabosky_dryad/tipRates_dryad/dataFiles/trueTipRates.csv", stringsAsFactors=FALSE))
 
@@ -38,20 +66,28 @@ colnames(rates.true)[which(colnames(rates.true)=="tipNetDiv")] <- "netDivTRUE"
 rates.true$turnoverTRUE <- rates.true$lambdaTRUE + rates.true$muTRUE
 rates.true$extinctionFractionTRUE <- rates.true$muTRUE / rates.true$lambdaTRUE
 
-colnames(rates.ours.best)[which(colnames(rates.ours.best)=="turnover")] <- "turnoverMiSSE"
-colnames(rates.ours.best)[which(colnames(rates.ours.best)=="extinction.fraction")] <- "extinctionFractionMiSSE"
-colnames(rates.ours.best)[which(colnames(rates.ours.best)=="net.div")] <- "netDivMiSSE"
-colnames(rates.ours.best)[which(colnames(rates.ours.best)=="speciation")] <- "lambdaMiSSE"
-colnames(rates.ours.best)[which(colnames(rates.ours.best)=="extinction")] <- "muMiSSE"
+colnames(rates.ours.best)[which(colnames(rates.ours.best)=="turnover")] <- "turnoverMiSSEbest"
+colnames(rates.ours.best)[which(colnames(rates.ours.best)=="extinction.fraction")] <- "extinctionFractionMiSSEbest"
+colnames(rates.ours.best)[which(colnames(rates.ours.best)=="net.div")] <- "netDivMiSSEbest"
+colnames(rates.ours.best)[which(colnames(rates.ours.best)=="speciation")] <- "lambdaMiSSEbest"
+colnames(rates.ours.best)[which(colnames(rates.ours.best)=="extinction")] <- "muMiSSEbest"
 
-rates.combined <- merge(rates.ours.best, rates.theirs, by="treeTipString")
+
+colnames(rates.ours.model.average)[which(colnames(rates.ours.model.average)=="turnover")] <- "turnoverMiSSEavg"
+colnames(rates.ours.model.average)[which(colnames(rates.ours.model.average)=="extinction.fraction")] <- "extinctionFractionMiSSEavg"
+colnames(rates.ours.model.average)[which(colnames(rates.ours.model.average)=="net.div")] <- "netDivMiSSEavg"
+colnames(rates.ours.model.average)[which(colnames(rates.ours.model.average)=="speciation")] <- "lambdaMiSSEavg"
+colnames(rates.ours.model.average)[which(colnames(rates.ours.model.average)=="extinction")] <- "muMiSSEavg"
+
+rates.combined <- merge(rates.ours.best, rates.ours.model.average, by="treeTipString")
+rates.combined <- merge(rates.combined, rates.theirs, by="treeTipString")
 rates.combined <- merge(rates.combined, rates.true, by="treeTipString")
 
 rates.combined$muBAMM <- rates.combined$lambdaBAMM - rates.combined$netDivBAMM
 rates.combined$turnoverBAMM <- rates.combined$muBAMM + rates.combined$lambdaBAMM
 rates.combined$extinctionFractionBAMM <- rates.combined$muBAMM / rates.combined$lambdaBAMM
 
-approaches <- c("TB", "ND", "DR", "BAMM", "MiSSE")
+approaches <- c("TB", "ND", "DR", "BAMM", "MiSSEbest", "MiSSEavg")
 parameters <- c("mu", "lambda", "netDiv", "turnover", "extinctionFraction")
 RMSE.results <- data.frame(matrix(nrow=length(approaches), ncol=length(parameters)))
 rownames(RMSE.results) <- approaches
@@ -81,6 +117,11 @@ for (approach.index in seq_along(approaches)) {
   }
 }
 
+print("RMSE")
 print(round(RMSE.results,3))
+
+print("absolute error, mean")
 print(round(absoluteError.mean.results,3))
+
+print("absolute error, median")
 print(round(absoluteError.median.results,3))
