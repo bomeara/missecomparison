@@ -3,6 +3,8 @@ library(Metrics)
 library(tidyverse)
 library(magrittr)
 library(stats)
+library(ggplot2)
+library(progress)
 
 treeTipMerge <- function(x) {
   x$treeTipString <- paste0(x$treeName, "_", x$tipName)
@@ -79,9 +81,9 @@ colnames(rates.ours.model.average)[which(colnames(rates.ours.model.average)=="ne
 colnames(rates.ours.model.average)[which(colnames(rates.ours.model.average)=="speciation")] <- "lambdaMiSSEavg"
 colnames(rates.ours.model.average)[which(colnames(rates.ours.model.average)=="extinction")] <- "muMiSSEavg"
 
-rates.combined <- merge(rates.ours.best, rates.ours.model.average, by="treeTipString")
-rates.combined <- merge(rates.combined, rates.theirs, by="treeTipString")
-rates.combined <- merge(rates.combined, rates.true, by="treeTipString")
+rates.combined <- merge(rates.ours.best, rates.ours.model.average)
+rates.combined <- merge(rates.combined, rates.theirs)
+rates.combined <- merge(rates.combined, rates.true)
 
 rates.combined$muBAMM <- rates.combined$lambdaBAMM - rates.combined$netDivBAMM
 rates.combined$turnoverBAMM <- rates.combined$muBAMM + rates.combined$lambdaBAMM
@@ -100,7 +102,7 @@ absoluteError.median.results <- RMSE.results
 # get rid of NAs and weird values for now
 rates.cleaned <- rates.combined
 rates.cleaned <- rates.cleaned[!is.na(rates.cleaned$netDivBAMM),]
-rates.cleaned <- rates.cleaned[(rates.cleaned$lambdaTRUE>0),] #yeah, not sure why there'd be no speciation in realisty for a tree with >2 taxa
+rates.cleaned <- rates.cleaned[(rates.cleaned$lambdaTRUE>0),] #yeah, not sure why there'd be no speciation in reality for a tree with >2 taxa
 
 
 for (approach.index in seq_along(approaches)) {
@@ -125,3 +127,34 @@ print(round(absoluteError.mean.results,3))
 
 print("absolute error, median")
 print(round(absoluteError.median.results,3))
+
+pivot_names <- colnames(rates.combined)[grepl("(lambda)|(mu)|(^turnover)|(extinctionFraction)|(netDiv)", colnames(rates.combined))]
+pivot_names <- pivot_names[!grepl("TRUE", pivot_names)]
+rates.cleaned.longer <- pivot_longer(rates.cleaned, cols=all_of(pivot_names), names_to="parameter_name", values_to="parameter_value")
+
+rates.cleaned.longer$estimator <- gsub("(lambda)|(mu)|(^turnover)|(extinctionFraction)|(netDiv)", "", rates.cleaned.longer$parameter_name)
+rates.cleaned.longer$actual_parameter <- gsub("(MiSSEbest)|(MiSSEavg)|(TB)|(ND)|(DR)|(BAMM)", "", rates.cleaned.longer$parameter_name)
+
+rates.cleaned.longer$true_value <- NA
+
+save(rates.cleaned.longer, file="results/rates.cleaned.longer.rda")
+
+print(dim(rates.cleaned.longer))
+unique_params <- unique(rates.cleaned.longer$actual_parameter)
+for(i in sequence(length(unique_params))) {
+	matching_rows <- which(rates.cleaned.longer$actual_parameter==unique_params[i])
+	matching_col <- which(colnames(rates.cleaned.longer)==paste0(unique_params[i], "TRUE"))
+	rates.cleaned.longer$true_value[matching_rows] <- as.data.frame(rates.cleaned.longer[matching_rows, matching_col])[,1]
+	print(dim(rates.cleaned.longer))
+}
+
+rates.cleaned.good <- subset(rates.cleaned.longer, estimator!="ND")
+rates.cleaned.good <- subset(rates.cleaned.good, estimator!="TB")
+rates.cleaned.good <- subset(rates.cleaned.good, estimator!="DR")
+rates.cleaned.good <- subset(rates.cleaned.good, actual_parameter!="extinctionFraction") #wrong scale for this
+
+g <- ggplot(rates.cleaned.good, aes(true_value, parameter_value)) + geom_point(alpha=0.05) + facet_grid(vars(estimator), vars(actual_parameter)) + geom_abline(slope=1, intercept=0) + xlim(min(rates.cleaned.good$true_value), 2*max(rates.cleaned.good$true_value)) + ylim(min(rates.cleaned.good$true_value), 2*max(rates.cleaned.good$true_value))
+pdf(file="results/rateplot.pdf", width=20, height=20)
+print(g)
+dev.off()
+system("open results/rateplot.pdf")
