@@ -14,7 +14,7 @@ Sys.setenv('R_MAX_VSIZE'=32000000000)
 
 set.seed(as.integer(round(runif(1, min=1, max=1e5)) + sqrt(as.numeric(gsub("\\.", "", as.character(ipify::get_ip()))))))
 
-tree_info <- read.csv(file=file_in("data/title_rabosky_dryad/tipRates_dryad/dataFiles/treeSummary.csv"),stringsAsFactors=FALSE)
+tree_info <- read.csv(file="data/title_rabosky_dryad/tipRates_dryad/dataFiles/treeSummary.csv",stringsAsFactors=FALSE)
 tree_names <- unique(tree_info$treeName)
 tree_names <- tree_names[grepl("1$", tree_names)] # for speed, only take a tenth of the trees: those ending in a 1.
 trees <- list()
@@ -30,18 +30,20 @@ tree_indices <- sample(sequence(length(tree_names)), replace=FALSE) # randomize 
 results <- list()
 #for (i in seq_along(tree_indices)) {
 foreach (i=seq_along(tree_indices), .combine=combine) %dopar% { 
-	done_runs <- list.files(pattern=".rda")		
+	started_runs <- list.files(pattern="starting*.rda")
 	tree_index <- tree_indices[i]
 
-	if(!any(grepl(paste0("_", tree_index, "newrun\\."), done_runs))) { # so we skip ones already done
-		print(paste0(Sys.info()['nodename'], " tree ", tree_index))
+	if(!any(grepl(paste0("starting_", tree_index, "_.rda"), started_runs))) { # so we skip ones already started
+		starting_session <- sessionInfo()
+		node <- unname(Sys.info()["nodename"])
+		save(tree_index, starting_session, node, file=paste0("starting_", tree_index, "_.rda"))
 		local_result <- NULL
 		possible_combos = hisse::generateMiSSEGreedyCombinations(max.param=round(ape::Ntip(trees[[tree_index]])/10), vary.both=TRUE)
 		try(local_result <- DoSingleRun(dir=tree_names[tree_index], phy=trees[[tree_index]], root_type="madfitz", possibilities=possible_combos, tree_index=tree_index, n.cores=1))
-		save(local_result, file=paste0("results/",unname(Sys.info()["nodename"]), "_",tree_index, "_local_result_newrun.rda"))
+		#save(local_result, file=paste0("results/",unname(Sys.info()["nodename"]), "_",tree_index, "_local_result_newrun.rda"))
 		if(!is.null(local_result)) {
 			results[[i]] <- local_result
-			save(results, tree_indices, file=paste0("manual", Sys.info()['nodename'], "_newrun.rda"))
+			#save(results, tree_indices, file=paste0("manual", Sys.info()['nodename'], "_newrun.rda"))
 		}
 	}
 }

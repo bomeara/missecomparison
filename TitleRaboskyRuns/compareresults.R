@@ -5,6 +5,7 @@ library(magrittr)
 library(stats)
 library(ggplot2)
 library(progress)
+library(viridis)
 
 treeTipMerge <- function(x) {
   x$treeTipString <- paste0(x$treeName, "_", x$tipName)
@@ -13,11 +14,27 @@ treeTipMerge <- function(x) {
 
 all_results <- data.frame()
 model_average_results <- data.frame()
+best_results <- data.frame()
 dones <- list.files("results", pattern="done", full.names=TRUE)
 for (i in seq_along(dones)) {
 	print(paste0("Loading ", i, " of ", length(dones)))
 	try(load(dones[i]))
 	if(exists("summary_df")) {
+		
+		# summary_df$loglik <- NA
+		# summary_df$nparam <- NA
+		# good_enough_recon <- which(delta_AICc<20)
+		# model_likelihoods <- sapply(hisse_result_all, "[[", "loglik")
+		# current_row <- 0
+		# for(good_enough_index in seq_along(good_enough_recon)) {
+		# 	for (taxon_index in sequence(length(unique(summary_df$taxon_id_in_phy)))) {
+		# 		current_row <- current_row+1
+		# 		summary_df$loglik[current_row] <- model_likelihoods[good_enough_recon[good_enough_index]]
+		# 		summary_df$nparam[current_row] <- 0.5*(summary_df$AIC[current_row] + 2*summary_df$loglik[current_row])
+		# 	}
+		# }
+
+
 		all_results <- rbind(all_results, summary_df)
 		local_weighted <- summary_df %>% group_by(treeName, taxon_id_in_phy, tipName) %>% summarise(
 			turnover = weighted.mean(turnover, AICc_weight),
@@ -27,8 +44,10 @@ for (i in seq_along(dones)) {
 			extinction = weighted.mean(extinction, AICc_weight)
 		)
 		model_average_results <- rbind(model_average_results, local_weighted)
+		best_results <- rbind(best_results, subset(summary_df, deltaAICc==0))
 
 		rm(summary_df)
+		rm(delta_AICc)
 		rm(local_weighted)
 	}
 
@@ -42,22 +61,23 @@ rates.true <- treeTipMerge(read.csv("data/title_rabosky_dryad/tipRates_dryad/dat
 
 rates.ours$unique_string <- paste(rates.ours$treeName, "nturnover", rates.ours$nturnover, "neps", rates.ours$neps, "root", rates.ours$root_type, sep="_")
 
-rates.ours.best <- data.frame()
-unique.trees <- unique(rates.ours$treeName)
-for (i in seq_along(unique.trees)) {
-  rates.local.df <- rates.ours[which(rates.ours$treeName == unique.trees[i]),]
-  rates.local <- split(rates.local.df, rates.local.df$unique_string)
-  AICc <- sapply(lapply(rates.local, "[[", "AICc"),min)
-  deltaAICcToNext <- NA
-  if(length(rates.local)>1) {
-    AICc.sorted <- sort(AICc, decreasing=FALSE)
-    deltaAICcToNext <- AICc.sorted[2] - AICc.sorted[1]
-  }
-  rates.local.best <- rates.local[[which.min(AICc)[1]]]
-  rates.local.best$numberAlternatives <- length(rates.local)
-  rates.local.best$deltaAICcToNext <- deltaAICcToNext
-  rates.ours.best <- rbind(rates.ours.best, rates.local.best)
-}
+rates.ours.best <- best_results
+# rates.ours.best <- data.frame()
+# unique.trees <- unique(rates.ours$treeName)
+# for (i in seq_along(unique.trees)) {
+#   rates.local.df <- rates.ours[which(rates.ours$treeName == unique.trees[i]),]
+#   rates.local <- split(rates.local.df, rates.local.df$unique_string)
+#   AICc <- sapply(lapply(rates.local, "[[", "AICc"),min)
+#   deltaAICcToNext <- NA
+#   if(length(rates.local)>1) {
+#     AICc.sorted <- sort(AICc, decreasing=FALSE)
+#     deltaAICcToNext <- AICc.sorted[2] - AICc.sorted[1]
+#   }
+#   rates.local.best <- rates.local[[which.min(AICc)[1]]]
+#   rates.local.best$numberAlternatives <- length(rates.local)
+#   rates.local.best$deltaAICcToNext <- deltaAICcToNext
+#   rates.ours.best <- rbind(rates.ours.best, rates.local.best)
+# }
 
 rates.theirs <- rates.theirs[rates.theirs$treeName %in% rates.ours.best$treeName,]
 rates.true <- rates.true[rates.true$treeName %in% rates.ours.best$treeName,]
@@ -158,3 +178,14 @@ pdf(file="results/rateplot.pdf", width=20, height=20)
 print(g)
 dev.off()
 system("open results/rateplot.pdf")
+
+unique_params <- unique(rates.cleaned.good$actual_parameter)
+for(i in sequence(length(unique_params))) {
+	focal <- subset(rates.cleaned.good, actual_parameter==unique_params[i])
+	g <- ggplot(focal, aes(true_value, parameter_value)) + facet_wrap(vars(estimator)) + geom_abline(slope=1, intercept=0) + geom_hex(bins=100) + scale_fill_viridis() + theme_bw() 
+	pdf(file=paste0("results/rates_", unique_params[i], ".pdf"), width=20, height=7)
+	print(g)
+	dev.off()
+	system(paste0("open results/rates_", unique_params[i], ".pdf"))
+
+}
