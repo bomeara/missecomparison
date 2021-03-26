@@ -35,7 +35,7 @@ for (i in seq_along(dones)) {
 		# }
 
 
-		all_results <- rbind(all_results, summary_df)
+		all_results <- plyr::rbind.fill(all_results, summary_df)
 		local_weighted <- summary_df %>% group_by(treeName, taxon_id_in_phy, tipName) %>% summarise(
 			turnover = weighted.mean(turnover, AICc_weight),
 			extinction.fraction = weighted.mean(extinction.fraction, AICc_weight),
@@ -43,8 +43,8 @@ for (i in seq_along(dones)) {
 			speciation = weighted.mean(speciation, AICc_weight),
 			extinction = weighted.mean(extinction, AICc_weight)
 		)
-		model_average_results <- rbind(model_average_results, local_weighted)
-		best_results <- rbind(best_results, subset(summary_df, deltaAICc==0))
+		model_average_results <- plyr::rbind.fill(model_average_results, local_weighted)
+		best_results <- plyr::rbind.fill(best_results, subset(summary_df, deltaAICc==0))
 
 		rm(summary_df)
 		rm(delta_AICc)
