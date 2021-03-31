@@ -14,15 +14,15 @@ possible.combos = hisse::generateMiSSEGreedyCombinations(max.param = max.param, 
                                                          eps.tries = eps.tries, fixed.eps.tries=c(0, 0.9, NA), vary.both=T)
 
 # Fit MiSSE models
-model.set = hisse::MiSSEGreedy(tree, f = 0.9, possible.combos = possible.combos, save.file=paste0(empirical.wd,"/conifer_example.Rsave"), 
-                               root.type="madfitz", stop.deltaAICc=Inf, n.cores=10, chunk.size=20, turnover.upper=20, trans.upper=10, sann=TRUE, sann.its=1000) #
+model.set = hisse::MiSSEGreedy(tree, f = 0.9, possible.combos = possible.combos, save.file=paste0(empirical.wd,"/Conifer_fit.Rsave"), 
+                               root.type="madfitz", stop.deltaAICc=10, n.cores=10, chunk.size=20, turnover.upper=20, trans.upper=10, sann=TRUE, sann.its=1000) #
 
 # Reconstruct rates
 model.recons <- as.list(1:length(model.set))
-for (model.index in 1:length(model.set)) {
+for (model_index in 1:length(model.set)) {
   nturnover <- length(unique(model.set[[model_index]]$turnover))
   neps <- length(unique(model.set[[model_index]]$eps))
-  model.recons[[model.index]] <- hisse::MarginReconMiSSE(phy = model.set[[model_index]]$phy, f = ape::Ntip(phy)/total_clade, hidden.states = max(c(nturnover, neps)), 
+  model.recons[[model_index]] <- hisse::MarginReconMiSSE(phy = model.set[[model_index]]$phy, f = 0.9, hidden.states = max(c(nturnover, neps)), 
                                                 pars = model.set[[model_index]]$solution, fixed.eps=model.set$fixed.eps , AIC = model.set[[model_index]]$AIC, root.type = "madfitz")
 }
 
