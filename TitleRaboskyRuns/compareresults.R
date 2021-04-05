@@ -1,3 +1,4 @@
+# setwd("~/Desktop/missecomparison/TitleRaboskyRuns") # TV local
 rm(list=ls())
 library(Metrics)
 library(tidyverse)
@@ -117,6 +118,7 @@ colnames(RMSE.results) <- parameters
 
 absoluteError.mean.results <- RMSE.results
 absoluteError.median.results <- RMSE.results
+cv.results <- RMSE.results
 
 
 # get rid of NAs and weird values for now
@@ -124,6 +126,10 @@ rates.cleaned <- rates.combined
 rates.cleaned <- rates.cleaned[!is.na(rates.cleaned$netDivBAMM),]
 rates.cleaned <- rates.cleaned[(rates.cleaned$lambdaTRUE>0),] #yeah, not sure why there'd be no speciation in reality for a tree with >2 taxa
 
+coef.var <- function(x){
+  cv <- sd(x) / mean(x) * 100
+  return(cv)
+}
 
 for (approach.index in seq_along(approaches)) {
   for (parameter.index in seq_along(parameters)) {
@@ -134,7 +140,7 @@ for (approach.index in seq_along(approaches)) {
       RMSE.results[approach.index, parameter.index] <- Metrics::rmse(estimate, truth)
       absoluteError.mean.results[approach.index, parameter.index] <- mean(abs(estimate-truth))
       absoluteError.median.results[approach.index, parameter.index] <- median(abs(estimate-truth))
-
+      cv.results[approach.index, parameter.index] <- coef.var(abs(estimate-truth))
     }
   }
 }
