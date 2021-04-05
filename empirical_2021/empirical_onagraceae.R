@@ -15,7 +15,7 @@ possible.combos = hisse::generateMiSSEGreedyCombinations(max.param = max.param, 
 
 # Fit MiSSE models
 model.set = hisse::MiSSEGreedy(tree, f = 0.45, possible.combos = possible.combos, save.file="Onagraceae_fit.Rsave", 
-                               root.type="madfitz", stop.deltaAICc=10, n.cores=10, chunk.size=20, turnover.upper=20, trans.upper=10, sann=TRUE, sann.its=1000) #
+                               root.type="madfitz", stop.deltaAICc=10, n.cores=10, chunk.size=5, turnover.upper=20, trans.upper=10, sann=TRUE, sann.its=1000) #
 
 # Reconstruct rates
 model.recons <- as.list(1:length(model.set))
