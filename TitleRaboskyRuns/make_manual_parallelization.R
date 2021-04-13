@@ -11,8 +11,9 @@ library(doParallel)
 #registerDoParallel(parallel::detectCores())
 
 Sys.setenv('R_MAX_VSIZE'=32000000000)
-
-set.seed(as.integer(round(runif(1, min=1, max=1e5)) + sqrt(as.numeric(gsub("\\.", "", as.character(ipify::get_ip()))))))
+ipifyseed <- 100
+try(ipifyseed <- sqrt(as.numeric(gsub("\\.", "", as.character(ipify::get_ip())))))
+set.seed(as.integer(round(runif(1, min=1, max=1e5)) + ipifyseed))
 
 tree_info <- read.csv(file="data/title_rabosky_dryad/tipRates_dryad/dataFiles/treeSummary.csv",stringsAsFactors=FALSE)
 tree_names <- unique(tree_info$treeName)
@@ -28,8 +29,8 @@ names(trees) <- tree_names
 tree_indices <- sample(sequence(length(tree_names)), replace=FALSE) # randomize order
 
 results <- list()
-for (i in seq_along(tree_indices)) {
-#foreach (i=seq_along(tree_indices)) %dopar% { 
+#for (i in seq_along(tree_indices)) {
+foreach (i=seq_along(tree_indices)) %dopar% { 
 	started_runs <- list.files(path="results", pattern="starting.*.rda")
 	tree_index <- tree_indices[i]
 
@@ -39,7 +40,7 @@ for (i in seq_along(tree_indices)) {
 		save(tree_index, starting_session, node, file=paste0("results/starting_", tree_index, "_.rda"))
 		local_result <- NULL
 		possible_combos = hisse::generateMiSSEGreedyCombinations(max.param=round(ape::Ntip(trees[[tree_index]])/10), vary.both=TRUE)
-		try(local_result <- DoSingleRun(dir=tree_names[tree_index], phy=trees[[tree_index]], root_type="madfitz", possibilities=possible_combos, tree_index=tree_index, n.cores=parallel::detectCores()))
+		try(local_result <- DoSingleRun(dir=tree_names[tree_index], phy=trees[[tree_index]], root_type="madfitz", possibilities=possible_combos, tree_index=tree_index, n.cores=1))
 		#save(local_result, file=paste0("results/",unname(Sys.info()["nodename"]), "_",tree_index, "_local_result_newrun.rda"))
 		if(!is.null(local_result)) {
 			results[[i]] <- local_result
