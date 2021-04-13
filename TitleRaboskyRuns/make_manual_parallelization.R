@@ -11,8 +11,9 @@ library(doParallel)
 registerDoParallel(parallel::detectCores())
 
 Sys.setenv('R_MAX_VSIZE'=32000000000)
-
-set.seed(as.integer(round(runif(1, min=1, max=1e5)) + sqrt(as.numeric(gsub("\\.", "", as.character(ipify::get_ip()))))))
+ipifyseed <- 100
+try(ipifyseed <- sqrt(as.numeric(gsub("\\.", "", as.character(ipify::get_ip())))))
+set.seed(as.integer(round(runif(1, min=1, max=1e5)) + ipifyseed))
 
 tree_info <- read.csv(file="data/title_rabosky_dryad/tipRates_dryad/dataFiles/treeSummary.csv",stringsAsFactors=FALSE)
 tree_names <- unique(tree_info$treeName)
@@ -29,7 +30,7 @@ tree_indices <- sample(sequence(length(tree_names)), replace=FALSE) # randomize 
 
 results <- list()
 #for (i in seq_along(tree_indices)) {
-foreach (i=seq_along(tree_indices), .combine=combine) %dopar% { 
+foreach (i=seq_along(tree_indices)) %dopar% { 
 	started_runs <- list.files(path="results", pattern="starting.*.rda")
 	tree_index <- tree_indices[i]
 

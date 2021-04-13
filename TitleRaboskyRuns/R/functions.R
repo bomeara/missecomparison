@@ -25,7 +25,7 @@ DoSingleRun <- function(dir, phy, root_type="madfitz", possibilities, tree_index
 			load(output_files[1])
 			hisse_result_all<- misse.list
 		} else {
-			hisse_result_all <- hisse::MiSSEGreedy(phy, f=1, root.type=root_type, possible.combos=possibilities, chunk.size=2, n.cores=n.cores, save.file=paste0("results/",unname(Sys.info()["nodename"]), "_",tree_index, ".rda"), stop.deltaAICc=1000, sann=TRUE)
+			hisse_result_all <- hisse::MiSSEGreedy(phy, f=1, root.type=root_type, possible.combos=possibilities, chunk.size=1, n.cores=1, save.file=paste0("results/",unname(Sys.info()["nodename"]), "_",tree_index, ".rda"), stop.deltaAICc=1000, sann=TRUE)
 			#cat(paste0("Finished fit to tree ", tree_index), file=paste0("results/",unname(Sys.info()["nodename"]), "_",tree_index, "_newrun.log"), append=TRUE)
 		}
 		hisse_result_nonredundant <- PruneRedundantModels(hisse_result_all)
@@ -33,7 +33,7 @@ DoSingleRun <- function(dir, phy, root_type="madfitz", possibilities, tree_index
 		delta_AIC <- sapply(hisse_result_nonredundant, "[[", "AIC") - min(sapply(hisse_result_nonredundant, "[[", "AIC"))
 		AICc_weights <- hisse::GetAICWeights(hisse_result_nonredundant, criterion="AICc")
 		delta_AICc <- sapply(hisse_result_nonredundant, "[[", "AICc") - min(sapply(hisse_result_nonredundant, "[[", "AICc"))
-
+		save(list=ls(), file=paste0("results/",unname(Sys.info()["nodename"]), "_",tree_index, "_donefitting.rda"))
 		model_fit_time <- as.numeric(difftime(Sys.time(), start_time, units="mins"))
 		for(model_index in sequence(length(hisse_result_nonredundant))) {
 			if(delta_AICc[model_index]<20) {
@@ -44,7 +44,7 @@ DoSingleRun <- function(dir, phy, root_type="madfitz", possibilities, tree_index
 				neps <- length(unique(hisse_result_nonredundant[[model_index]]$eps)) - ifelse(is.null(hisse_result_nonredundant[[model_index]]$fixed.eps), 0,1)
 
 
-				hisse_recon <- hisse::MarginReconMiSSE(phy=hisse_result_nonredundant[[model_index]]$phy, f=1, hidden.states=nturnover, fixed.eps=hisse_result_nonredundant[[model_index]]$fixed.eps, pars=hisse_result_nonredundant[[model_index]]$solution, AIC=hisse_result_nonredundant[[model_index]]$AIC, root.type=root_type, get.tips.only=TRUE)
+				hisse_recon <- hisse::MarginReconMiSSE(phy=hisse_result_nonredundant[[model_index]]$phy, f=1, hidden.states=nturnover, fixed.eps=hisse_result_nonredundant[[model_index]]$fixed.eps, pars=hisse_result_nonredundant[[model_index]]$solution, AIC=hisse_result_nonredundant[[model_index]]$AIC, root.type=root_type, get.tips.only=TRUE, n.cores=1)
 
 				save(hisse_recon, hisse_result_nonredundant, hisse_result_all, file=paste0("results/", unname(Sys.info()["nodename"]), "_pre_summarizing_recon_",tree_index, "_model_", model_index, "_raw_.rda"))
 
@@ -85,9 +85,9 @@ DoSingleRun <- function(dir, phy, root_type="madfitz", possibilities, tree_index
 				#return(list(hisse_result=hisse_result, hisse_recon=hisse_recon, summary_df=summary_df))
 				#save(summary_df_local, hisse_recon, file=paste0("results/", unname(Sys.info()["nodename"]), "_model_", model_index, "_recon_",tree_index, "_newrun.rda"))
 				if(nrow(summary_df)==0) {
-					summary_df <- summary_df_local
+					try(summary_df <- summary_df_local)
 				} else {
-					summary_df <- rbind(summary_df, summary_df_local)
+					try(summary_df <- plyr::rbind.fill(summary_df, summary_df_local))
 				}
 				save(summary_df, hisse_result_nonredundant, AICc_weights, delta_AICc, file=paste0("results/", unname(Sys.info()["nodename"]), "_post_summarizing_recon_",tree_index,"_model_", model_index, "_newrun.rda"))
 			}
