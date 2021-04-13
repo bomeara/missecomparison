@@ -8,7 +8,7 @@ source("R/functions.R")
 
 library(foreach)
 library(doParallel)
-#registerDoParallel(parallel::detectCores())
+registerDoParallel(parallel::detectCores())
 
 Sys.setenv('R_MAX_VSIZE'=32000000000)
 ipifyseed <- 100
