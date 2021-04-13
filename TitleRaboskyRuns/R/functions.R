@@ -87,7 +87,7 @@ DoSingleRun <- function(dir, phy, root_type="madfitz", possibilities, tree_index
 				if(nrow(summary_df)==0) {
 					summary_df <- summary_df_local
 				} else {
-					summary_df <- rbind(summary_df, summary_df_local)
+					summary_df <- plyr::rbind.fill(summary_df, summary_df_local)
 				}
 				save(summary_df, hisse_result_nonredundant, AICc_weights, delta_AICc, file=paste0("results/", unname(Sys.info()["nodename"]), "_post_summarizing_recon_",tree_index,"_model_", model_index, "_newrun.rda"))
 			}
