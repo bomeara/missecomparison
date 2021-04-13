@@ -44,7 +44,7 @@ DoSingleRun <- function(dir, phy, root_type="madfitz", possibilities, tree_index
 				neps <- length(unique(hisse_result_nonredundant[[model_index]]$eps)) - ifelse(is.null(hisse_result_nonredundant[[model_index]]$fixed.eps), 0,1)
 
 
-				hisse_recon <- hisse::MarginReconMiSSE(phy=hisse_result_nonredundant[[model_index]]$phy, f=1, hidden.states=nturnover, fixed.eps=hisse_result_nonredundant[[model_index]]$fixed.eps, pars=hisse_result_nonredundant[[model_index]]$solution, AIC=hisse_result_nonredundant[[model_index]]$AIC, root.type=root_type, get.tips.only=TRUE)
+				hisse_recon <- hisse::MarginReconMiSSE(phy=hisse_result_nonredundant[[model_index]]$phy, f=1, hidden.states=nturnover, fixed.eps=hisse_result_nonredundant[[model_index]]$fixed.eps, pars=hisse_result_nonredundant[[model_index]]$solution, AIC=hisse_result_nonredundant[[model_index]]$AIC, root.type=root_type, get.tips.only=TRUE, n.cores=n.cores)
 
 				save(hisse_recon, hisse_result_nonredundant, hisse_result_all, file=paste0("results/", unname(Sys.info()["nodename"]), "_pre_summarizing_recon_",tree_index, "_model_", model_index, "_raw_.rda"))
 

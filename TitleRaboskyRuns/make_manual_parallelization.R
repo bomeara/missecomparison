@@ -8,7 +8,7 @@ source("R/functions.R")
 
 library(foreach)
 library(doParallel)
-registerDoParallel(parallel::detectCores())
+#registerDoParallel(parallel::detectCores())
 
 Sys.setenv('R_MAX_VSIZE'=32000000000)
 
@@ -28,8 +28,8 @@ names(trees) <- tree_names
 tree_indices <- sample(sequence(length(tree_names)), replace=FALSE) # randomize order
 
 results <- list()
-#for (i in seq_along(tree_indices)) {
-foreach (i=seq_along(tree_indices), .combine=combine) %dopar% { 
+for (i in seq_along(tree_indices)) {
+#foreach (i=seq_along(tree_indices)) %dopar% { 
 	started_runs <- list.files(path="results", pattern="starting.*.rda")
 	tree_index <- tree_indices[i]
 
@@ -39,7 +39,7 @@ foreach (i=seq_along(tree_indices), .combine=combine) %dopar% {
 		save(tree_index, starting_session, node, file=paste0("results/starting_", tree_index, "_.rda"))
 		local_result <- NULL
 		possible_combos = hisse::generateMiSSEGreedyCombinations(max.param=round(ape::Ntip(trees[[tree_index]])/10), vary.both=TRUE)
-		try(local_result <- DoSingleRun(dir=tree_names[tree_index], phy=trees[[tree_index]], root_type="madfitz", possibilities=possible_combos, tree_index=tree_index, n.cores=1))
+		try(local_result <- DoSingleRun(dir=tree_names[tree_index], phy=trees[[tree_index]], root_type="madfitz", possibilities=possible_combos, tree_index=tree_index, n.cores=parallel::detectCores()))
 		#save(local_result, file=paste0("results/",unname(Sys.info()["nodename"]), "_",tree_index, "_local_result_newrun.rda"))
 		if(!is.null(local_result)) {
 			results[[i]] <- local_result
