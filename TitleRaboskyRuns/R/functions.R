@@ -25,7 +25,7 @@ DoSingleRun <- function(dir, phy, root_type="madfitz", possibilities, tree_index
 			load(output_files[1])
 			hisse_result_all<- misse.list
 		} else {
-			hisse_result_all <- hisse::MiSSEGreedy(phy, f=1, root.type=root_type, possible.combos=possibilities, chunk.size=2, n.cores=n.cores, save.file=paste0("results/",unname(Sys.info()["nodename"]), "_",tree_index, ".rda"), stop.deltaAICc=1000, sann=TRUE)
+			hisse_result_all <- hisse::MiSSEGreedy(phy, f=1, root.type=root_type, possible.combos=possibilities, chunk.size=n.cores, n.cores=n.cores, save.file=paste0("results/",unname(Sys.info()["nodename"]), "_",tree_index, ".rda"), stop.deltaAICc=1000, sann=TRUE)
 			#cat(paste0("Finished fit to tree ", tree_index), file=paste0("results/",unname(Sys.info()["nodename"]), "_",tree_index, "_newrun.log"), append=TRUE)
 		}
 		hisse_result_nonredundant <- PruneRedundantModels(hisse_result_all)
