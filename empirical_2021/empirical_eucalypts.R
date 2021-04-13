@@ -99,3 +99,5 @@ hist(heights$max_height_m, breaks = 50)
 
 
 
+
+
