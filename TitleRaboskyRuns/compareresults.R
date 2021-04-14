@@ -16,7 +16,7 @@ treeTipMerge <- function(x) {
 all_results <- data.frame()
 model_average_results <- data.frame()
 best_results <- data.frame()
-dones <- list.files("results", pattern="done", full.names=TRUE)
+dones <- c(list.files("results", pattern="done_recon", full.names=TRUE), list.files("results_March2021", pattern="done_recon", full.names=TRUE))
 for (i in seq_along(dones)) {
 	print(paste0("Loading ", i, " of ", length(dones)))
 	try(load(dones[i]))
