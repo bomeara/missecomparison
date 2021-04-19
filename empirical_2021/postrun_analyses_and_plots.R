@@ -4,7 +4,7 @@
 
 load(file.choose()) # load results
 run_1 <- model.set
-model.recons1 <- model.recons
+model.recons1 <- recon_models
 # tip.rates_1 <- hisse::GetModelAveRates(model.recons1, type = c("tips"))
 
 tip.rates_1 <- tip.rates
@@ -24,7 +24,7 @@ painted_tree1 <- hisse::plot.misse.states(x = model.recons1,
                                           show.tip.label = F, fsize=0.9) 
    
 
-tree_pruned <- ape::drop.tip(tree_pruned, setdiff(tree_pruned$tip.label, tip.rates_1$species))
+tree_pruned <- ape::drop.tip(tree_pruned, setdiff(tree_pruned$tip.label, tip.rates_1$taxon))
 
 # Small corrections so that tips appear in the right order
 is_tip <- tree_pruned$edge[,2] <= length(tree_pruned$tip.label)
@@ -51,7 +51,7 @@ net.div.mean <- as.numeric(cleaned_table$net.div)
     
     # Tree
     plot(tree_pruned, show.tip.label=F, edge.width=0.2, adj=1, cex=0.08)
-    #title(main="Cupressophytes")
+    title(main="Eucalypts")
     ape::axisPhylo()
     
     x <- 1:length(turnover.mean)
@@ -104,7 +104,7 @@ ordered_tips <- tree_pruned$edge[is_tip, 2]
 right_order <- as.character(tree_pruned$tip.label[ordered_tips])
     
 # Organizing so tip rates are in the same order as tips of the tree
-cleaned_table <- tip.rates_1[match(as.character(right_order), as.character(tip.rates_1$taxon)),]
+cleaned_table <- tip.rates_1[match(as.character(right_order), as.character(tip.rates_1$species)),]
 
 # cleaned_table <- tip.rates_1[match(as.character(right_order), as.character(tip.rates_1$species)),]
 height_max <- as.numeric(cleaned_table$max_height_m)
@@ -127,4 +127,7 @@ pal <- pal[match(rounded_rates, as.numeric(levels(as.factor(rounded_rates))))]
 plot(height_max, x,  lwd = 0.2, xlim=range(c(min(height_max), max(height_max))),
     pch=19, yaxt = "n", xlab="max_height_m", ylab="", frame.plot=T, cex=0.75, col=pal)
 segments(min(height_max), 1:length(height_max), height_max[1:length(height_max)], 1:length(height_max), col= pal,lwd = 0.2)
+
+
+
     

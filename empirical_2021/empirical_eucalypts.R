@@ -82,20 +82,12 @@ model.set = hisse::MiSSEGreedy(tree, f = 0.87, possible.combos = possible.combos
 # load("Eucalypts_fit.Rsave")
 # model.set <- misse.list
 
-recon_models <- MarginReconMiSSE_full(model.set, possible.combos, f=1, root.type = "madfitz", models.to.recon=c("all"), prune.redundant=F)
+recon_models <- MarginReconMiSSE_full(model.set, possible.combos, f=0.87, root.type = "madfitz", models.to.recon=c("best"), prune.redundant=T)
 
-tip.rates <- hisse::GetModelAveRates(model.recons, type = "tips")
-save(model.set, model.recons, tip.rates, file="Eucalypts_example.Rsave")
+tip.rates <- hisse::GetModelAveRates(recon_models, type = "tips")
+save(model.set, recon_models, tip.rates, file="Eucalypts_example.Rsave")
 
 
-# 
-# PLOTS
-
-heights <- read.csv("Eucalypt_heights.csv")[,c(2,3)]
-heights <- heights[heights$max_height_m!="no_info_yet",]
-heights$max_height_m <- as.numeric(heights$max_height_m)
-
-hist(heights$max_height_m, breaks = 50)
 
 
 
