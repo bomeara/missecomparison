@@ -195,3 +195,148 @@ for(i in sequence(length(unique_params))) {
 	system(paste0("open results/rates_", unique_params[i], ".pdf"))
 
 }
+
+
+
+#----------------------
+# Separating by type of tree:
+types_of_trees <- unique(unlist(lapply(strsplit(rates.combined$treeTipString, "_"),"[[",1)))
+
+results_by_type_of_tree <- list()
+for(trees_index in 1:length(types_of_trees)) {
+  tmp <- rates.combined[grep(types_of_trees[trees_index], rates.combined$treeTipString),]
+  # nrow(rates.combined)
+  #----------------------
+  
+  # get rid of NAs and weird values for now
+  rates.cleaned <- tmp
+  rates.cleaned <- rates.cleaned[!is.na(rates.cleaned$netDivBAMM),]
+  rates.cleaned <- rates.cleaned[(rates.cleaned$lambdaTRUE>0),] #yeah, not sure why there'd be no speciation in reality for a tree with >2 taxa
+  
+  #coef.var <- function(x){
+  #  cv <- sd(x) / mean(x) * 100
+  #  return(cv)
+  #}
+  
+  for (approach.index in seq_along(approaches)) {
+    for (parameter.index in seq_along(parameters)) {
+      truth <- rates.cleaned[,paste0(parameters[parameter.index],"TRUE")]
+      estimate_name <- paste0(parameters[parameter.index], approaches[approach.index])
+      if(estimate_name %in% colnames(rates.cleaned)) {
+        estimate <- rates.cleaned[,estimate_name]
+        RMSE.results[approach.index, parameter.index] <- Metrics::rmse(estimate, truth)
+        absoluteError.mean.results[approach.index, parameter.index] <- mean(abs(estimate-truth))
+        absoluteError.median.results[approach.index, parameter.index] <- median(abs(estimate-truth))
+        #cv.results[approach.index, parameter.index] <- coef.var(abs(estimate-truth))
+      }
+    }
+  }
+  
+  r0 <- list(RMSE.results, absoluteError.mean.results, absoluteError.median.results)
+  names(r0) <- c("RMSE", "absolute error, mean", "absolute error, median")
+  results_by_type_of_tree[[trees_index]] <- r0
+  names(results_by_type_of_tree)[trees_index] <- types_of_trees[trees_index]
+}
+
+results_by_type_of_tree
+
+#----------------------
+# Separating by tree height:
+
+tree_height_groups <- round(seq(min(rates.combined$treeHeight), max(rates.combined$treeHeight), by = max(rates.combined$treeHeight)/5))
+
+results_by_tree_height <- list()
+for(trees_index in 1:length(tree_height_groups)) {
+  if(trees_index==length(tree_height_groups)) {
+    interval <- c(tree_height_groups[trees_index], round(max(rates.combined$treeHeight),2)) 
+    tmp <- rates.combined[which(rates.combined$treeHeight > interval[1]),]
+  } else {
+    interval <- c(tree_height_groups[trees_index], tree_height_groups[trees_index+1]) 
+    tmp <- rates.combined[which(rates.combined$treeHeight > interval[1] & rates.combined$treeHeight < interval[2]),]
+  }
+  
+  
+  # nrow(rates.combined)
+  #----------------------
+  
+  # get rid of NAs and weird values for now
+  rates.cleaned <- tmp
+  rates.cleaned <- rates.cleaned[!is.na(rates.cleaned$netDivBAMM),]
+  rates.cleaned <- rates.cleaned[(rates.cleaned$lambdaTRUE>0),] #yeah, not sure why there'd be no speciation in reality for a tree with >2 taxa
+  
+  #coef.var <- function(x){
+  #  cv <- sd(x) / mean(x) * 100
+  #  return(cv)
+  #}
+  
+  for (approach.index in seq_along(approaches)) {
+    for (parameter.index in seq_along(parameters)) {
+      truth <- rates.cleaned[,paste0(parameters[parameter.index],"TRUE")]
+      estimate_name <- paste0(parameters[parameter.index], approaches[approach.index])
+      if(estimate_name %in% colnames(rates.cleaned)) {
+        estimate <- rates.cleaned[,estimate_name]
+        RMSE.results[approach.index, parameter.index] <- Metrics::rmse(estimate, truth)
+        absoluteError.mean.results[approach.index, parameter.index] <- mean(abs(estimate-truth))
+        absoluteError.median.results[approach.index, parameter.index] <- median(abs(estimate-truth))
+        #cv.results[approach.index, parameter.index] <- coef.var(abs(estimate-truth))
+      }
+    }
+  }
+  
+  r0 <- list(RMSE.results, absoluteError.mean.results, absoluteError.median.results)
+  names(r0) <- c("RMSE", "absolute error, mean", "absolute error, median")
+  
+  results_by_tree_height[[trees_index]] <- r0
+  names(results_by_tree_height)[trees_index] <- paste(interval, collapse=" ")
+}
+results_by_tree_height
+
+
+#----------------------
+# Separating by ntips:
+
+tree_ntips_groups <- round(seq(min(rates.combined$ntip), max(rates.combined$ntip), by = max(rates.combined$ntip)/5))
+results_by_ntips_groups <- list()
+for(trees_index in 1:length(tree_ntips_groups)) {
+  if(trees_index==length(tree_height_groups)) {
+    interval <- c(tree_ntips_groups[trees_index], round(max(rates.combined$ntip),2)) 
+    tmp <- rates.combined[which(rates.combined$ntip > interval[1]),]
+  } else {
+    interval <- c(tree_ntips_groups[trees_index], tree_ntips_groups[trees_index+1]) 
+    tmp <- rates.combined[which(rates.combined$ntip > interval[1] & rates.combined$ntip < interval[2]),]
+  }
+  
+  # nrow(rates.combined)
+  #----------------------
+  
+  # get rid of NAs and weird values for now
+  rates.cleaned <- tmp
+  rates.cleaned <- rates.cleaned[!is.na(rates.cleaned$netDivBAMM),]
+  rates.cleaned <- rates.cleaned[(rates.cleaned$lambdaTRUE>0),] #yeah, not sure why there'd be no speciation in reality for a tree with >2 taxa
+  
+  #coef.var <- function(x){
+  #  cv <- sd(x) / mean(x) * 100
+  #  return(cv)
+  #}
+  
+  for (approach.index in seq_along(approaches)) {
+    for (parameter.index in seq_along(parameters)) {
+      truth <- rates.cleaned[,paste0(parameters[parameter.index],"TRUE")]
+      estimate_name <- paste0(parameters[parameter.index], approaches[approach.index])
+      if(estimate_name %in% colnames(rates.cleaned)) {
+        estimate <- rates.cleaned[,estimate_name]
+        RMSE.results[approach.index, parameter.index] <- Metrics::rmse(estimate, truth)
+        absoluteError.mean.results[approach.index, parameter.index] <- mean(abs(estimate-truth))
+        absoluteError.median.results[approach.index, parameter.index] <- median(abs(estimate-truth))
+        #cv.results[approach.index, parameter.index] <- coef.var(abs(estimate-truth))
+      }
+    }
+  }
+  
+  r0 <- list(RMSE.results, absoluteError.mean.results, absoluteError.median.results)
+  names(r0) <- c("RMSE", "absolute error, mean", "absolute error, median")
+  results_by_ntips_groups[[trees_index]] <- r0
+  names(results_by_ntips_groups)[trees_index] <- paste(interval, collapse=" ")
+}
+
+results_by_ntips_groups
