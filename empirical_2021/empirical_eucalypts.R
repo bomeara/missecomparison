@@ -1,7 +1,7 @@
-
+# Functions
 #-----------
 
-MarginReconMiSSE_full <- function(model.set, possible.combos, f=1, root.type = "madfitz", models.to.recon=c("all","best"), prune.redundant=TRUE) {
+MarginReconMiSSE_full <- function(model.set, possible.combos, f=1, root.type = "madfitz", models.to.recon=c("all","best"), prune.redundant=TRUE, n.cores=NULL) {
   misse_fit <- model.set
   reference_table <- possible.combos[!is.na(possible.combos$lnL),]
   
@@ -35,7 +35,8 @@ MarginReconMiSSE_full <- function(model.set, possible.combos, f=1, root.type = "
     nturnover <- length(unique(best_models[[model_index]]$turnover))
     neps <- length(unique(best_models[[model_index]]$eps))
     model.recons[[model_index]] <- hisse::MarginReconMiSSE(phy = best_models[[model_index]]$phy, f = 0.87, hidden.states = max(c(nturnover, neps)), 
-                                                           pars = best_models[[model_index]]$solution, fixed.eps=best_models$fixed.eps , AIC = best_models[[model_index]]$AIC, root.type = "madfitz")
+                                                           pars = best_models[[model_index]]$solution, fixed.eps=best_models$fixed.eps , 
+                                                           AIC = best_models[[model_index]]$AIC, root.type = "madfitz",n.cores=n.cores)   
   }
   return(model.recons)
 }
@@ -77,16 +78,15 @@ possible.combos = hisse::generateMiSSEGreedyCombinations(max.param = max.param, 
 
 # Fit MiSSE models
 model.set = hisse::MiSSEGreedy(tree, f = 0.87, possible.combos = possible.combos, save.file="Eucalypts_fit.Rsave", 
-                               root.type="madfitz", stop.deltaAICc=10, n.cores=5, chunk.size=5, turnover.upper=20, trans.upper=10, sann=TRUE, sann.its=1000) #
+                               root.type="madfitz", stop.deltaAICc=10, n.cores=10, chunk.size=10, turnover.upper=20, trans.upper=10, sann=TRUE, sann.its=1000) #
 
 # load("Eucalypts_fit.Rsave")
 # model.set <- misse.list
 
-recon_models <- MarginReconMiSSE_full(model.set, possible.combos, f=0.87, root.type = "madfitz", models.to.recon=c("best"), prune.redundant=T)
+recon_models <- MarginReconMiSSE_full(model.set, possible.combos, f=0.87, root.type = "madfitz", models.to.recon=c("all"), prune.redundant=F, n.cores=20)
 
 tip.rates <- hisse::GetModelAveRates(recon_models, type = "tips")
-save(model.set, recon_models, tip.rates, file="Eucalypts_example.Rsave")
-
+save(model.set, recon_models, tip.rates, possible.combos, file="Eucalypts_example.Rsave")
 
 
 
