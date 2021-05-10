@@ -1,4 +1,4 @@
-# ansible linux -a 'nohup Rscript /share/missecomparison/TitleRaboskyRuns/make_manual_parallelization.R &'
+# ansible linux -a 'nohup Rscript /share/missecomparison/TitleRaboskyRuns/make_manual_parallelization.R &' -f 10
 
 setwd("/share/missecomparison/TitleRaboskyRuns")
 
