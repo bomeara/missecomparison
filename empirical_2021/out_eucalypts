@@ -1,0 +1,1081 @@
+Loading required package: ape
+Loading required package: deSolve
+Loading required package: GenSA
+Loading required package: subplex
+Loading required package: nloptr
+Starting at 2021-05-10 09:21:13
+ running on 10 cores.
+   turnover eps fixed.eps
+1         1   0       0.0
+2         1   0       0.9
+3         2   0       0.0
+4         2   0       0.9
+5         1   1        NA
+6         3   0       0.0
+7         3   0       0.9
+8         2   1        NA
+9         1   2        NA
+10        4   0       0.0
+
+Initializing... 
+Initializing... 
+Initializing... 
+Initializing... 
+Initializing... 
+Initializing... 
+Initializing... 
+Initializing... 
+Initializing... 
+Initializing... 
+Finished. Beginning simulated annealing... 
+Finished. Beginning simulated annealing...Finished. Beginning simulated annealing...  
+
+Finished. Beginning simulated annealing... 
+Finished. Beginning simulated annealing... 
+Finished. Beginning simulated annealing... 
+Finished. Beginning simulated annealing... 
+Finished. Beginning simulated annealing...Finished. Beginning simulated annealing...  
+
+Finished. Beginning simulated annealing... 
+Finished. Refining using subplex routine... 
+Finished. Refining using subplex routine... 
+Finished. Summarizing results... 
+Finished. Refining using subplex routine... 
+Finished. Summarizing results... 
+Finished. Refining using subplex routine... 
+Finished. Refining using subplex routine... 
+Finished. Summarizing results... 
+Finished. Refining using subplex routine... 
+Finished. Refining using subplex routine... 
+Finished. Summarizing results... 
+Finished. Refining using subplex routine... 
+Finished. Summarizing results... 
+Finished. Summarizing results... 
+Finished. Summarizing results... 
+Finished. Summarizing results... 
+Finished. Refining using subplex routine... 
+Finished. Summarizing results... 
+Finished. Refining using subplex routine... 
+Finished. Summarizing results... 
+
+Results so far
+   turnover eps fixed.eps      lnL     AIC    AICc deltaAICc elapsedMinutes
+1         1   0       0.0 -1899.44 3800.87 3800.88   1365.16          13.79
+2         1   0       0.9 -1609.28 3220.57 3220.57    784.86          14.18
+3         2   0       0.0 -1299.71 2605.43 2605.46    169.75          16.03
+4         2   0       0.9 -1279.56 2565.13 2565.16    129.44          17.08
+5         1   1        NA -1595.89 3195.78 3195.80    760.08          15.48
+6         3   0       0.0 -1217.45 2442.90 2442.96      7.24          27.03
+7         3   0       0.9 -1223.09 2454.18 2454.24     18.52          17.24
+8         2   1        NA -1222.04 2452.08 2452.14     16.42          20.02
+9         1   2        NA -1417.69 2843.38 2843.44    407.72          17.41
+10        4   0       0.0 -1212.82 2435.63 2435.72      0.00          33.51
+11        4   0       0.9       NA      NA      NA        NA             NA
+12        3   1        NA       NA      NA      NA        NA             NA
+13        2   2        NA       NA      NA      NA        NA             NA
+14        1   3        NA       NA      NA      NA        NA             NA
+15        5   0       0.0       NA      NA      NA        NA             NA
+16        5   0       0.9       NA      NA      NA        NA             NA
+17        4   1        NA       NA      NA      NA        NA             NA
+18        3   2        NA       NA      NA      NA        NA             NA
+19        2   3        NA       NA      NA      NA        NA             NA
+20        6   0       0.0       NA      NA      NA        NA             NA
+21        6   0       0.9       NA      NA      NA        NA             NA
+22        5   1        NA       NA      NA      NA        NA             NA
+23        4   2        NA       NA      NA      NA        NA             NA
+24        3   3        NA       NA      NA      NA        NA             NA
+25        7   0       0.0       NA      NA      NA        NA             NA
+26        7   0       0.9       NA      NA      NA        NA             NA
+27        6   1        NA       NA      NA      NA        NA             NA
+28        5   2        NA       NA      NA      NA        NA             NA
+29        4   3        NA       NA      NA      NA        NA             NA
+30        8   0       0.0       NA      NA      NA        NA             NA
+31        8   0       0.9       NA      NA      NA        NA             NA
+32        7   1        NA       NA      NA      NA        NA             NA
+33        6   2        NA       NA      NA      NA        NA             NA
+34        5   3        NA       NA      NA      NA        NA             NA
+35        9   0       0.0       NA      NA      NA        NA             NA
+36        9   0       0.9       NA      NA      NA        NA             NA
+37        8   1        NA       NA      NA      NA        NA             NA
+38        7   2        NA       NA      NA      NA        NA             NA
+39        6   3        NA       NA      NA      NA        NA             NA
+40       10   0       0.0       NA      NA      NA        NA             NA
+41       10   0       0.9       NA      NA      NA        NA             NA
+42        9   1        NA       NA      NA      NA        NA             NA
+43        8   2        NA       NA      NA      NA        NA             NA
+44        7   3        NA       NA      NA      NA        NA             NA
+45       11   0       0.0       NA      NA      NA        NA             NA
+46       11   0       0.9       NA      NA      NA        NA             NA
+47       10   1        NA       NA      NA      NA        NA             NA
+48        9   2        NA       NA      NA      NA        NA             NA
+49        8   3        NA       NA      NA      NA        NA             NA
+50       12   0       0.0       NA      NA      NA        NA             NA
+51       12   0       0.9       NA      NA      NA        NA             NA
+52       11   1        NA       NA      NA      NA        NA             NA
+53       10   2        NA       NA      NA      NA        NA             NA
+54        9   3        NA       NA      NA      NA        NA             NA
+55       12   1        NA       NA      NA      NA        NA             NA
+56       11   2        NA       NA      NA      NA        NA             NA
+57       10   3        NA       NA      NA      NA        NA             NA
+58       12   2        NA       NA      NA      NA        NA             NA
+59       11   3        NA       NA      NA      NA        NA             NA
+60       12   3        NA       NA      NA      NA        NA             NA
+   predictedMinutes
+1             13.01
+2             13.01
+3             16.68
+4             16.68
+5             16.68
+6             21.39
+7             21.39
+8             21.39
+9             21.39
+10            27.44
+11            27.44
+12            27.44
+13            27.44
+14            27.44
+15            35.19
+16            35.19
+17            35.19
+18            35.19
+19            35.19
+20            45.14
+21            45.14
+22            45.14
+23            45.14
+24            45.14
+25            57.89
+26            57.89
+27            57.89
+28            57.89
+29            57.89
+30            74.25
+31            74.25
+32            74.25
+33            74.25
+34            74.25
+35            95.23
+36            95.23
+37            95.23
+38            95.23
+39            95.23
+40           122.14
+41           122.14
+42           122.14
+43           122.14
+44           122.14
+45           156.65
+46           156.65
+47           156.65
+48           156.65
+49           156.65
+50           200.92
+51           200.92
+52           200.92
+53           200.92
+54           200.92
+55           257.69
+56           257.69
+57           257.69
+58           330.51
+59           330.51
+60           423.90
+[1] "Best AICc in this set of parallel runs was 0 which is less than the cutoff to stop running (10), so starting another set of parallel runs"
+Starting at 2021-05-10 09:54:44
+ running on 10 cores.
+   turnover eps fixed.eps
+11        4   0       0.9
+12        3   1        NA
+13        2   2        NA
+14        1   3        NA
+15        5   0       0.0
+16        5   0       0.9
+17        4   1        NA
+18        3   2        NA
+19        2   3        NA
+20        6   0       0.0
+
+Initializing... 
+Initializing... 
+Initializing... 
+Initializing... 
+Initializing... 
+Initializing... 
+Initializing... 
+Initializing... 
+Initializing... 
+Initializing... 
+Finished. Beginning simulated annealing... 
+Finished. Beginning simulated annealing... 
+Finished. Beginning simulated annealing... 
+Finished. Beginning simulated annealing... 
+Finished. Beginning simulated annealing...Finished. Beginning simulated annealing...  
+
+Finished. Beginning simulated annealing... 
+Finished. Beginning simulated annealing... 
+Finished. Beginning simulated annealing...Finished. Beginning simulated annealing...  
+
+Finished. Refining using subplex routine... 
+Finished. Refining using subplex routine... 
+Finished. Refining using subplex routine... 
+Finished. Refining using subplex routine... 
+Finished. Refining using subplex routine... 
+Finished. Refining using subplex routine... 
+Finished. Refining using subplex routine... 
+Finished. Refining using subplex routine... 
+Finished. Summarizing results... 
+Finished. Refining using subplex routine... 
+Finished. Summarizing results... 
+Finished. Summarizing results... 
+Finished. Summarizing results... 
+Finished. Summarizing results... 
+Finished. Summarizing results... 
+Finished. Summarizing results... 
+Finished. Summarizing results... 
+Finished. Summarizing results... 
+Finished. Refining using subplex routine... 
+Finished. Summarizing results... 
+
+Results so far
+   turnover eps fixed.eps      lnL     AIC    AICc deltaAICc elapsedMinutes
+1         1   0       0.0 -1899.44 3800.87 3800.88   1420.01          13.79
+2         1   0       0.9 -1609.28 3220.57 3220.57    839.71          14.18
+3         2   0       0.0 -1299.71 2605.43 2605.46    224.60          16.03
+4         2   0       0.9 -1279.56 2565.13 2565.16    184.30          17.08
+5         1   1        NA -1595.89 3195.78 3195.80    814.94          15.48
+6         3   0       0.0 -1217.45 2442.90 2442.96     62.09          27.03
+7         3   0       0.9 -1223.09 2454.18 2454.24     73.38          17.24
+8         2   1        NA -1222.04 2452.08 2452.14     71.28          20.02
+9         1   2        NA -1417.69 2843.38 2843.44    462.58          17.41
+10        4   0       0.0 -1212.82 2435.63 2435.72     54.86          33.51
+11        4   0       0.9 -1198.46 2406.93 2407.01     26.15          20.51
+12        3   1        NA -1217.45 2444.90 2444.98     64.12          22.47
+13        2   2        NA -1299.24 2608.48 2608.57    227.71          16.99
+14        1   3        NA -1416.79 2843.59 2843.67    462.81          19.26
+15        5   0       0.0 -1207.71 2427.42 2427.54     46.68          26.59
+16        5   0       0.9 -1184.37 2380.74 2380.86      0.00          20.91
+17        4   1        NA -1212.82 2437.63 2437.75     56.89          19.62
+18        3   2        NA -1217.45 2446.90 2447.02     66.16          20.80
+19        2   3        NA -1271.41 2554.82 2554.94    174.08          21.92
+20        6   0       0.0 -1202.73 2419.47 2419.62     38.76          21.29
+21        6   0       0.9       NA      NA      NA        NA             NA
+22        5   1        NA       NA      NA      NA        NA             NA
+23        4   2        NA       NA      NA      NA        NA             NA
+24        3   3        NA       NA      NA      NA        NA             NA
+25        7   0       0.0       NA      NA      NA        NA             NA
+26        7   0       0.9       NA      NA      NA        NA             NA
+27        6   1        NA       NA      NA      NA        NA             NA
+28        5   2        NA       NA      NA      NA        NA             NA
+29        4   3        NA       NA      NA      NA        NA             NA
+30        8   0       0.0       NA      NA      NA        NA             NA
+31        8   0       0.9       NA      NA      NA        NA             NA
+32        7   1        NA       NA      NA      NA        NA             NA
+33        6   2        NA       NA      NA      NA        NA             NA
+34        5   3        NA       NA      NA      NA        NA             NA
+35        9   0       0.0       NA      NA      NA        NA             NA
+36        9   0       0.9       NA      NA      NA        NA             NA
+37        8   1        NA       NA      NA      NA        NA             NA
+38        7   2        NA       NA      NA      NA        NA             NA
+39        6   3        NA       NA      NA      NA        NA             NA
+40       10   0       0.0       NA      NA      NA        NA             NA
+41       10   0       0.9       NA      NA      NA        NA             NA
+42        9   1        NA       NA      NA      NA        NA             NA
+43        8   2        NA       NA      NA      NA        NA             NA
+44        7   3        NA       NA      NA      NA        NA             NA
+45       11   0       0.0       NA      NA      NA        NA             NA
+46       11   0       0.9       NA      NA      NA        NA             NA
+47       10   1        NA       NA      NA      NA        NA             NA
+48        9   2        NA       NA      NA      NA        NA             NA
+49        8   3        NA       NA      NA      NA        NA             NA
+50       12   0       0.0       NA      NA      NA        NA             NA
+51       12   0       0.9       NA      NA      NA        NA             NA
+52       11   1        NA       NA      NA      NA        NA             NA
+53       10   2        NA       NA      NA      NA        NA             NA
+54        9   3        NA       NA      NA      NA        NA             NA
+55       12   1        NA       NA      NA      NA        NA             NA
+56       11   2        NA       NA      NA      NA        NA             NA
+57       10   3        NA       NA      NA      NA        NA             NA
+58       12   2        NA       NA      NA      NA        NA             NA
+59       11   3        NA       NA      NA      NA        NA             NA
+60       12   3        NA       NA      NA      NA        NA             NA
+   predictedMinutes
+1             15.31
+2             15.31
+3             16.87
+4             16.87
+5             16.87
+6             18.60
+7             18.60
+8             18.60
+9             18.60
+10            20.51
+11            20.51
+12            20.51
+13            20.51
+14            20.51
+15            22.61
+16            22.61
+17            22.61
+18            22.61
+19            22.61
+20            24.93
+21            24.93
+22            24.93
+23            24.93
+24            24.93
+25            27.48
+26            27.48
+27            27.48
+28            27.48
+29            27.48
+30            30.29
+31            30.29
+32            30.29
+33            30.29
+34            30.29
+35            33.40
+36            33.40
+37            33.40
+38            33.40
+39            33.40
+40            36.82
+41            36.82
+42            36.82
+43            36.82
+44            36.82
+45            40.59
+46            40.59
+47            40.59
+48            40.59
+49            40.59
+50            44.75
+51            44.75
+52            44.75
+53            44.75
+54            44.75
+55            49.33
+56            49.33
+57            49.33
+58            54.38
+59            54.38
+60            59.96
+[1] "Best AICc in this set of parallel runs was 0 which is less than the cutoff to stop running (10), so starting another set of parallel runs"
+Starting at 2021-05-10 10:21:19
+ running on 10 cores.
+   turnover eps fixed.eps
+21        6   0       0.9
+22        5   1        NA
+23        4   2        NA
+24        3   3        NA
+25        7   0       0.0
+26        7   0       0.9
+27        6   1        NA
+28        5   2        NA
+29        4   3        NA
+30        8   0       0.0
+
+Initializing... 
+Initializing... 
+Initializing... 
+Initializing... 
+Initializing... 
+Initializing... 
+Initializing... 
+Initializing... 
+Initializing... 
+Initializing... 
+Finished. Beginning simulated annealing... 
+Finished. Beginning simulated annealing... 
+Finished. Beginning simulated annealing... 
+Finished. Beginning simulated annealing... 
+Finished. Beginning simulated annealing... 
+Finished. Beginning simulated annealing...Finished. Beginning simulated annealing...  
+
+Finished. Beginning simulated annealing... 
+Finished. Beginning simulated annealing...Finished. Beginning simulated annealing...  
+
+Finished. Refining using subplex routine... 
+Finished. Refining using subplex routine... 
+Finished. Refining using subplex routine... 
+Finished. Refining using subplex routine... 
+Finished. Refining using subplex routine... 
+Finished. Refining using subplex routine... 
+Finished. Refining using subplex routine... 
+Finished. Refining using subplex routine... 
+Finished. Summarizing results... 
+Finished. Summarizing results... 
+Finished. Summarizing results... 
+Finished. Summarizing results... 
+Finished. Summarizing results... 
+Finished. Refining using subplex routine... 
+Finished. Refining using subplex routine... 
+Finished. Summarizing results... 
+Finished. Summarizing results... 
+Finished. Summarizing results... 
+Finished. Summarizing results... 
+Finished. Summarizing results... 
+
+Results so far
+   turnover eps fixed.eps      lnL     AIC    AICc deltaAICc elapsedMinutes
+1         1   0       0.0 -1899.44 3800.87 3800.88   1457.77          13.79
+2         1   0       0.9 -1609.28 3220.57 3220.57    877.47          14.18
+3         2   0       0.0 -1299.71 2605.43 2605.46    262.36          16.03
+4         2   0       0.9 -1279.56 2565.13 2565.16    222.06          17.08
+5         1   1        NA -1595.89 3195.78 3195.80    852.70          15.48
+6         3   0       0.0 -1217.45 2442.90 2442.96     99.86          27.03
+7         3   0       0.9 -1223.09 2454.18 2454.24    111.14          17.24
+8         2   1        NA -1222.04 2452.08 2452.14    109.04          20.02
+9         1   2        NA -1417.69 2843.38 2843.44    500.34          17.41
+10        4   0       0.0 -1212.82 2435.63 2435.72     92.62          33.51
+11        4   0       0.9 -1198.46 2406.93 2407.01     63.91          20.51
+12        3   1        NA -1217.45 2444.90 2444.98    101.88          22.47
+13        2   2        NA -1299.24 2608.48 2608.57    265.47          16.99
+14        1   3        NA -1416.79 2843.59 2843.67    500.57          19.26
+15        5   0       0.0 -1207.71 2427.42 2427.54     84.44          26.59
+16        5   0       0.9 -1184.37 2380.74 2380.86     37.76          20.91
+17        4   1        NA -1212.82 2437.63 2437.75     94.65          19.62
+18        3   2        NA -1217.45 2446.90 2447.02    103.92          20.80
+19        2   3        NA -1271.41 2554.82 2554.94    211.84          21.92
+20        6   0       0.0 -1202.73 2419.47 2419.62     76.52          21.29
+21        6   0       0.9 -1175.12 2364.24 2364.40     21.30          28.96
+22        5   1        NA -1207.71 2429.42 2429.58     86.48          21.38
+23        4   2        NA -1174.93 2363.87 2364.03     20.92          61.87
+24        3   3        NA -1217.45 2448.90 2449.06    105.96          34.64
+25        7   0       0.0 -1198.22 2412.44 2412.64     69.54          24.61
+26        7   0       0.9 -1168.73 2353.46 2353.67     10.57          24.12
+27        6   1        NA -1163.45 2342.90 2343.10      0.00          43.38
+28        5   2        NA -1167.13 2350.27 2350.47      7.37          34.33
+29        4   3        NA -1174.94 2365.87 2366.07     22.97          39.15
+30        8   0       0.0 -1200.91 2419.82 2420.08     76.98          27.79
+31        8   0       0.9       NA      NA      NA        NA             NA
+32        7   1        NA       NA      NA      NA        NA             NA
+33        6   2        NA       NA      NA      NA        NA             NA
+34        5   3        NA       NA      NA      NA        NA             NA
+35        9   0       0.0       NA      NA      NA        NA             NA
+36        9   0       0.9       NA      NA      NA        NA             NA
+37        8   1        NA       NA      NA      NA        NA             NA
+38        7   2        NA       NA      NA      NA        NA             NA
+39        6   3        NA       NA      NA      NA        NA             NA
+40       10   0       0.0       NA      NA      NA        NA             NA
+41       10   0       0.9       NA      NA      NA        NA             NA
+42        9   1        NA       NA      NA      NA        NA             NA
+43        8   2        NA       NA      NA      NA        NA             NA
+44        7   3        NA       NA      NA      NA        NA             NA
+45       11   0       0.0       NA      NA      NA        NA             NA
+46       11   0       0.9       NA      NA      NA        NA             NA
+47       10   1        NA       NA      NA      NA        NA             NA
+48        9   2        NA       NA      NA      NA        NA             NA
+49        8   3        NA       NA      NA      NA        NA             NA
+50       12   0       0.0       NA      NA      NA        NA             NA
+51       12   0       0.9       NA      NA      NA        NA             NA
+52       11   1        NA       NA      NA      NA        NA             NA
+53       10   2        NA       NA      NA      NA        NA             NA
+54        9   3        NA       NA      NA      NA        NA             NA
+55       12   1        NA       NA      NA      NA        NA             NA
+56       11   2        NA       NA      NA      NA        NA             NA
+57       10   3        NA       NA      NA      NA        NA             NA
+58       12   2        NA       NA      NA      NA        NA             NA
+59       11   3        NA       NA      NA      NA        NA             NA
+60       12   3        NA       NA      NA      NA        NA             NA
+   predictedMinutes
+1             14.63
+2             14.63
+3             16.63
+4             16.63
+5             16.63
+6             18.90
+7             18.90
+8             18.90
+9             18.90
+10            21.48
+11            21.48
+12            21.48
+13            21.48
+14            21.48
+15            24.42
+16            24.42
+17            24.42
+18            24.42
+19            24.42
+20            27.75
+21            27.75
+22            27.75
+23            27.75
+24            27.75
+25            31.55
+26            31.55
+27            31.55
+28            31.55
+29            31.55
+30            35.86
+31            35.86
+32            35.86
+33            35.86
+34            35.86
+35            40.76
+36            40.76
+37            40.76
+38            40.76
+39            40.76
+40            46.33
+41            46.33
+42            46.33
+43            46.33
+44            46.33
+45            52.66
+46            52.66
+47            52.66
+48            52.66
+49            52.66
+50            59.85
+51            59.85
+52            59.85
+53            59.85
+54            59.85
+55            68.03
+56            68.03
+57            68.03
+58            77.33
+59            77.33
+60            87.90
+[1] "Best AICc in this set of parallel runs was 0 which is less than the cutoff to stop running (10), so starting another set of parallel runs"
+Starting at 2021-05-10 11:23:12
+ running on 10 cores.
+   turnover eps fixed.eps
+31        8   0       0.9
+32        7   1        NA
+33        6   2        NA
+34        5   3        NA
+35        9   0       0.0
+36        9   0       0.9
+37        8   1        NA
+38        7   2        NA
+39        6   3        NA
+40       10   0       0.0
+
+Initializing... 
+Initializing... 
+Initializing... 
+Initializing... 
+Initializing... 
+Initializing... 
+Initializing... 
+Initializing... 
+Initializing... 
+Initializing... 
+Finished. Beginning simulated annealing... 
+Finished. Beginning simulated annealing... 
+Finished. Beginning simulated annealing... 
+Finished. Beginning simulated annealing... 
+Finished. Beginning simulated annealing...Finished. Beginning simulated annealing...  
+
+Finished. Beginning simulated annealing... 
+Finished. Beginning simulated annealing...Finished. Beginning simulated annealing...  
+
+Finished. Beginning simulated annealing... 
+Finished. Refining using subplex routine... 
+Finished. Refining using subplex routine... 
+Finished. Refining using subplex routine... 
+Finished. Refining using subplex routine... 
+Finished. Refining using subplex routine... 
+Finished. Refining using subplex routine... 
+Finished. Refining using subplex routine... 
+Finished. Refining using subplex routine... 
+Finished. Refining using subplex routine... 
+Finished. Refining using subplex routine... 
+Finished. Summarizing results... 
+Finished. Summarizing results... 
+Finished. Summarizing results... 
+Finished. Summarizing results... 
+Finished. Summarizing results... 
+Finished. Summarizing results... 
+Finished. Summarizing results... 
+Finished. Summarizing results... 
+Finished. Summarizing results... 
+Finished. Summarizing results... 
+
+Results so far
+   turnover eps fixed.eps      lnL     AIC    AICc deltaAICc elapsedMinutes
+1         1   0       0.0 -1899.44 3800.87 3800.88   1460.39          13.79
+2         1   0       0.9 -1609.28 3220.57 3220.57    880.09          14.18
+3         2   0       0.0 -1299.71 2605.43 2605.46    264.97          16.03
+4         2   0       0.9 -1279.56 2565.13 2565.16    224.67          17.08
+5         1   1        NA -1595.89 3195.78 3195.80    855.31          15.48
+6         3   0       0.0 -1217.45 2442.90 2442.96    102.47          27.03
+7         3   0       0.9 -1223.09 2454.18 2454.24    113.75          17.24
+8         2   1        NA -1222.04 2452.08 2452.14    111.65          20.02
+9         1   2        NA -1417.69 2843.38 2843.44    502.95          17.41
+10        4   0       0.0 -1212.82 2435.63 2435.72     95.23          33.51
+11        4   0       0.9 -1198.46 2406.93 2407.01     66.52          20.51
+12        3   1        NA -1217.45 2444.90 2444.98    104.50          22.47
+13        2   2        NA -1299.24 2608.48 2608.57    268.08          16.99
+14        1   3        NA -1416.79 2843.59 2843.67    503.18          19.26
+15        5   0       0.0 -1207.71 2427.42 2427.54     87.05          26.59
+16        5   0       0.9 -1184.37 2380.74 2380.86     40.37          20.91
+17        4   1        NA -1212.82 2437.63 2437.75     97.26          19.62
+18        3   2        NA -1217.45 2446.90 2447.02    106.53          20.80
+19        2   3        NA -1271.41 2554.82 2554.94    214.45          21.92
+20        6   0       0.0 -1202.73 2419.47 2419.62     79.14          21.29
+21        6   0       0.9 -1175.12 2364.24 2364.40     23.91          28.96
+22        5   1        NA -1207.71 2429.42 2429.58     89.09          21.38
+23        4   2        NA -1174.93 2363.87 2364.03     23.54          61.87
+24        3   3        NA -1217.45 2448.90 2449.06    108.57          34.64
+25        7   0       0.0 -1198.22 2412.44 2412.64     72.16          24.61
+26        7   0       0.9 -1168.73 2353.46 2353.67     13.18          24.12
+27        6   1        NA -1163.45 2342.90 2343.10      2.61          43.38
+28        5   2        NA -1167.13 2350.27 2350.47      9.98          34.33
+29        4   3        NA -1174.94 2365.87 2366.07     25.59          39.15
+30        8   0       0.0 -1200.91 2419.82 2420.08     79.59          27.79
+31        8   0       0.9 -1163.94 2345.88 2346.14      5.65          28.62
+32        7   1        NA -1161.12 2340.23 2340.49      0.00          29.79
+33        6   2        NA -1202.73 2423.47 2423.72     83.23          30.15
+34        5   3        NA -1165.06 2348.12 2348.38      7.89          39.65
+35        9   0       0.0 -1202.16 2424.31 2424.63     84.14          33.95
+36        9   0       0.9 -1160.21 2340.42 2340.73      0.25          28.30
+37        8   1        NA -1194.27 2408.53 2408.84     68.36          31.14
+38        7   2        NA -1198.22 2416.44 2416.75     76.26          28.10
+39        6   3        NA -1202.73 2425.47 2425.78     85.29          33.39
+40       10   0       0.0 -1188.52 2399.04 2399.42     58.93          35.20
+41       10   0       0.9       NA      NA      NA        NA             NA
+42        9   1        NA       NA      NA      NA        NA             NA
+43        8   2        NA       NA      NA      NA        NA             NA
+44        7   3        NA       NA      NA      NA        NA             NA
+45       11   0       0.0       NA      NA      NA        NA             NA
+46       11   0       0.9       NA      NA      NA        NA             NA
+47       10   1        NA       NA      NA      NA        NA             NA
+48        9   2        NA       NA      NA      NA        NA             NA
+49        8   3        NA       NA      NA      NA        NA             NA
+50       12   0       0.0       NA      NA      NA        NA             NA
+51       12   0       0.9       NA      NA      NA        NA             NA
+52       11   1        NA       NA      NA      NA        NA             NA
+53       10   2        NA       NA      NA      NA        NA             NA
+54        9   3        NA       NA      NA      NA        NA             NA
+55       12   1        NA       NA      NA      NA        NA             NA
+56       11   2        NA       NA      NA      NA        NA             NA
+57       10   3        NA       NA      NA      NA        NA             NA
+58       12   2        NA       NA      NA      NA        NA             NA
+59       11   3        NA       NA      NA      NA        NA             NA
+60       12   3        NA       NA      NA      NA        NA             NA
+   predictedMinutes
+1             15.88
+2             15.88
+3             17.53
+4             17.53
+5             17.53
+6             19.35
+7             19.35
+8             19.35
+9             19.35
+10            21.36
+11            21.36
+12            21.36
+13            21.36
+14            21.36
+15            23.57
+16            23.57
+17            23.57
+18            23.57
+19            23.57
+20            26.02
+21            26.02
+22            26.02
+23            26.02
+24            26.02
+25            28.72
+26            28.72
+27            28.72
+28            28.72
+29            28.72
+30            31.69
+31            31.69
+32            31.69
+33            31.69
+34            31.69
+35            34.98
+36            34.98
+37            34.98
+38            34.98
+39            34.98
+40            38.61
+41            38.61
+42            38.61
+43            38.61
+44            38.61
+45            42.62
+46            42.62
+47            42.62
+48            42.62
+49            42.62
+50            47.04
+51            47.04
+52            47.04
+53            47.04
+54            47.04
+55            51.91
+56            51.91
+57            51.91
+58            57.30
+59            57.30
+60            63.24
+[1] "Best AICc in this set of parallel runs was 0 which is less than the cutoff to stop running (10), so starting another set of parallel runs"
+Starting at 2021-05-10 12:02:51
+ running on 10 cores.
+   turnover eps fixed.eps
+41       10   0       0.9
+42        9   1        NA
+43        8   2        NA
+44        7   3        NA
+45       11   0       0.0
+46       11   0       0.9
+47       10   1        NA
+48        9   2        NA
+49        8   3        NA
+50       12   0       0.0
+
+Initializing... 
+Initializing... 
+Initializing... 
+Initializing... 
+Initializing... 
+Initializing... 
+Initializing... 
+Initializing... 
+Initializing... 
+Initializing... 
+Finished. Beginning simulated annealing... 
+Finished. Beginning simulated annealing... 
+Finished. Beginning simulated annealing... 
+Finished. Beginning simulated annealing... 
+Finished. Beginning simulated annealing...Finished. Beginning simulated annealing...  
+
+Finished. Beginning simulated annealing... 
+Finished. Beginning simulated annealing... 
+Finished. Beginning simulated annealing... 
+Finished. Beginning simulated annealing... 
+Finished. Refining using subplex routine... 
+Finished. Refining using subplex routine... 
+Finished. Refining using subplex routine... 
+Finished. Refining using subplex routine... 
+Finished. Refining using subplex routine... 
+Finished. Refining using subplex routine... 
+Finished. Summarizing results... 
+Finished. Refining using subplex routine... 
+Finished. Refining using subplex routine... 
+Finished. Refining using subplex routine... 
+Finished. Refining using subplex routine... 
+Finished. Summarizing results... 
+Finished. Summarizing results... 
+Finished. Summarizing results... 
+Finished. Summarizing results... 
+Finished. Summarizing results... 
+Finished. Summarizing results... 
+Finished. Summarizing results... 
+Finished. Summarizing results... 
+Finished. Summarizing results... 
+
+Results so far
+   turnover eps fixed.eps      lnL     AIC    AICc deltaAICc elapsedMinutes
+1         1   0       0.0 -1899.44 3800.87 3800.88   1469.99          13.79
+2         1   0       0.9 -1609.28 3220.57 3220.57    889.69          14.18
+3         2   0       0.0 -1299.71 2605.43 2605.46    274.58          16.03
+4         2   0       0.9 -1279.56 2565.13 2565.16    234.27          17.08
+5         1   1        NA -1595.89 3195.78 3195.80    864.91          15.48
+6         3   0       0.0 -1217.45 2442.90 2442.96    112.07          27.03
+7         3   0       0.9 -1223.09 2454.18 2454.24    123.35          17.24
+8         2   1        NA -1222.04 2452.08 2452.14    121.25          20.02
+9         1   2        NA -1417.69 2843.38 2843.44    512.55          17.41
+10        4   0       0.0 -1212.82 2435.63 2435.72    104.83          33.51
+11        4   0       0.9 -1198.46 2406.93 2407.01     76.12          20.51
+12        3   1        NA -1217.45 2444.90 2444.98    114.10          22.47
+13        2   2        NA -1299.24 2608.48 2608.57    277.68          16.99
+14        1   3        NA -1416.79 2843.59 2843.67    512.79          19.26
+15        5   0       0.0 -1207.71 2427.42 2427.54     96.66          26.59
+16        5   0       0.9 -1184.37 2380.74 2380.86     49.97          20.91
+17        4   1        NA -1212.82 2437.63 2437.75    106.86          19.62
+18        3   2        NA -1217.45 2446.90 2447.02    116.13          20.80
+19        2   3        NA -1271.41 2554.82 2554.94    224.05          21.92
+20        6   0       0.0 -1202.73 2419.47 2419.62     88.74          21.29
+21        6   0       0.9 -1175.12 2364.24 2364.40     33.51          28.96
+22        5   1        NA -1207.71 2429.42 2429.58     98.70          21.38
+23        4   2        NA -1174.93 2363.87 2364.03     33.14          61.87
+24        3   3        NA -1217.45 2448.90 2449.06    118.17          34.64
+25        7   0       0.0 -1198.22 2412.44 2412.64     81.76          24.61
+26        7   0       0.9 -1168.73 2353.46 2353.67     22.78          24.12
+27        6   1        NA -1163.45 2342.90 2343.10     12.21          43.38
+28        5   2        NA -1167.13 2350.27 2350.47     19.59          34.33
+29        4   3        NA -1174.94 2365.87 2366.07     35.19          39.15
+30        8   0       0.0 -1200.91 2419.82 2420.08     89.19          27.79
+31        8   0       0.9 -1163.94 2345.88 2346.14     15.25          28.62
+32        7   1        NA -1161.12 2340.23 2340.49      9.60          29.79
+33        6   2        NA -1202.73 2423.47 2423.72     92.83          30.15
+34        5   3        NA -1165.06 2348.12 2348.38     17.49          39.65
+35        9   0       0.0 -1202.16 2424.31 2424.63     93.74          33.95
+36        9   0       0.9 -1160.21 2340.42 2340.73      9.85          28.30
+37        8   1        NA -1194.27 2408.53 2408.84     77.96          31.14
+38        7   2        NA -1198.22 2416.44 2416.75     85.87          28.10
+39        6   3        NA -1202.73 2425.47 2425.78     94.89          33.39
+40       10   0       0.0 -1188.52 2399.04 2399.42     68.53          35.20
+41       10   0       0.9 -1157.57 2337.13 2337.51      6.62          35.69
+42        9   1        NA -1190.84 2403.69 2404.06     73.18          26.14
+43        8   2        NA -1194.31 2410.61 2410.99     80.10          35.84
+44        7   3        NA -1157.20 2336.41 2336.78      5.90         115.71
+45       11   0       0.0 -1186.02 2396.05 2396.49     65.60          36.53
+46       11   0       0.9 -1155.45 2334.89 2335.34      4.45          37.53
+47       10   1        NA -1155.55 2335.10 2335.54      4.65          44.41
+48        9   2        NA -1190.81 2405.63 2406.07     75.18          44.54
+49        8   3        NA -1153.22 2330.44 2330.89      0.00          75.46
+50       12   0       0.0 -1183.79 2393.58 2394.09     63.21          37.57
+51       12   0       0.9       NA      NA      NA        NA             NA
+52       11   1        NA       NA      NA      NA        NA             NA
+53       10   2        NA       NA      NA      NA        NA             NA
+54        9   3        NA       NA      NA      NA        NA             NA
+55       12   1        NA       NA      NA      NA        NA             NA
+56       11   2        NA       NA      NA      NA        NA             NA
+57       10   3        NA       NA      NA      NA        NA             NA
+58       12   2        NA       NA      NA      NA        NA             NA
+59       11   3        NA       NA      NA      NA        NA             NA
+60       12   3        NA       NA      NA      NA        NA             NA
+   predictedMinutes
+1             15.65
+2             15.65
+3             17.36
+4             17.36
+5             17.36
+6             19.26
+7             19.26
+8             19.26
+9             19.26
+10            21.37
+11            21.37
+12            21.37
+13            21.37
+14            21.37
+15            23.71
+16            23.71
+17            23.71
+18            23.71
+19            23.71
+20            26.30
+21            26.30
+22            26.30
+23            26.30
+24            26.30
+25            29.18
+26            29.18
+27            29.18
+28            29.18
+29            29.18
+30            32.37
+31            32.37
+32            32.37
+33            32.37
+34            32.37
+35            35.91
+36            35.91
+37            35.91
+38            35.91
+39            35.91
+40            39.84
+41            39.84
+42            39.84
+43            39.84
+44            39.84
+45            44.19
+46            44.19
+47            44.19
+48            44.19
+49            44.19
+50            49.03
+51            49.03
+52            49.03
+53            49.03
+54            49.03
+55            54.39
+56            54.39
+57            54.39
+58            60.34
+59            60.34
+60            66.94
+[1] "Best AICc in this set of parallel runs was 0 which is less than the cutoff to stop running (10), so starting another set of parallel runs"
+Starting at 2021-05-10 13:58:34
+ running on 10 cores.
+   turnover eps fixed.eps
+51       12   0       0.9
+52       11   1        NA
+53       10   2        NA
+54        9   3        NA
+55       12   1        NA
+56       11   2        NA
+57       10   3        NA
+58       12   2        NA
+59       11   3        NA
+60       12   3        NA
+
+Initializing... 
+Initializing... 
+Initializing... 
+Initializing... 
+Initializing... 
+Initializing... 
+Initializing... 
+Initializing... 
+Initializing... 
+Initializing... 
+Finished. Beginning simulated annealing... 
+Finished. Beginning simulated annealing...Finished. Beginning simulated annealing...Finished. Beginning simulated annealing...   
+Finished. Beginning simulated annealing...
+
+ 
+Finished. Beginning simulated annealing... 
+Finished. Beginning simulated annealing... 
+Finished. Beginning simulated annealing...Finished. Beginning simulated annealing...  
+
+Finished. Beginning simulated annealing... 
+Finished. Refining using subplex routine... 
+Finished. Refining using subplex routine... 
+Finished. Refining using subplex routine... 
+Finished. Refining using subplex routine... 
+Finished. Refining using subplex routine... 
+Finished. Refining using subplex routine... 
+Finished. Refining using subplex routine... 
+Finished. Summarizing results... 
+Finished. Refining using subplex routine... 
+Finished. Refining using subplex routine... 
+Finished. Refining using subplex routine... 
+Finished. Summarizing results... 
+Finished. Summarizing results... 
+Finished. Summarizing results... 
+Finished. Summarizing results... 
+Finished. Summarizing results... 
+Finished. Summarizing results... 
+Finished. Summarizing results... 
+Finished. Summarizing results... 
+Finished. Summarizing results... 
+
+Results so far
+   turnover eps fixed.eps      lnL     AIC    AICc deltaAICc elapsedMinutes
+1         1   0       0.0 -1899.44 3800.87 3800.88   1469.99          13.79
+2         1   0       0.9 -1609.28 3220.57 3220.57    889.69          14.18
+3         2   0       0.0 -1299.71 2605.43 2605.46    274.58          16.03
+4         2   0       0.9 -1279.56 2565.13 2565.16    234.27          17.08
+5         1   1        NA -1595.89 3195.78 3195.80    864.91          15.48
+6         3   0       0.0 -1217.45 2442.90 2442.96    112.07          27.03
+7         3   0       0.9 -1223.09 2454.18 2454.24    123.35          17.24
+8         2   1        NA -1222.04 2452.08 2452.14    121.25          20.02
+9         1   2        NA -1417.69 2843.38 2843.44    512.55          17.41
+10        4   0       0.0 -1212.82 2435.63 2435.72    104.83          33.51
+11        4   0       0.9 -1198.46 2406.93 2407.01     76.12          20.51
+12        3   1        NA -1217.45 2444.90 2444.98    114.10          22.47
+13        2   2        NA -1299.24 2608.48 2608.57    277.68          16.99
+14        1   3        NA -1416.79 2843.59 2843.67    512.79          19.26
+15        5   0       0.0 -1207.71 2427.42 2427.54     96.66          26.59
+16        5   0       0.9 -1184.37 2380.74 2380.86     49.97          20.91
+17        4   1        NA -1212.82 2437.63 2437.75    106.86          19.62
+18        3   2        NA -1217.45 2446.90 2447.02    116.13          20.80
+19        2   3        NA -1271.41 2554.82 2554.94    224.05          21.92
+20        6   0       0.0 -1202.73 2419.47 2419.62     88.74          21.29
+21        6   0       0.9 -1175.12 2364.24 2364.40     33.51          28.96
+22        5   1        NA -1207.71 2429.42 2429.58     98.70          21.38
+23        4   2        NA -1174.93 2363.87 2364.03     33.14          61.87
+24        3   3        NA -1217.45 2448.90 2449.06    118.17          34.64
+25        7   0       0.0 -1198.22 2412.44 2412.64     81.76          24.61
+26        7   0       0.9 -1168.73 2353.46 2353.67     22.78          24.12
+27        6   1        NA -1163.45 2342.90 2343.10     12.21          43.38
+28        5   2        NA -1167.13 2350.27 2350.47     19.59          34.33
+29        4   3        NA -1174.94 2365.87 2366.07     35.19          39.15
+30        8   0       0.0 -1200.91 2419.82 2420.08     89.19          27.79
+31        8   0       0.9 -1163.94 2345.88 2346.14     15.25          28.62
+32        7   1        NA -1161.12 2340.23 2340.49      9.60          29.79
+33        6   2        NA -1202.73 2423.47 2423.72     92.83          30.15
+34        5   3        NA -1165.06 2348.12 2348.38     17.49          39.65
+35        9   0       0.0 -1202.16 2424.31 2424.63     93.74          33.95
+36        9   0       0.9 -1160.21 2340.42 2340.73      9.85          28.30
+37        8   1        NA -1194.27 2408.53 2408.84     77.96          31.14
+38        7   2        NA -1198.22 2416.44 2416.75     85.87          28.10
+39        6   3        NA -1202.73 2425.47 2425.78     94.89          33.39
+40       10   0       0.0 -1188.52 2399.04 2399.42     68.53          35.20
+41       10   0       0.9 -1157.57 2337.13 2337.51      6.62          35.69
+42        9   1        NA -1190.84 2403.69 2404.06     73.18          26.14
+43        8   2        NA -1194.31 2410.61 2410.99     80.10          35.84
+44        7   3        NA -1157.20 2336.41 2336.78      5.90         115.71
+45       11   0       0.0 -1186.02 2396.05 2396.49     65.60          36.53
+46       11   0       0.9 -1155.45 2334.89 2335.34      4.45          37.53
+47       10   1        NA -1155.55 2335.10 2335.54      4.65          44.41
+48        9   2        NA -1190.81 2405.63 2406.07     75.18          44.54
+49        8   3        NA -1153.22 2330.44 2330.89      0.00          75.46
+50       12   0       0.0 -1183.79 2393.58 2394.09     63.21          37.57
+51       12   0       0.9 -1153.60 2333.21 2333.73      2.84          36.83
+52       11   1        NA -1186.02 2398.05 2398.56     67.68          46.39
+53       10   2        NA -1188.52 2403.04 2403.56     72.67          47.83
+54        9   3        NA -1190.84 2407.69 2408.21     77.32          41.20
+55       12   1        NA -1182.80 2393.59 2394.19     63.30          46.91
+56       11   2        NA -1185.17 2398.34 2398.94     68.05          49.25
+57       10   3        NA -1188.52 2405.04 2405.64     74.75          43.70
+58       12   2        NA -1182.81 2395.61 2396.30     65.41          68.17
+59       11   3        NA -1185.14 2400.28 2400.96     70.07          70.35
+60       12   3        NA -1182.80 2397.59 2398.37     67.48          54.18
+   predictedMinutes
+1             16.01
+2             16.01
+3             17.66
+4             17.66
+5             17.66
+6             19.48
+7             19.48
+8             19.48
+9             19.48
+10            21.49
+11            21.49
+12            21.49
+13            21.49
+14            21.49
+15            23.70
+16            23.70
+17            23.70
+18            23.70
+19            23.70
+20            26.15
+21            26.15
+22            26.15
+23            26.15
+24            26.15
+25            28.84
+26            28.84
+27            28.84
+28            28.84
+29            28.84
+30            31.81
+31            31.81
+32            31.81
+33            31.81
+34            31.81
+35            35.08
+36            35.08
+37            35.08
+38            35.08
+39            35.08
+40            38.70
+41            38.70
+42            38.70
+43            38.70
+44            38.70
+45            42.68
+46            42.68
+47            42.68
+48            42.68
+49            42.68
+50            47.08
+51            47.08
+52            47.08
+53            47.08
+54            47.08
+55            51.93
+56            51.93
+57            51.93
+58            57.28
+59            57.28
+60            63.18
+Running marginal reconstruction for 0 models.Error in best_models[[model_index]] : subscript out of bounds
+Calls: MarginReconMiSSE_full -> unique
+Execution halted
