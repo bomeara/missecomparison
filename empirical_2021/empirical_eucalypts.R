@@ -63,25 +63,26 @@ library(hisse)
 
 # Code to run empirical example with Conifers
 # Load tree file
-tree <- read.tree("Eucalypts.tre")
+## tree <- read.tree("Eucalypts.tre")
 #plot(tree, cex=0.2)
 #write.csv(tree$tip.label, file="Eucalypt_heights.csv")
 
 
 # Specify number of possible combos to run
-turnover.tries = sequence(12) 
-eps.tries = sequence(3)
-max.param = length(turnover.tries) + length(eps.tries)
 
-possible.combos = hisse::generateMiSSEGreedyCombinations(max.param = max.param, turnover.tries = turnover.tries, 
-                                                         eps.tries = eps.tries, fixed.eps.tries=c(0, 0.9, NA), vary.both=T)
+#turnover.tries = sequence(12) 
+#eps.tries = sequence(3)
+#max.param = length(turnover.tries) + length(eps.tries)
+
+#possible.combos = hisse::generateMiSSEGreedyCombinations(max.param = max.param, turnover.tries = turnover.tries, 
+                                                         #eps.tries = eps.tries, fixed.eps.tries=c(0, 0.9, NA), vary.both=T)
 
 # Fit MiSSE models
-model.set = hisse::MiSSEGreedy(tree, f = 0.87, possible.combos = possible.combos, save.file="Eucalypts_fit.Rsave", 
-                               root.type="madfitz", stop.deltaAICc=10, n.cores=10, chunk.size=10, turnover.upper=20, trans.upper=10, sann=TRUE, sann.its=1000) #
+#model.set = hisse::MiSSEGreedy(tree, f = 0.87, possible.combos = possible.combos, save.file="Eucalypts_fit.Rsave", 
+                            #   root.type="madfitz", stop.deltaAICc=10, n.cores=10, chunk.size=10, turnover.upper=20, trans.upper=10, sann=TRUE, sann.its=1000) #
 
-# load("Eucalypts_fit.Rsave")
-# model.set <- misse.list
+load("Eucalypts_fit.Rsave")
+model.set <- misse.list
 
 recon_models <- MarginReconMiSSE_full(model.set, possible.combos, f=0.87, root.type = "madfitz", models.to.recon=c("all"), prune.redundant=F, n.cores=20)
 
