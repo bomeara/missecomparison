@@ -19,8 +19,8 @@ library(parallel)
 library(data.table)
 
 # Loading all trees
-load.all.trees <- function() {
-  tree_info <- read.csv(file=file_in("data/title_rabosky_dryad/tipRates_dryad/dataFiles/treeSummary.csv"),stringsAsFactors=FALSE)
+load.all.trees <- function(base.dir) {
+  tree_info <- read.csv(file=file_in(paste0(base.dir,"/data/title_rabosky_dryad/tipRates_dryad/dataFiles/treeSummary.csv")),stringsAsFactors=FALSE)
   tree_names <- unique(tree_info$treeName)
   tree_names <- tree_names[grepl("1$", tree_names)] # for speed, only take a tenth of the trees: those ending in a 1.
   trees <- list()
@@ -161,12 +161,13 @@ DoSingleRun_crashed <- function(dir, phy, root_type="madfitz", n.cores=NULL) {
 
 # Rerunning trees
 Recover_crashed_trees <- drake_plan(
-    all_trees = load.all.trees(),
+    base.dir = "/home/tvasconcelos/missecomparison/TitleRaboskyRuns",
+    all_trees = load.all.trees(base.dir),
     done_tree_numbers = get.all.results(),
     crashed_trees = get.crashed.trees(all_trees, done_trees_number),
-    crashed_trees_names = names(crashed_trees),
-    target(DoSingleRun_crashed(dir=crashed_trees_names, phy=crashed_trees, root_type="madfitz", n.cores=NULL), 
-           dynamic=map(crashed_trees_names))
+    crashed_trees_names = names(crashed_trees)#,
+    #target(DoSingleRun_crashed(dir=crashed_trees_names, phy=crashed_trees, root_type="madfitz", n.cores=NULL), 
+    #      dynamic=map(crashed_trees_names))
   )
     
 
