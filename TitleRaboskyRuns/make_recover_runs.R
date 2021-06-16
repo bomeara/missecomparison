@@ -1,5 +1,6 @@
 source("recover_runs.R") 
-setDTthreads(threads=1)
+#setDTthreads(threads=1)
+print("passed loading packages")
 cl <- future::makeClusterPSOCK(workers=c(rep(c("10.4.9.45", "10.4.9.34"),48)), rscript="/usr/bin/Rscript")
 #cl <- future::makeClusterPSOCK(workers=c(rep(c("10.4.8.174"),48)), rscript="/usr/bin/Rscript")
 

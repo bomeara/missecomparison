@@ -16,7 +16,7 @@ library(future)
 library(future.batchtools)
 library(batchtools)
 library(parallel)
-library(data.table)
+#library(data.table)
 
 # Loading all trees
 load.all.trees <- function() {
