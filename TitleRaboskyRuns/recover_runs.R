@@ -2,7 +2,6 @@
 # setwd("/Users/thaisvasconcelos/Desktop/misse_mme_paper/missecomparison/TitleRaboskyRuns")
 # rm(list=ls())
 
-library(Metrics)
 library(tidyverse)
 library(magrittr)
 library(stats)
