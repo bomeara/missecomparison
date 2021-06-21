@@ -160,15 +160,30 @@ DoSingleRun_crashed <- function(dir, phy, root_type="madfitz", n.cores=NULL) {
 
 
 # Rerunning trees
-Recover_crashed_trees <- drake_plan(
+# Dividing into two runs to use less cores 
+# First run
+Recover_crashed_trees1 <- drake_plan(
     base.dir = "/home/tvasconcelos/missecomparison/TitleRaboskyRuns",
     #base.dir = "/Users/thaisvasconcelos/Desktop/misse_mme_paper/missecomparison/TitleRaboskyRuns",
     all_trees = load.all.trees(base.dir),
     done_tree_numbers = get.all.results(),
     crashed_trees = get.crashed.trees(all_trees, done_tree_numbers),
     crashed_trees_names = names(crashed_trees),
-    target(DoSingleRun_crashed(dir=crashed_trees_names, phy=crashed_trees, root_type="madfitz", n.cores=NULL), 
-          dynamic=map(crashed_trees_names))
+    target(DoSingleRun_crashed(dir=crashed_trees_names, 
+                               phy=crashed_trees_names[1:floor(length(crashed_trees_names) / 2)], 
+                               root_type="madfitz", n.cores=NULL), dynamic=map(crashed_trees_names))
   )
-    
 
+
+# Second run
+Recover_crashed_trees2 <- drake_plan(
+  base.dir = "/home/tvasconcelos/missecomparison/TitleRaboskyRuns",
+  #base.dir = "/Users/thaisvasconcelos/Desktop/misse_mme_paper/missecomparison/TitleRaboskyRuns",
+  all_trees = load.all.trees(base.dir),
+  done_tree_numbers = get.all.results(),
+  crashed_trees = get.crashed.trees(all_trees, done_tree_numbers),
+  crashed_trees_names = names(crashed_trees),
+  target(DoSingleRun_crashed(dir=crashed_trees_names, 
+                             phy=crashed_trees_names[ceiling(length(crashed_trees_names) / 2):length(crashed_trees_names)], 
+                             root_type="madfitz", n.cores=NULL), dynamic=map(crashed_trees_names))
+)
