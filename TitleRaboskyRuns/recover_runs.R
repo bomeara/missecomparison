@@ -25,7 +25,7 @@ load.all.trees <- function(base.dir) {
   tree_names <- tree_names[grepl("1$", tree_names)] # for speed, only take a tenth of the trees: those ending in a 1.
   trees <- list()
   for (i in seq_along(tree_names)) {
-    trees[[i]] <- ape::read.tree(paste0("data/title_rabosky_dryad/trees/", tree_names[i], "/", tree_names[i], ".tre"))
+    trees[[i]] <- ape::read.tree(paste0(base.dir,"/data/title_rabosky_dryad/trees/", tree_names[i], "/", tree_names[i], ".tre"))
   }
   names(trees) <- tree_names
 return(trees)
