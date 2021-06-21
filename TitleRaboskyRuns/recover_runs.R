@@ -162,12 +162,13 @@ DoSingleRun_crashed <- function(dir, phy, root_type="madfitz", n.cores=NULL) {
 # Rerunning trees
 Recover_crashed_trees <- drake_plan(
     base.dir = "/home/tvasconcelos/missecomparison/TitleRaboskyRuns",
+    #base.dir = "/Users/thaisvasconcelos/Desktop/misse_mme_paper/missecomparison/TitleRaboskyRuns",
     all_trees = load.all.trees(base.dir),
     done_tree_numbers = get.all.results(),
-    crashed_trees = get.crashed.trees(all_trees, done_trees_number),
-    crashed_trees_names = names(crashed_trees)#,
-    #target(DoSingleRun_crashed(dir=crashed_trees_names, phy=crashed_trees, root_type="madfitz", n.cores=NULL), 
-    #      dynamic=map(crashed_trees_names))
+    crashed_trees = get.crashed.trees(all_trees, done_tree_numbers),
+    crashed_trees_names = names(crashed_trees),
+    target(DoSingleRun_crashed(dir=crashed_trees_names, phy=crashed_trees, root_type="madfitz", n.cores=NULL), 
+          dynamic=map(crashed_trees_names))
   )
     
 

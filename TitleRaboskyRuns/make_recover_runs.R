@@ -1,7 +1,7 @@
 source("recover_runs.R") 
 setDTthreads(threads=1)
 print("passed loading packages")
-cl <- future::makeClusterPSOCK(workers=c(rep(c("10.4.9.45", "10.4.9.34"),48)), rscript="/usr/bin/Rscript")
+cl <- future::makeClusterPSOCK(workers=c(rep(c("10.4.9.34", "10.4.9.45"),48)), rscript="/usr/bin/Rscript")
 #cl <- future::makeClusterPSOCK(workers=c(rep(c("10.4.9.34"),48)), rscript="/usr/bin/Rscript")
 
 sessionInfo() 
@@ -10,3 +10,4 @@ cache_rerun_crashed <- drake::new_cache(path = "drake_cache_rerun_crashed", hash
 make(Recover_crashed_trees, cache=cache_rerun_crashed, parallelism="future", jobs=150)
 parallel::stopCluster(cl)
 
+#make(Recover_crashed_trees, cache=cache_rerun_crashed)
