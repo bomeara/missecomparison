@@ -18,9 +18,12 @@ library(batchtools)
 library(parallel)
 library(data.table)
 
+
+
+
 # Loading all trees
 load.all.trees <- function(base.dir) {
-  tree_info <- read.csv(file=file_in(paste0(base.dir,"/data/title_rabosky_dryad/tipRates_dryad/dataFiles/treeSummary.csv")),stringsAsFactors=FALSE)
+  tree_info <- read.csv(file=file_in("/home/tvasconcelos/missecomparison/TitleRaboskyRuns/data/title_rabosky_dryad/tipRates_dryad/dataFiles/treeSummary.csv"),stringsAsFactors=FALSE)
   tree_names <- unique(tree_info$treeName)
   tree_names <- tree_names[grepl("1$", tree_names)] # for speed, only take a tenth of the trees: those ending in a 1.
   trees <- list()
@@ -37,11 +40,11 @@ treeTipMerge <- function(x) {
 }
 
 # Checking which ones didn't crashed
-get.all.results <- function() {
+get.all.results <- function(base.dir, x=NULL) {
   all_results <- data.frame()
   model_average_results <- data.frame()
   best_results <- data.frame() 
-  dones <- c(list.files("results", pattern="done_recon", full.names=TRUE)) #list.files("results_March2021", pattern="done_recon", full.names=TRUE)
+  dones <- c(list.files(paste0(base.dir,"/results"), pattern="done_recon", full.names=TRUE)) #list.files("results_March2021", pattern="done_recon", full.names=TRUE)
   file_to_tree_number <- c()
   for (i in seq_along(dones)) {
     print(paste0("Loading ", i, " of ", length(dones)))
@@ -80,25 +83,26 @@ get.crashed.trees <- function(trees, done_trees_number) {
 
 # do single run for crashed trees
 
-
 DoSingleRun_crashed <- function(dir, phy, root_type="madfitz", n.cores=NULL) {
-  phy <- phy[which(names(phy)==dir)]
+  dir <- unname(dir)
+  tree_index<- 1
+  phy <- phy[which(names(phy)%in%dir)][[1]]
   possibilities = hisse::generateMiSSEGreedyCombinations(max.param=round(ape::Ntip(phy)/10), vary.both=TRUE)
   
   start_time <- Sys.time()
   if(!is.null(phy)) {
     summary_df <- data.frame()
-    hisse_result_all <- hisse::MiSSEGreedy(phy, f=1, root.type=root_type, possible.combos=possibilities, chunk.size=1, n.cores=1, save.file=paste0("results/",unname(Sys.info()["nodename"]), "_",tree_index, ".rda"), stop.deltaAICc=1000, sann=TRUE)
+    hisse_result_all <- hisse::MiSSEGreedy(phy, f=1, root.type=root_type, possible.combos=possibilities, chunk.size=1, n.cores=1, save.file=paste0("/home/tvasconcelos/missecomparison/TitleRaboskyRuns/results/",unname(Sys.info()["nodename"]), "_",tree_index, ".rda"), stop.deltaAICc=1000, sann=TRUE)
     hisse_result_nonredundant <- PruneRedundantModels(hisse_result_all)
     AIC_weights <- hisse::GetAICWeights(hisse_result_nonredundant, criterion="AIC")
     delta_AIC <- sapply(hisse_result_nonredundant, "[[", "AIC") - min(sapply(hisse_result_nonredundant, "[[", "AIC"))
     AICc_weights <- hisse::GetAICWeights(hisse_result_nonredundant, criterion="AICc")
     delta_AICc <- sapply(hisse_result_nonredundant, "[[", "AICc") - min(sapply(hisse_result_nonredundant, "[[", "AICc"))
-    save(list=ls(), file=paste0("results/",unname(Sys.info()["nodename"]), "_",tree_index, "_donefitting.rda"))
+    save(list=ls(), file=paste0("/home/tvasconcelos/missecomparison/TitleRaboskyRuns/results/",unname(Sys.info()["nodename"]), "_",tree_index, "_donefitting.rda"))
     model_fit_time <- as.numeric(difftime(Sys.time(), start_time, units="mins"))
     for(model_index in sequence(length(hisse_result_nonredundant))) {
       if(delta_AICc[model_index]<20) {
-        cat(paste0("Doing recon on model ", model_index, " at ", Sys.time(), "\n"), file=paste0("results/",unname(Sys.info()["nodename"]), "_",tree_index, ".log"), append=TRUE)
+        cat(paste0("Doing recon on model ", model_index, " at ", Sys.time(), "\n"), file=paste0("/home/tvasconcelos/missecomparison/TitleRaboskyRuns/results/",unname(Sys.info()["nodename"]), "_",tree_index, ".log"), append=TRUE)
         
         start_time <- Sys.time()
         nturnover <- length(unique(hisse_result_nonredundant[[model_index]]$turnover))
@@ -107,7 +111,7 @@ DoSingleRun_crashed <- function(dir, phy, root_type="madfitz", n.cores=NULL) {
         
         hisse_recon <- hisse::MarginReconMiSSE(phy=hisse_result_nonredundant[[model_index]]$phy, f=1, hidden.states=nturnover, fixed.eps=hisse_result_nonredundant[[model_index]]$fixed.eps, pars=hisse_result_nonredundant[[model_index]]$solution, AIC=hisse_result_nonredundant[[model_index]]$AIC, root.type=root_type, get.tips.only=TRUE, n.cores=1)
         
-        save(hisse_recon, hisse_result_nonredundant, hisse_result_all, file=paste0("results/", unname(Sys.info()["nodename"]), "_pre_summarizing_recon_",tree_index, "_model_", model_index, "_raw_.rda"))
+        save(hisse_recon, hisse_result_nonredundant, hisse_result_all, file=paste0("/home/tvasconcelos/missecomparison/TitleRaboskyRuns/results/", unname(Sys.info()["nodename"]), "_pre_summarizing_recon_",tree_index, "_model_", model_index, "_raw_.rda"))
         
         
         tip_mat_transformed <- hisse_recon$tip.mat[,-1]
@@ -148,10 +152,10 @@ DoSingleRun_crashed <- function(dir, phy, root_type="madfitz", n.cores=NULL) {
         } else {
           try(summary_df <- plyr::rbind.fill(summary_df, summary_df_local))
         }
-        save(summary_df, hisse_result_nonredundant, AICc_weights, delta_AICc, file=paste0("results/", unname(Sys.info()["nodename"]), "_post_summarizing_recon_",tree_index,"_model_", model_index, "_newrun.rda"))
+        save(summary_df, hisse_result_nonredundant, AICc_weights, delta_AICc, file=paste0("/home/tvasconcelos/missecomparison/TitleRaboskyRuns/results/", unname(Sys.info()["nodename"]), "_post_summarizing_recon_",tree_index,"_model_", model_index, "_newrun.rda"))
       }
     }
-    save(summary_df, hisse_result_nonredundant, hisse_result_all, AICc_weights, delta_AICc, model_fit_time, file=paste0("results/", unname(Sys.info()["nodename"]), "_done_recon_",tree_index, "_newrun.rda"))
+    save(summary_df, hisse_result_nonredundant, hisse_result_all, AICc_weights, delta_AICc, model_fit_time, file=paste0("/home/tvasconcelos/missecomparison/TitleRaboskyRuns/results/", unname(Sys.info()["nodename"]), "_done_recon_",tree_index, "_newrun.rda"))
     return(summary_df)
   } else {
     return(list(failure=dir))
@@ -166,12 +170,13 @@ Recover_crashed_trees1 <- drake_plan(
     base.dir = "/home/tvasconcelos/missecomparison/TitleRaboskyRuns",
     #base.dir = "/Users/thaisvasconcelos/Desktop/misse_mme_paper/missecomparison/TitleRaboskyRuns",
     all_trees = load.all.trees(base.dir),
-    done_tree_numbers = get.all.results(),
+    done_tree_numbers = get.all.results(base.dir, x=all_trees),
     crashed_trees = get.crashed.trees(all_trees, done_tree_numbers),
     crashed_trees_names = names(crashed_trees),
-    target(DoSingleRun_crashed(dir=crashed_trees_names, 
-                               phy=crashed_trees_names[1:floor(length(crashed_trees_names) / 2)], 
-                               root_type="madfitz", n.cores=NULL), dynamic=map(crashed_trees_names))
+    subset_crashed = crashed_trees_names[1:40],
+    target(DoSingleRun_crashed(dir=subset_crashed, 
+                               phy=crashed_trees, 
+                               root_type="madfitz", n.cores=NULL), dynamic=map(subset_crashed))
   )
 
 
@@ -180,10 +185,10 @@ Recover_crashed_trees2 <- drake_plan(
   base.dir = "/home/tvasconcelos/missecomparison/TitleRaboskyRuns",
   #base.dir = "/Users/thaisvasconcelos/Desktop/misse_mme_paper/missecomparison/TitleRaboskyRuns",
   all_trees = load.all.trees(base.dir),
-  done_tree_numbers = get.all.results(),
+  done_tree_numbers = get.all.results(base.dir),
   crashed_trees = get.crashed.trees(all_trees, done_tree_numbers),
   crashed_trees_names = names(crashed_trees),
   target(DoSingleRun_crashed(dir=crashed_trees_names, 
-                             phy=crashed_trees_names[ceiling(length(crashed_trees_names) / 2):length(crashed_trees_names)], 
-                             root_type="madfitz", n.cores=NULL), dynamic=map(crashed_trees_names))
+                             phy=crashed_trees, 
+                             root_type="madfitz", n.cores=NULL), dynamic=map(dir))
 )
