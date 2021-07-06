@@ -42,15 +42,19 @@ devtools::install_github("thej022214/hisse")
 # Let's now replicate the example with Eucalypts from Vasconcelos et al. 
 # (in prep.). The goal here is to prepare all arguments that go in the 
 # functions MiSSEGreedy and MarginReconMiSSE. First of all, let's load
-# the Eucalypts tree from Thornhill et al. (2019) ()
+# the Eucalypts tree from Thornhill et al. (2019) "A dated molecular 
+# perspective of eucalypt taxonomy, evolution and diversification". 
+# Australian Systematic Botany, 32(1), 29-48.)
 #########################################################################
-## Individual models can be fitted out of the greedy approach with simply MiSSE.
+## Individual models can be fitted out of the greedy approach with MiSSE().
 
 #########################################################################
 # (1) Load tree file
 #########################################################################
 
+tree_wd <- "./trees"
 phy <- read.tree("Eucalypts.tre")
+
 # TO BE REMOVED FOR SUBMISSION #
 # phy <- extract.clade(phy, node=1340) # for speed
 # TO BE REMOVED FOR SUBMISSION #
@@ -63,7 +67,6 @@ turnover.tries = sequence(3)
 eps.tries = sequence(3)
 max.param = length(turnover.tries) + length(eps.tries)
 fixed.eps.tries = NA
-
 possible.combos = generateMiSSEGreedyCombinations(max.param=max.param, 
                                                   turnover.tries=turnover.tries, 
                                                   eps.tries=eps.tries, 
