@@ -50,7 +50,7 @@ phy_ml2 <- read.tree("trees/Eucalypts_ML2.tre")
 # (2) Specify number of possible combos to run
 # A combo here is defined as..
 #########################################################################
-turnover.tries = sequence(3) 
+turnover.tries = sequence(12) 
 eps.tries = sequence(3)
 max.param = length(turnover.tries) + length(eps.tries)
 fixed.eps.tries = NA
@@ -62,7 +62,7 @@ possible.combos = generateMiSSEGreedyCombinations(max.param=max.param,
 #########################################################################
 # And this is how the possible.combos data.frame should look like:
 #########################################################################
-head(possible.combos)
+#head(possible.combos)
 
 #########################################################################
 # (3) Specify a sampling fraction
@@ -79,7 +79,9 @@ f = 0.87
 # IMPORTANT NOTE: Remember that you should change the name of this object 
 # for different runs or the file will be overwritten
 #########################################################################
-save.file = "Eucalypts_fit_fast.Rsave"
+save.file_bayes = "Eucalypts_fit_bayes.Rsave"
+save.file_ml1 = "Eucalypts_fit_ml1.Rsave"
+save.file_ml2 = "Eucalypts_fit_ml2.Rsave"
 
 #########################################################################
 # (5) Specify a delta AIC to stop MiSSEgreedy
@@ -92,7 +94,7 @@ stop.deltaAICc = 10
 # To run in my macbook, I will use 4 cores, but for big big trees it is comendable that
 # you increase the number of cores when in parallel.
 #########################################################################
-n.cores = 10
+n.cores = 40
 
 #########################################################################
 # (6) Specify the chunk size of how many models per chunk
@@ -105,10 +107,26 @@ chunk.size = 5
 # all other parameters set to default
 # NOTE: This command can take a while to run depending on te 
 #########################################################################
-model.set = MiSSEGreedy(phy=phy, # the phylogeny 
+model.set_bayes = MiSSEGreedy(phy=phy_bayes, # the phylogeny 
                         f=f, # sampling fraction
                         possible.combos=possible.combos, # possible combinations of models
-                        save.file=save.file, # the name of the file to save
+                        save.file=save.file_bayes, # the name of the file to save
+                        stop.deltaAICc=stop.deltaAICc, # the deltaAIC to stop running
+                        n.cores=n.cores, # number of cores
+                        chunk.size=chunk.size) # size of the "chunk" of models
+
+model.set_ml1 = MiSSEGreedy(phy=phy_ml1, # the phylogeny 
+                        f=f, # sampling fraction
+                        possible.combos=possible.combos, # possible combinations of models
+                        save.file=save.file_ml1, # the name of the file to save
+                        stop.deltaAICc=stop.deltaAICc, # the deltaAIC to stop running
+                        n.cores=n.cores, # number of cores
+                        chunk.size=chunk.size) # size of the "chunk" of models
+
+model.set_ml2 = MiSSEGreedy(phy=phy_ml2, # the phylogeny 
+                        f=f, # sampling fraction
+                        possible.combos=possible.combos, # possible combinations of models
+                        save.file=save.file_ml2, # the name of the file to save
                         stop.deltaAICc=stop.deltaAICc, # the deltaAIC to stop running
                         n.cores=n.cores, # number of cores
                         chunk.size=chunk.size, sann=F) # size of the "chunk" of models
@@ -117,48 +135,63 @@ model.set = MiSSEGreedy(phy=phy, # the phylogeny
 # (8) Prune redundant
 # Your set of models should be a list and look like this:
 #########################################################################
-class(model.set)
-length(model.set)
 
 #########################################################################
 # You should then prune the redundant models with the following command:
 #
 #########################################################################
-model.set_pruned <- PruneRedundantModels(model.set)
-class(model.set_pruned)
-length(model.set_pruned)
+model.set_pruned_bayes <- PruneRedundantModels(model.set_bayes)
+model.set_pruned_ml1 <- PruneRedundantModels(model.set_ml1)
+model.set_pruned_ml2 <- PruneRedundantModels(model.set_ml2)
+
 
 #########################################################################
 # (9) Reconstruct rates
 # Because we want to reconstruct all non-redundant models, let's loop over all
 # possibilities with a for loop:
 #########################################################################
-model.recons <- as.list(1:length(model.set_pruned))
-for (model_index in 1:length(model.set_pruned)) {
-  nturnover <- length(unique(model.set_pruned[[model_index]]$turnover))
-  neps <- length(unique(model.set_pruned[[model_index]]$eps))
-  model.recons[[model_index]] <- hisse::MarginReconMiSSE(phy = model.set_pruned[[model_index]]$phy, f = 0.87, hidden.states = max(c(nturnover, neps)), 
-                                                         pars = model.set_pruned[[model_index]]$solution, fixed.eps=model.set_pruned$fixed.eps , 
-                                                         AIC = model.set_pruned[[model_index]]$AIC, root.type = "madfitz",n.cores=n.cores)   
+model.recons_bayes <- as.list(1:length(model.set_pruned_bayes))
+for (model_index in 1:length(model.set_pruned_bayes)) {
+  nturnover <- length(unique(model.set_pruned_bayes[[model_index]]$turnover))
+  neps <- length(unique(model.set_pruned_bayes[[model_index]]$eps))
+  model.recons_bayes[[model_index]] <- hisse::MarginReconMiSSE(phy = model.set_pruned_bayes[[model_index]]$phy, f = 0.87, hidden.states = max(c(nturnover, neps)), 
+                                                         pars = model.set_pruned_bayes[[model_index]]$solution, fixed.eps=model.set_pruned_bayes$fixed.eps , 
+                                                         AIC = model.set_pruned_bayes[[model_index]]$AIC, root.type = "madfitz",n.cores=n.cores)   
+}
+
+model.recons_ml1 <- as.list(1:length(model.set_pruned_ml1))
+for (model_index in 1:length(model.set_pruned_ml1)) {
+  nturnover <- length(unique(model.set_pruned_ml1[[model_index]]$turnover))
+  neps <- length(unique(model.set_pruned_ml1[[model_index]]$eps))
+  model.recons_ml1[[model_index]] <- hisse::MarginReconMiSSE(phy = model.set_pruned_ml1[[model_index]]$phy, f = 0.87, hidden.states = max(c(nturnover, neps)), 
+                                                               pars = model.set_pruned_ml1[[model_index]]$solution, fixed.eps=model.set_pruned_ml1$fixed.eps , 
+                                                               AIC = model.set_pruned_ml1[[model_index]]$AIC, root.type = "madfitz",n.cores=n.cores)   
+}
+
+model.recons_ml2 <- as.list(1:length(model.set_pruned_ml2))
+for (model_index in 1:length(model.set_pruned_ml2)) {
+  nturnover <- length(unique(model.set_pruned_ml2[[model_index]]$turnover))
+  neps <- length(unique(model.set_pruned_ml2[[model_index]]$eps))
+  model.recons_ml2[[model_index]] <- hisse::MarginReconMiSSE(phy = model.set_pruned_ml2[[model_index]]$phy, f = 0.87, hidden.states = max(c(nturnover, neps)), 
+                                                               pars = model.set_pruned_ml2[[model_index]]$solution, fixed.eps=model.set_pruned_ml2$fixed.eps , 
+                                                               AIC = model.set_pruned_ml2[[model_index]]$AIC, root.type = "madfitz",n.cores=n.cores)   
 }
 
 # Calculating marginal probabilities for 40 internal nodes... 
 # Finished. Calculating marginal probabilities for 41 tips... 
 # Done. 
-
-class(model.recons)
-length(model.recons)
-
 #########################################################################
 # (10) Get tip rates
 # Finally, we can use the reconstruct models to estimate the rates at the tips
 #########################################################################
 
-tip.rates <- GetModelAveRates(model.recons, type = "tips")
+tip.rates_bayes <- GetModelAveRates(model.recons_bayes, type = "tips")
+tip.rates_ml1 <- GetModelAveRates(model.recons_ml1, type = "tips")
+tip.rates_ml2 <- GetModelAveRates(model.recons_ml2, type = "tips")
 
 #########################################################################
 # We can also set to get the tips based only on the "best" model (though this is not commendable)
-# To do that mannualy, you can uncomment the following lines:
+# To do that manually, you can uncomment the following lines:
 #########################################################################
 
 # AIC.weights <- rep(0, length(model.recons))
@@ -169,13 +202,23 @@ tip.rates <- GetModelAveRates(model.recons, type = "tips")
 # The tip.rates should look like this:
 #########################################################################
 
-head(tip.rates)
 
 #########################################################################
 # Recommended to save all files:
-save(model.set_pruned, 
-     model.recons, 
-     tip.rates, 
+save(model.set_pruned_bayes, 
+     model.recons_bayes, 
+     tip.rates_bayes, 
      possible.combos, # MiSSEgreedy will overwrite this object as it runs, showing the updated AIC and lokLik it may be interesting to have it
-     file="Eucalypts_example.Rsave")
-#save(model.set, model.recons, tip.rates.best, possible.combos, file="Eucalypts_example.best.Rsave")
+     file="Eucalypts_example_bayes_tree.Rsave")
+
+save(model.set_pruned_ml1, 
+     model.recons_ml1, 
+     tip.rates_ml1, 
+     possible.combos, # MiSSEgreedy will overwrite this object as it runs, showing the updated AIC and lokLik it may be interesting to have it
+     file="Eucalypts_example_ml1_tree.Rsave")
+
+save(model.set_pruned_ml2, 
+     model.recons_ml2, 
+     tip.rates_ml2, 
+     possible.combos, # MiSSEgreedy will overwrite this object as it runs, showing the updated AIC and lokLik it may be interesting to have it
+     file="Eucalypts_example_ml2_tree.Rsave")

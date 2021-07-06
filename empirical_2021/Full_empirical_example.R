@@ -126,7 +126,7 @@ model.set = MiSSEGreedy(phy=phy, # the phylogeny
                         n.cores=n.cores, # number of cores
                         chunk.size=chunk.size, sann=F) # size of the "chunk" of models
 
-#########################################################################
+ #########################################################################
 # (8) Prune redundant
 # Your set of models should be a list and look like this:
 #########################################################################
