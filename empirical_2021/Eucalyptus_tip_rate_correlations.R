@@ -4,32 +4,23 @@
 # rm(list=ls())
 library(hisse)
 
-load("Eucalypts_example.Rsave") # load results
-run_1 <- model.set
-model.recons1 <- recon_models
+load("Eucalypts_example_bayes_tree.Rsave") # load results
 
-tip.rates_best <- hisse::GetModelAveRates(recon_models[[which.min(unlist(lapply(recon_models, "[[","AIC")))]], type = "tips")
-tip.rates_avg <- hisse::GetModelAveRates(recon_models, type = "tips")
+tip.rates_best <- hisse::GetModelAveRates(model.recons_bayes[[which.min(unlist(lapply(model.recons_bayes, "[[","AIC")))]], type = "tips")
+tip.rates_avg <- hisse::GetModelAveRates(model.recons_bayes, type = "tips")
 
-tree <- model.recons1[[1]]$phy
+
+tree_bayes <- model.recons_bayes[[1]]$phy
 
 heights <- read.csv("Eucalypt_heights.csv")[,c(2,3)]
 heights <- heights[heights$max_height_m!="no_info_yet",]
 
-aridity <- read.csv("./climate_data/eucalyptus_summstats.csv")
-aridity <- aridity[,c("species","mean_temp")]
-aridity <- subset(aridity, !is.nan(aridity$mean_temp))
-aridity$species <- sub(" ","_", aridity$species)
-
-
 
 # Combining heights and rates
 full_table_best <- merge(tip.rates_best, heights, by.x="taxon",by.y="species")
-full_table_best <- merge(full_table_best, aridity, by.x="taxon",by.y="species")
 rownames(full_table_best) <- full_table_best$taxon
 
 full_table_avg <- merge(tip.rates_avg, heights, by.x="taxon",by.y="species")
-full_table_avg <- merge(full_table_avg, aridity, by.x="taxon",by.y="species")
 rownames(full_table_avg) <- full_table_avg$taxon
 
 
@@ -92,7 +83,6 @@ segments(min(height_max), 1:length(height_max), height_max[1:length(height_max)]
 
 
 turnover.mean <- as.numeric(cleaned_table$turnover)
-aridity <- as.numeric(exp(cleaned_table$mean_temp))
 
 #net.div.mean <- as.numeric(cleaned_table$net.div)
 
@@ -146,14 +136,8 @@ tree_pruned <- ape::keep.tip(tree, full_table_avg$taxon)
 #result_best <- lm(full_table_avg$net.div~full_table_avg$max_height_m)
 #result_best <- lm(full_table_avg$turnover~full_table_avg$max_height_m)
 
-result1 <- phylolm::phylolm(turnover~max_height_m, data=full_table_avg, phy=tree_pruned, model="BM")
+  result1 <- phylolm::phylolm(turnover~max_height_m, data=full_table_avg, phy=tree_pruned, model="OUrandomRoot")
 summary(result1)
-result2 <- phylolm::phylolm(turnover~mean_temp, data=full_table_avg, phy=tree_pruned, model="BM")
-summary(result2)
-result3 <- phylolm::phylolm(turnover~max_height_m+mean_aridity, data=full_table_avg, phy=tree_pruned, model="BM")
-summary(result3)
-result4 <- phylolm::phylolm(turnover~max_height_m+mean_aridity+max_height_m*mean_aridity, data=full_table_avg, phy=tree_pruned, model="BM")
-summary(result4)
 
 
 summary(result_best)

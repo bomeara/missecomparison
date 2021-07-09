@@ -34,3 +34,8 @@ vignettes/*.pdf
 
 # Shiny token, see https://shiny.rstudio.com/articles/shinyapps.html
 rsconnect/
+
+# some folders
+empirical_2021_old/
+conifer_MISSE/
+EmpiricalConifer.pdf
