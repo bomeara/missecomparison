@@ -6,6 +6,7 @@
 #########################################################################
 
 library(hisse)
+library(phytools)
 
 #########################################################################
 # The package hisse is under constant development. If you have problems 
@@ -38,9 +39,9 @@ library(hisse)
 # (1) Load tree file
 #########################################################################
 
-phy_bayes <- read.tree("trees/Eucalypts_Bayes.tre")
-phy_ml1 <- read.tree("trees/Eucalypts_ML1.tre")
-phy_ml2 <- read.tree("trees/Eucalypts_ML2.tre")
+phy_bayes <- force.ultrametric(read.tree("trees/Eucalypts_Bayes.tre"))
+phy_ml1 <- force.ultrametric(read.tree("trees/Eucalypts_ML1.tre"))
+phy_ml2 <- force.ultrametric(read.tree("trees/Eucalypts_ML2.tre"))
 
 # TO BE REMOVED FOR SUBMISSION #
 # phy <- extract.clade(phy, node=1340) # for speed
@@ -99,7 +100,7 @@ n.cores = 40
 #########################################################################
 # (6) Specify the chunk size of how many models per chunk
 #########################################################################
-chunk.size = 5
+chunk.size = 20
 
 #########################################################################
 # (7) FIT MiSSE MODEL 
@@ -107,29 +108,30 @@ chunk.size = 5
 # all other parameters set to default
 # NOTE: This command can take a while to run depending on te 
 #########################################################################
-model.set_bayes = MiSSEGreedy(phy=phy_bayes, # the phylogeny 
-                        f=f, # sampling fraction
-                        possible.combos=possible.combos, # possible combinations of models
-                        save.file=save.file_bayes, # the name of the file to save
-                        stop.deltaAICc=stop.deltaAICc, # the deltaAIC to stop running
-                        n.cores=n.cores, # number of cores
-                        chunk.size=chunk.size) # size of the "chunk" of models
 
-model.set_ml1 = MiSSEGreedy(phy=phy_ml1, # the phylogeny 
-                        f=f, # sampling fraction
-                        possible.combos=possible.combos, # possible combinations of models
-                        save.file=save.file_ml1, # the name of the file to save
-                        stop.deltaAICc=stop.deltaAICc, # the deltaAIC to stop running
-                        n.cores=n.cores, # number of cores
-                        chunk.size=chunk.size) # size of the "chunk" of models
+#model.set_bayes = MiSSEGreedy(phy=phy_bayes, # the phylogeny 
+#                        f=f, # sampling fraction
+#                        possible.combos=possible.combos, # possible combinations of models
+#                        save.file=save.file_bayes, # the name of the file to save
+#                        stop.deltaAICc=stop.deltaAICc, # the deltaAIC to stop running
+#                        n.cores=n.cores, # number of cores
+#                        chunk.size=chunk.size) # size of the "chunk" of models
 
-model.set_ml2 = MiSSEGreedy(phy=phy_ml2, # the phylogeny 
-                        f=f, # sampling fraction
-                        possible.combos=possible.combos, # possible combinations of models
-                        save.file=save.file_ml2, # the name of the file to save
-                        stop.deltaAICc=stop.deltaAICc, # the deltaAIC to stop running
-                        n.cores=n.cores, # number of cores
-                        chunk.size=chunk.size, sann=F) # size of the "chunk" of models
+#model.set_ml1 = MiSSEGreedy(phy=phy_ml1, # the phylogeny 
+#                        f=f, # sampling fraction
+#                        possible.combos=possible.combos, # possible combinations of models
+#                        save.file=save.file_ml1, # the name of the file to save
+#                        stop.deltaAICc=stop.deltaAICc, # the deltaAIC to stop running
+#                        n.cores=n.cores, # number of cores
+#                        chunk.size=chunk.size) # size of the "chunk" of models
+
+#model.set_ml2 = MiSSEGreedy(phy=phy_ml2, # the phylogeny 
+#                        f=f, # sampling fraction
+#                        possible.combos=possible.combos, # possible combinations of models
+#                        save.file=save.file_ml2, # the name of the file to save
+#                        stop.deltaAICc=stop.deltaAICc, # the deltaAIC to stop running
+#                        n.cores=n.cores, # number of cores
+#                        chunk.size=chunk.size) # size of the "chunk" of models
 
 #########################################################################
 # (8) Prune redundant
@@ -140,9 +142,21 @@ model.set_ml2 = MiSSEGreedy(phy=phy_ml2, # the phylogeny
 # You should then prune the redundant models with the following command:
 #
 #########################################################################
+load("Eucalypts_fit_bayes.Rsave")
+model.set_bayes <- misse.list
+possible.combos_bayes <- possible.combos
+
+load("Eucalypts_fit_ml1.Rsave")
+model.set_ml1 <- misse.list
+possible.combos_ml1 <- possible.combos
+
+#load("Eucalypts_fit_ml2.Rsave")
+#model.set_ml2 <- misse.list
+#possible.combos_ml2 <- possible.combos
+
 model.set_pruned_bayes <- PruneRedundantModels(model.set_bayes)
 model.set_pruned_ml1 <- PruneRedundantModels(model.set_ml1)
-model.set_pruned_ml2 <- PruneRedundantModels(model.set_ml2)
+#model.set_pruned_ml2 <- PruneRedundantModels(model.set_ml2)
 
 
 #########################################################################
@@ -158,6 +172,14 @@ for (model_index in 1:length(model.set_pruned_bayes)) {
                                                          pars = model.set_pruned_bayes[[model_index]]$solution, fixed.eps=model.set_pruned_bayes$fixed.eps , 
                                                          AIC = model.set_pruned_bayes[[model_index]]$AIC, root.type = "madfitz",n.cores=n.cores)   
 }
+tip.rates_bayes <- GetModelAveRates(model.recons_bayes, type = "tips")
+save(model.set_pruned_bayes, 
+     model.recons_bayes, 
+     tip.rates_bayes, 
+     possible.combos_bayes, # MiSSEgreedy will overwrite this object as it runs, showing the updated AIC and lokLik it may be interesting to have it
+     file="Eucalypts_example_bayes_tree.Rsave")
+
+
 
 model.recons_ml1 <- as.list(1:length(model.set_pruned_ml1))
 for (model_index in 1:length(model.set_pruned_ml1)) {
@@ -167,6 +189,14 @@ for (model_index in 1:length(model.set_pruned_ml1)) {
                                                                pars = model.set_pruned_ml1[[model_index]]$solution, fixed.eps=model.set_pruned_ml1$fixed.eps , 
                                                                AIC = model.set_pruned_ml1[[model_index]]$AIC, root.type = "madfitz",n.cores=n.cores)   
 }
+tip.rates_ml1 <- GetModelAveRates(model.recons_ml1, type = "tips")
+save(model.set_pruned_ml1, 
+     model.recons_ml1, 
+     tip.rates_ml1, 
+     possible.combos_ml1, # MiSSEgreedy will overwrite this object as it runs, showing the updated AIC and lokLik it may be interesting to have it
+     file="Eucalypts_example_ml1_tree.Rsave")
+
+
 
 model.recons_ml2 <- as.list(1:length(model.set_pruned_ml2))
 for (model_index in 1:length(model.set_pruned_ml2)) {
@@ -177,6 +207,13 @@ for (model_index in 1:length(model.set_pruned_ml2)) {
                                                                AIC = model.set_pruned_ml2[[model_index]]$AIC, root.type = "madfitz",n.cores=n.cores)   
 }
 
+tip.rates_ml2 <- GetModelAveRates(model.recons_ml2, type = "tips")
+save(model.set_pruned_ml2, 
+     model.recons_ml2, 
+     tip.rates_ml2, 
+     possible.combos_ml2, # MiSSEgreedy will overwrite this object as it runs, showing the updated AIC and lokLik it may be interesting to have it
+     file="Eucalypts_example_ml2_tree.Rsave")
+
 # Calculating marginal probabilities for 40 internal nodes... 
 # Finished. Calculating marginal probabilities for 41 tips... 
 # Done. 
@@ -185,9 +222,6 @@ for (model_index in 1:length(model.set_pruned_ml2)) {
 # Finally, we can use the reconstruct models to estimate the rates at the tips
 #########################################################################
 
-tip.rates_bayes <- GetModelAveRates(model.recons_bayes, type = "tips")
-tip.rates_ml1 <- GetModelAveRates(model.recons_ml1, type = "tips")
-tip.rates_ml2 <- GetModelAveRates(model.recons_ml2, type = "tips")
 
 #########################################################################
 # We can also set to get the tips based only on the "best" model (though this is not commendable)
@@ -205,20 +239,5 @@ tip.rates_ml2 <- GetModelAveRates(model.recons_ml2, type = "tips")
 
 #########################################################################
 # Recommended to save all files:
-save(model.set_pruned_bayes, 
-     model.recons_bayes, 
-     tip.rates_bayes, 
-     possible.combos, # MiSSEgreedy will overwrite this object as it runs, showing the updated AIC and lokLik it may be interesting to have it
-     file="Eucalypts_example_bayes_tree.Rsave")
 
-save(model.set_pruned_ml1, 
-     model.recons_ml1, 
-     tip.rates_ml1, 
-     possible.combos, # MiSSEgreedy will overwrite this object as it runs, showing the updated AIC and lokLik it may be interesting to have it
-     file="Eucalypts_example_ml1_tree.Rsave")
 
-save(model.set_pruned_ml2, 
-     model.recons_ml2, 
-     tip.rates_ml2, 
-     possible.combos, # MiSSEgreedy will overwrite this object as it runs, showing the updated AIC and lokLik it may be interesting to have it
-     file="Eucalypts_example_ml2_tree.Rsave")
