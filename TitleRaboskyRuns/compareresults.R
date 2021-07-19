@@ -1,4 +1,4 @@
-# setwd("~/Desktop/missecomparison/TitleRaboskyRuns") # TV local
+#setwd("~/Desktop/misse_mme_paper/missecomparison/TitleRaboskyRuns") # TV local
 rm(list=ls())
 library(Metrics)
 library(tidyverse)
@@ -126,6 +126,9 @@ rates.cleaned <- rates.combined
 rates.cleaned <- rates.cleaned[!is.na(rates.cleaned$netDivBAMM),]
 rates.cleaned <- rates.cleaned[(rates.cleaned$lambdaTRUE>0),] #yeah, not sure why there'd be no speciation in reality for a tree with >2 taxa
 
+# removing fixed eps
+#rates.cleaned <- subset(rates.cleaned, is.na(rates.cleaned$fixed_eps)) 
+
 coef.var <- function(x){
   cv <- sd(x) / mean(x) * 100
   return(cv)
@@ -177,7 +180,7 @@ for(i in sequence(length(unique_params))) {
 rates.cleaned.good <- subset(rates.cleaned.longer, estimator!="ND")
 rates.cleaned.good <- subset(rates.cleaned.good, estimator!="TB")
 rates.cleaned.good <- subset(rates.cleaned.good, estimator!="DR")
-rates.cleaned.good <- subset(rates.cleaned.good, actual_parameter!="extinctionFraction") #wrong scale for this
+#rates.cleaned.good <- subset(rates.cleaned.good, actual_parameter!="extinctionFraction") #wrong scale for this
 
 g <- ggplot(rates.cleaned.good, aes(true_value, parameter_value)) + geom_point(alpha=0.05) + facet_grid(vars(estimator), vars(actual_parameter)) + geom_abline(slope=1, intercept=0) + xlim(min(rates.cleaned.good$true_value), 2*max(rates.cleaned.good$true_value)) + ylim(min(rates.cleaned.good$true_value), 2*max(rates.cleaned.good$true_value))
 pdf(file="results/rateplot.pdf", width=20, height=20)
@@ -195,6 +198,55 @@ for(i in sequence(length(unique_params))) {
 	system(paste0("open results/rates_", unique_params[i], ".pdf"))
 
 }
+
+#----using LSD package----
+library(LSD)
+
+gridVal = 100
+
+rates <- c("turnover","lambda","mu","netDiv","extinctionFraction")
+software <- c("BAMM","MiSSEbest","MiSSEavg")
+
+pdf("without_eps_fixed.pdf", width=7, height=10)
+#plot.new()
+par(mfrow=c(5,3))
+for(rate_index in seq_along(rates)){
+  for(software_index in seq_along(software)){
+    s0 <- as.data.frame(rates.cleaned.good[rates.cleaned.good$estimator==software[software_index],])
+    r0 <- s0[s0$actual_parameter==rates[rate_index],]
+    r0 <- subset(r0, !r0$true_value%in%(boxplot(r0$true_value, plot=F)$out))
+    if(rates[rate_index]=="extinctionFraction") {
+      if(software[software_index] %in% c("MiSSEbest", "MiSSEavg")) {
+       r0 <- subset(r0, !r0$fixed_eps %in% c(0,0.9))
+      }
+    }
+    plot(r0$true_value, r0$parameter_value, col="white", xlab=paste0(rates[rate_index], " true"), ylab=paste0(rates[rate_index], " estimated"), main=paste0(software[software_index]), xlim=c(0,1), ylim=c(0,1))
+    heatscatterpoints(r0$true_value, r0$parameter_value, xlim=c(0,10),ylim=c(0,10))
+    abline(0, 1)
+  }
+}
+dev.off()
+#-----
+
+pdf("with_eps_fixed.pdf", width=7, height=10)
+#plot.new()
+par(mfrow=c(5,3))
+for(rate_index in seq_along(rates)){
+  for(software_index in seq_along(software)){
+    s0 <- as.data.frame(rates.cleaned.good[rates.cleaned.good$estimator==software[software_index],])
+    r0 <- s0[s0$actual_parameter==rates[rate_index],]
+    r0 <- subset(r0, !r0$true_value%in%(boxplot(r0$true_value, plot=F)$out))
+    #if(rates[rate_index]=="extinctionFraction") {
+    #  if(software[software_index] %in% c("MiSSEbest", "MiSSEavg")) {
+    #    r0 <- subset(r0, !r0$fixed_eps %in% c(0,0.9))
+    # }
+    #}
+    plot(r0$true_value, r0$parameter_value, col="white", xlab=paste0(rates[rate_index], " true"), ylab=paste0(rates[rate_index], " estimated"), main=paste0(software[software_index]), xlim=c(0,1), ylim=c(0,1))
+    heatscatterpoints(r0$true_value, r0$parameter_value, xlim=c(0,10),ylim=c(0,10))
+    abline(0, 1)
+  }
+}
+dev.off()
 
 
 
@@ -340,3 +392,27 @@ for(trees_index in 1:length(tree_ntips_groups)) {
 }
 
 results_by_ntips_groups
+
+
+#----------
+# Getting tables with AIC by model and tree
+
+all_files <- list.files(paste0(getwd(),"/results"))
+include <- c("omeara")
+exclude <- c("recon","donefitting",".log")
+raw_files <- all_files[!grepl(paste(exclude, collapse="|"), all_files)]
+raw_files <- unique(grep(paste(include, collapse="|"), raw_files, value=TRUE))
+
+all_lik_results <- list()
+for(result_index in seq_along(raw_files)) {
+  try(load(paste0(getwd(),"/results/",raw_files[result_index])))   
+  if(exists("possible.combos")) {
+    all_lik_results[[result_index]] <- possible.combos
+    names(all_lik_results)[result_index] <- dir # adding tree name
+  }
+}
+save(all_lik_results, file="results_fit.rda")
+
+
+
+
