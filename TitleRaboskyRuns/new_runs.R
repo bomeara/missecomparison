@@ -96,23 +96,23 @@ DoSingleRun_new <- function(dir, phy, root_type="madfitz", n.cores=NULL) {
   start_time <- Sys.time()
   if(!is.null(phy)) {
     summary_df <- data.frame()
-    hisse_result_all <- hisse::MiSSEGreedy(phy, f=1, root.type=root_type, possible.combos=possibilities, chunk.size=1, n.cores=1, save.file=paste0("/home/tvasconcelos/missecomparison/TitleRaboskyRuns/results/",unname(Sys.info()["nodename"]), "_",tree_index, ".rda"), stop.deltaAICc=10, sann=TRUE)
+    hisse_result_all <- hisse::MiSSEGreedy(phy, f=1, root.type=root_type, possible.combos=possibilities, chunk.size=1, n.cores=1, save.file=paste0("/home/tvasconcelos/missecomparison/TitleRaboskyRuns/new_results/",unname(Sys.info()["nodename"]), "_",tree_index, ".rda"), stop.deltaAICc=10, sann=TRUE)
     hisse_result_nonredundant <- PruneRedundantModels(hisse_result_all)
     AIC_weights <- hisse::GetAICWeights(hisse_result_nonredundant, criterion="AIC")
     delta_AIC <- sapply(hisse_result_nonredundant, "[[", "AIC") - min(sapply(hisse_result_nonredundant, "[[", "AIC"))
     AICc_weights <- hisse::GetAICWeights(hisse_result_nonredundant, criterion="AICc")
     delta_AICc <- sapply(hisse_result_nonredundant, "[[", "AICc") - min(sapply(hisse_result_nonredundant, "[[", "AICc"))
-    save(list=ls(), file=paste0("/home/tvasconcelos/missecomparison/TitleRaboskyRuns/results/",unname(Sys.info()["nodename"]), "_",tree_index, "_donefitting.rda"))
+    save(list=ls(), file=paste0("/home/tvasconcelos/missecomparison/TitleRaboskyRuns/new_results/",unname(Sys.info()["nodename"]), "_",tree_index, "_donefitting.rda"))
     model_fit_time <- as.numeric(difftime(Sys.time(), start_time, units="mins"))
     for(model_index in sequence(length(hisse_result_nonredundant))) {
       if(delta_AICc[model_index]<20) {
-        cat(paste0("Doing recon on model ", model_index, " at ", Sys.time(), "\n"), file=paste0("/home/tvasconcelos/missecomparison/TitleRaboskyRuns/results/",unname(Sys.info()["nodename"]), "_",tree_index, ".log"), append=TRUE)
+        cat(paste0("Doing recon on model ", model_index, " at ", Sys.time(), "\n"), file=paste0("/home/tvasconcelos/missecomparison/TitleRaboskyRuns/new_results/",unname(Sys.info()["nodename"]), "_",tree_index, ".log"), append=TRUE)
         
         start_time <- Sys.time()
         nturnover <- length(unique(hisse_result_nonredundant[[model_index]]$turnover))
         neps <- length(unique(hisse_result_nonredundant[[model_index]]$eps)) - ifelse(is.null(hisse_result_nonredundant[[model_index]]$fixed.eps), 0,1)
         hisse_recon <- hisse::MarginReconMiSSE(phy=hisse_result_nonredundant[[model_index]]$phy, f=1, hidden.states=nturnover, fixed.eps=hisse_result_nonredundant[[model_index]]$fixed.eps, pars=hisse_result_nonredundant[[model_index]]$solution, AIC=hisse_result_nonredundant[[model_index]]$AIC, root.type=root_type, get.tips.only=TRUE, n.cores=1)
-        save(hisse_recon, hisse_result_nonredundant, hisse_result_all, file=paste0("/home/tvasconcelos/missecomparison/TitleRaboskyRuns/results/", unname(Sys.info()["nodename"]), "_pre_summarizing_recon_",tree_index, "_model_", model_index, "_raw_.rda"))
+        save(hisse_recon, hisse_result_nonredundant, hisse_result_all, file=paste0("/home/tvasconcelos/missecomparison/TitleRaboskyRuns/new_results/", unname(Sys.info()["nodename"]), "_pre_summarizing_recon_",tree_index, "_model_", model_index, "_raw_.rda"))
         
         tip_mat_transformed <- hisse_recon$tip.mat[,-1]
         if(max(tip_mat_transformed) == 0) {
@@ -152,10 +152,10 @@ DoSingleRun_new <- function(dir, phy, root_type="madfitz", n.cores=NULL) {
         } else {
           try(summary_df <- plyr::rbind.fill(summary_df, summary_df_local))
         }
-        save(summary_df, hisse_result_nonredundant, AICc_weights, delta_AICc, file=paste0("/home/tvasconcelos/missecomparison/TitleRaboskyRuns/results/", unname(Sys.info()["nodename"]), "_post_summarizing_recon_",tree_index,"_model_", model_index, "_newrun.rda"))
+        save(summary_df, hisse_result_nonredundant, AICc_weights, delta_AICc, file=paste0("/home/tvasconcelos/missecomparison/TitleRaboskyRuns/new_results/", unname(Sys.info()["nodename"]), "_post_summarizing_recon_",tree_index,"_model_", model_index, "_newrun.rda"))
       }
     }
-    save(summary_df, hisse_result_nonredundant, hisse_result_all, AICc_weights, delta_AICc, model_fit_time, file=paste0("/home/tvasconcelos/missecomparison/TitleRaboskyRuns/results/", unname(Sys.info()["nodename"]), "_done_recon_",tree_index, "_newrun.rda"))
+    save(summary_df, hisse_result_nonredundant, hisse_result_all, AICc_weights, delta_AICc, model_fit_time, file=paste0("/home/tvasconcelos/missecomparison/TitleRaboskyRuns/new_results/", unname(Sys.info()["nodename"]), "_done_recon_",tree_index, "_newrun.rda"))
     return(summary_df)
   } else {
     return(list(failure=dir))
