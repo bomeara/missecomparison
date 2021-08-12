@@ -9,6 +9,8 @@ names(trees) <- tree_names
 
 print(paste0("There are ", length(trees), " to analyze"))
 
+# table(unname(unlist(lapply(trees, Ntip))))
+
 # # Works but single variable
 # plan <- drake_plan(
 #   #hisse_out = DoSingleRun("Rabosky2014_DD_k1_1")

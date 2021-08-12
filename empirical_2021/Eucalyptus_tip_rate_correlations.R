@@ -1,27 +1,56 @@
 #----------------------------
 # Post-run 
-# setwd("~/Desktop/missecomparison/empirical_2021")
+# setwd("~/Desktop/misse_mme_paper/missecomparison/empirical_2021")
 # rm(list=ls())
 library(hisse)
 
-load("Eucalypts_example_bayes_tree.Rsave") # load results
+load("Eucalypts_example_ml1_tree.Rsave") # load results
+tree <- model.recons_ml1[[1]]$phy
 
-tip.rates_best <- hisse::GetModelAveRates(model.recons_bayes[[which.min(unlist(lapply(model.recons_bayes, "[[","AIC")))]], type = "tips")
-tip.rates_avg <- hisse::GetModelAveRates(model.recons_bayes, type = "tips")
+View(possible.combos_ml1)
+     #tip.rates_best <- hisse::GetModelAveRates(model.recons_ml1[[which.min(unlist(lapply(model.recons_ml1, "[[","AIC")))]], type = "tips")
+#tip.rates_avg <- hisse::GetModelAveRates(model.recons_ml1, type = "tips")
+#tip.rates_ml1
 
 
-tree_bayes <- model.recons_bayes[[1]]$phy
+###############################################
+# Some exploratory things
+###############################################
+
+# Getting tip age for plots:
+tip_age <- c()
+for(i in 1:length(tree$tip.label)) {
+  tip_age[i] <- tree$edge.length[which(tree$edge[,2] == i)]
+}
+names(tip_age) <- tree$tip.label
+
+#tip.rates_avg$taxon[which.max(tip.rates_avg$turnover)]
+#tip_age[names(tip_age)==tip.rates_avg$taxon[which.max(tip.rates_avg$turnover)]]
+
+painted.tree <- hisse::plot.misse.states(x = model.recons_ml1, 
+                                         rate.param = "speciation", type = "phylo", show.tip.label = F) 
+
+###############################################
+# Tip-correlation with plant height
+###############################################
+
 
 heights <- read.csv("Eucalypt_heights.csv")[,c(2,3)]
 heights <- heights[heights$max_height_m!="no_info_yet",]
 
+#plot(tree, show.tip.label = T, cex=0.2) 
+
 
 # Combining heights and rates
-full_table_best <- merge(tip.rates_best, heights, by.x="taxon",by.y="species")
-rownames(full_table_best) <- full_table_best$taxon
 
-full_table_avg <- merge(tip.rates_avg, heights, by.x="taxon",by.y="species")
-rownames(full_table_avg) <- full_table_avg$taxon
+full_table_ml1 <- merge(tip.rates_ml1, heights, by.x="taxon",by.y="species")
+rownames(full_table_ml1) <- full_table_ml1$taxon
+
+#full_table_best <- merge(tip.rates_best, heights, by.x="taxon",by.y="species")
+#rownames(full_table_best) <- full_table_best$taxon
+
+#full_table_avg <- merge(tip.rates_avg, heights, by.x="taxon",by.y="species")
+#rownames(full_table_avg) <- full_table_avg$taxon
 
 
 # plot(full_table$turnover, full_table$max_height_m)
@@ -30,11 +59,14 @@ rownames(full_table_avg) <- full_table_avg$taxon
 # Some plots
 #----------------------------
 # Eucalypts Height 
-full_table_avg$max_height_m <- as.numeric(full_table_avg$max_height_m)
+full_table_ml1$max_height_m <- as.numeric(full_table_ml1$max_height_m)
+# removing outliers?
+full_table_ml1 <- subset(full_table_ml1, full_table_ml1$turnover < 100)
 
-#hist(exp(full_table_avg$max_height_m), breaks = 50)
 
-tree_pruned <- ape::drop.tip(tree, setdiff(tree$tip.label, full_table_avg$taxon))
+#hist(exp(full_table_ml1$max_height_m), breaks = 50)
+
+tree_pruned <- ape::drop.tip(tree, setdiff(tree$tip.label, full_table_ml1$taxon))
 
 # Small corrections so that tips appear in the right order
 is_tip <- tree_pruned$edge[,2] <= length(tree_pruned$tip.label)
@@ -42,7 +74,11 @@ ordered_tips <- tree_pruned$edge[is_tip, 2]
 right_order <- as.character(tree_pruned$tip.label[ordered_tips])
 
 # Organizing so tip rates are in the same order as tips of the tree
-cleaned_table <- full_table_avg[match(as.character(right_order), as.character(full_table_avg$taxon)),]
+cleaned_table <- full_table_ml1[match(as.character(right_order), as.character(full_table_ml1$taxon)),]
+
+
+
+#cleaned_table <- full_table_avg[match(as.character(right_order), as.character(full_table_avg$taxon)),]
 
 # cleaned_table_heights <- tip.rates_1[match(as.character(right_order), as.character(tip.rates_1$species)),]
 height_max <- as.numeric(cleaned_table$max_height_m)
@@ -87,15 +123,6 @@ turnover.mean <- as.numeric(cleaned_table$turnover)
 #net.div.mean <- as.numeric(cleaned_table$net.div)
 
 
-x <- 1:length(aridity)
-rounded_rates <- round(aridity, color_breaks)
-pal <- hcl.colors(length(levels(as.factor(rounded_rates))), palette = "Viridis", alpha = 0.75)
-pal <- pal[match(rounded_rates, as.numeric(levels(as.factor(rounded_rates))))] 
-plot(aridity, x,  lwd = 0.2, xlim=range(c(min(aridity), max(aridity))),
-     pch=19, yaxt = "n", xlab="aridity", ylab="", frame.plot=T, cex=0.75, col=pal)
-segments(min(aridity), 1:length(aridity), aridity[1:length(aridity)], 1:length(aridity), col= pal,lwd = 0.2)
-
-
 x <- 1:length(turnover.mean)
 rounded_rates <- round(turnover.mean, color_breaks)
 pal <- hcl.colors(length(levels(as.factor(rounded_rates))), palette = "Viridis", alpha = 0.75)
@@ -136,7 +163,7 @@ tree_pruned <- ape::keep.tip(tree, full_table_avg$taxon)
 #result_best <- lm(full_table_avg$net.div~full_table_avg$max_height_m)
 #result_best <- lm(full_table_avg$turnover~full_table_avg$max_height_m)
 
-  result1 <- phylolm::phylolm(turnover~max_height_m, data=full_table_avg, phy=tree_pruned, model="OUrandomRoot")
+  result1 <- phylolm::phylolm(turnover~max_height_m, data=full_table_avg, phy=tree_pruned, model="BM")
 summary(result1)
 
 
@@ -152,6 +179,28 @@ tree_pruned <- ape::keep.tip(tree, full_table_avg$taxon)
 result_avg <- phylolm::phylolm(turnover~max_height_m, data=full_table_avg, phy=tree_pruned, model="BM")
 summary(result_avg)
 
+full_table_avg <- subset(full_table_avg, full_table_avg$turnover < 100)
+
+plot(full_table_avg$turnover, full_table_avg$max_height_m)
+
+  
 
 
-    
+
+pgls_table <- full_table_ml1
+
+
+pgls_table$max_height_m <- log(as.numeric(pgls_table$max_height_m))
+pgls_table$turnover <- log(as.numeric(pgls_table$turnover))
+tree_pruned <- ape::keep.tip(tree, pgls_table$taxon) 
+
+
+result_ml1 <- phylolm::phylolm(turnover~max_height_m, data=pgls_table, phy=tree_pruned, model="BM")
+summary(result_ml1)
+
+plot(pgls_table$turnover, pgls_table$max_height_m)
+
+###############################################
+# Some plots
+###############################################
+
