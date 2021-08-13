@@ -89,14 +89,14 @@ get.crashed.trees <- function(trees, done_trees_number) {
 # Do single run 
 DoSingleRun_new <- function(dir, phy, root_type="madfitz", n.cores=NULL) {
   dir <- unname(dir)
-  tree_index <- 1
+  tree_index <- dir
   phy <- phy[which(names(phy)%in%dir)][[1]]
   possibilities = generateMiSSEGreedyCombinations(max.param=round(ape::Ntip(phy)/10), vary.both=TRUE, fixed.eps.tries=NA, shuffle.start=TRUE)
   
   start_time <- Sys.time()
   if(!is.null(phy)) {
     summary_df <- data.frame()
-    hisse_result_all <- hisse::MiSSEGreedy(phy, f=1, root.type=root_type, possible.combos=possibilities, chunk.size=1, n.cores=1, save.file=paste0("/home/tvasconcelos/missecomparison/TitleRaboskyRuns/new_results/",unname(Sys.info()["nodename"]), "_",tree_index, ".rda"), stop.deltaAICc=10, sann=TRUE)
+    hisse_result_all <- hisse::MiSSEGreedy(phy, f=1, root.type=root_type, possible.combos=possibilities, chunk.size=10, n.cores=1, save.file=paste0("/home/tvasconcelos/missecomparison/TitleRaboskyRuns/new_results/",unname(Sys.info()["nodename"]), "_",tree_index, ".rda"), stop.deltaAICc=10, sann=TRUE)
     hisse_result_nonredundant <- PruneRedundantModels(hisse_result_all)
     AIC_weights <- hisse::GetAICWeights(hisse_result_nonredundant, criterion="AIC")
     delta_AIC <- sapply(hisse_result_nonredundant, "[[", "AIC") - min(sapply(hisse_result_nonredundant, "[[", "AIC"))
@@ -202,18 +202,18 @@ New_sim_runs_beaulieu3 <- drake_plan(
   subset_trees1 = tree_names[1:96],
   target(DoSingleRun_new(dir=subset_trees1, 
                              phy=all_trees, 
-                             root_type="madfitz", n.cores=NULL), dynamic=map(dir))
+                             root_type="madfitz", n.cores=NULL), dynamic=map(subset_trees1))
 )
 
 New_sim_runs_beaulieu4 <- drake_plan(
   base.dir = "/home/tvasconcelos/missecomparison/TitleRaboskyRuns",
   #base.dir = "/Users/thaisvasconcelos/Desktop/misse_mme_paper/missecomparison/TitleRaboskyRuns",
-  all_trees = load.all.trees(base.dir, where="labcomputer"),
+  all_trees = load.all.trees(base.dir, where="local"),
   tree_names = names(all_trees),
   subset_trees2 = tree_names[97:192],
   target(DoSingleRun_new(dir=subset_trees2, 
                          phy=all_trees, 
-                         root_type="madfitz", n.cores=NULL), dynamic=map(dir))
+                         root_type="madfitz", n.cores=NULL), dynamic=map(subset_trees2))
 )
 
 #write.csv(tree_names[193:312], file="trees_for_Brian.csv") # These are going to Brian's 
