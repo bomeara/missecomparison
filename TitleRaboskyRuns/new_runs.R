@@ -91,7 +91,7 @@ DoSingleRun_new <- function(dir, phy, root_type="madfitz", n.cores=NULL) {
   dir <- unname(dir)
   tree_index <- dir
   phy <- phy[which(names(phy)%in%dir)][[1]]
-  possibilities = generateMiSSEGreedyCombinations(max.param=round(ape::Ntip(phy)/10), vary.both=TRUE, fixed.eps.tries=NA, shuffle.start=TRUE)
+  possibilities = generateMiSSEGreedyCombinations(max.param=max(4, round(ape::Ntip(phy)/10)), vary.both=TRUE, fixed.eps.tries=NA, shuffle.start=TRUE)
   
   start_time <- Sys.time()
   if(!is.null(phy)) {
@@ -208,7 +208,7 @@ New_sim_runs_beaulieu3 <- drake_plan(
 New_sim_runs_beaulieu4 <- drake_plan(
   base.dir = "/home/tvasconcelos/missecomparison/TitleRaboskyRuns",
   #base.dir = "/Users/thaisvasconcelos/Desktop/misse_mme_paper/missecomparison/TitleRaboskyRuns",
-  all_trees = load.all.trees(base.dir, where="local"),
+  all_trees = load.all.trees(base.dir, where="labcomputer"),
   tree_names = names(all_trees),
   subset_trees2 = tree_names[97:192],
   target(DoSingleRun_new(dir=subset_trees2, 
@@ -217,3 +217,5 @@ New_sim_runs_beaulieu4 <- drake_plan(
 )
 
 #write.csv(tree_names[193:312], file="trees_for_Brian.csv") # These are going to Brian's 
+
+
