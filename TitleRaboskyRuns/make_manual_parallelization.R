@@ -8,7 +8,7 @@ source("R/functions.R")
 
 library(foreach)
 library(doParallel)
-registerDoParallel(parallel::detectCores())
+registerDoParallel(floor(parallel::detectCores()/10)) # so on machines with >20 cores it runs multiple
 
 Sys.setenv('R_MAX_VSIZE'=32000000000)
 ipifyseed <- 100
@@ -32,8 +32,8 @@ names(trees) <- tree_names
 tree_indices <- sample(sequence(length(tree_names)), replace=FALSE) # randomize order
 
 results <- list()
-for (i in seq_along(tree_indices)) {
-#foreach (i=seq_along(tree_indices)) %dopar% { 
+#for (i in seq_along(tree_indices)) {
+foreach (i=seq_along(tree_indices)) %dopar% { 
 	started_runs <- list.files(path="results", pattern="starting.*.rda")
 	tree_index <- tree_indices[i]
 
