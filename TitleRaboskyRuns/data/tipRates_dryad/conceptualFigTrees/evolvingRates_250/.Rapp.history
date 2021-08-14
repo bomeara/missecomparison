@@ -1,0 +1,1354 @@
+setwd('../')
+outfile <- 'regimeSummary.csv'
+trueRates <- read.csv('dataFiles/trueTipRates.csv', stringsAsFactors=FALSE)#
+estimatedRates <- read.csv('dataFiles/estimatedTipRates.csv', stringsAsFactors=FALSE)#
+treeDat <- read.csv('dataFiles/treeSummary.csv', stringsAsFactors=FALSE)#
+crbd <- read.csv('dataFiles/estimatedCRBD.csv', stringsAsFactors=FALSE)
+trueRatesList <- split(trueRates, trueRates$treeName)#
+estimatedRatesList <- split(estimatedRates, estimatedRates$treeName)
+# make sure lists are in the same order, and tips are in the same order in each list element#
+identical(names(trueRatesList), names(estimatedRatesList))
+for (i in 1:length(trueRatesList)) {#
+	xx <- trueRatesList[[i]]$tipName#
+	xx <- sort(xx)#
+	trueRatesList[[i]] <- trueRatesList[[i]][match(xx, trueRatesList[[i]]$tipName),]#
+	estimatedRatesList[[i]] <- estimatedRatesList[[i]][match(xx, estimatedRatesList[[i]]$tipName),]#
+}#
+#
+# put CRBD table in same order#
+ordering <- sapply(names(trueRatesList), function(x) which(crbd$treeName == x))#
+crbd <- crbd[ordering,]
+# merge the two, and add CRBD lambda and mu (identical values across tip names)#
+allRatesList <- vector('list', length = length(trueRatesList))#
+names(allRatesList) <- names(trueRatesList)#
+for (i in 1:length(trueRatesList)) {#
+	allRatesList[[i]] <- cbind.data.frame(trueRatesList[[i]], estimatedRatesList[[i]][, c('lambdaTB', 'lambdaND', 'lambdaDR', 'lambdaBAMM', 'netDivBAMM')], CRBDlambda = crbd[i, 'lambda'], CRBDmu = crbd[i, 'mu'])#
+}
+# use regime ID to create table of regimes, and true/inferred rate averages#
+# single-regime trees will be a single regime#
+# also record size of regimes#
+#
+setvec <- c('MitchellRabosky2016','MeyerWiens2017','fossilBAMM','MooreEtAl2016','RaboskyEtAl2017','lambdaConstantVariance', 'netDivConstantVariance')#
+#
+setInd <- unique(treeDat[which(treeDat$setname %in% setvec), 'treeName'])
+regimeList <- list()#
+#
+counter <- 1#
+for (i in 1:length(setInd)) {#
+	cat(i, 'of', length(setInd), '\n')#
+	xx <- allRatesList[[setInd[i]]]#
+	# take average of all tip metrics, grouped by regimeID#
+	tmp <- aggregate(xx[, colnames(xx)[which(colnames(xx) == 'tipLambda'):ncol(xx)]], list(xx$regimeID), mean)#
+	regimeList[[counter]] <- cbind(treeName = xx[1, 'treeName'], setname = xx[1, 'setname'], nTips = aggregate(xx$regimeID, list(xx$regimeID), length)$x, tmp)#
+	counter <- counter + 1	#
+}#
+#
+regimeSummary <- do.call(rbind, regimeList)#
+regimeSummary <- regimeSummary[, -which(colnames(regimeSummary) == 'Group.1')]#
+regimeSummary <- as.data.frame(regimeSummary, stringsAsFactors=FALSE)#
+#
+for (i in 3:ncol(regimeSummary)) {#
+	regimeSummary[, i] <- as.numeric(regimeSummary[, i])#
+}#
+regimeSummary[,1] <- as.character(regimeSummary[,1])#
+regimeSummary[,2] <- as.character(regimeSummary[,2])
+outfile
+outfile <- 'dataFiles/regimeSummary.csv'
+write.csv(regimeSummary, outfile, row.names = FALSE)
+## Diversity-dependent trees#
+outfile <- 'dataFiles/regimeSummary_dd.csv'#
+#
+setvec <- c('Rabosky2014_DD_k1', 'Rabosky2014_DD_k2', 'Rabosky2014_DD_k3', 'Rabosky2014_DD_k4')#
+#
+setInd <- unique(treeDat[which(treeDat$setname %in% setvec), 'treeName'])#
+#
+regimeList <- list()#
+#
+counter <- 1#
+for (i in 1:length(setInd)) {#
+	cat(i, 'of', length(setInd), '\n')#
+	xx <- allRatesList[[setInd[i]]]#
+	# take average of all tip metrics, grouped by regimeID#
+	tmp <- aggregate(xx[, colnames(xx)[which(colnames(xx) == 'tipLambda'):ncol(xx)]], list(xx$regimeID), mean)#
+	regimeList[[counter]] <- cbind(treeName = xx[1, 'treeName'], setname = xx[1, 'setname'], nTips = aggregate(xx$regimeID, list(xx$regimeID), length)$x, tmp)#
+	counter <- counter + 1	#
+}#
+#
+regimeSummary <- do.call(rbind, regimeList)#
+regimeSummary <- regimeSummary[, -which(colnames(regimeSummary) == 'Group.1')]#
+regimeSummary <- as.data.frame(regimeSummary, stringsAsFactors=FALSE)#
+#
+for (i in 3:ncol(regimeSummary)) {#
+	regimeSummary[, i] <- as.numeric(regimeSummary[, i])#
+}#
+regimeSummary[,1] <- as.character(regimeSummary[,1])#
+regimeSummary[,2] <- as.character(regimeSummary[,2])#
+#
+write.csv(regimeSummary, outfile, row.names = FALSE)
+## Evolving Rates trees#
+#
+outfile <- 'dataFiles/regimeSummary_evolvingRates.csv'#
+#
+setvec <- c('evolvingRates')#
+#
+setInd <- unique(treeDat[which(treeDat$setname %in% setvec), 'treeName'])#
+#
+regimeList <- list()#
+#
+counter <- 1#
+for (i in 1:length(setInd)) {#
+	cat(i, 'of', length(setInd), '\n')#
+	xx <- allRatesList[[setInd[i]]]#
+	# take average of all tip metrics, grouped by regimeID#
+	tmp <- aggregate(xx[, colnames(xx)[which(colnames(xx) == 'tipLambda'):ncol(xx)]], list(xx$regimeID), mean)#
+	regimeList[[counter]] <- cbind(treeName = xx[1, 'treeName'], setname = xx[1, 'setname'], nTips = aggregate(xx$regimeID, list(xx$regimeID), length)$x, tmp)#
+	counter <- counter + 1	#
+}#
+#
+regimeSummary <- do.call(rbind, regimeList)#
+regimeSummary <- regimeSummary[, -which(colnames(regimeSummary) == 'Group.1')]#
+regimeSummary <- as.data.frame(regimeSummary, stringsAsFactors=FALSE)#
+#
+for (i in 3:ncol(regimeSummary)) {#
+	regimeSummary[, i] <- as.numeric(regimeSummary[, i])#
+}#
+regimeSummary[,1] <- as.character(regimeSummary[,1])#
+regimeSummary[,2] <- as.character(regimeSummary[,2])#
+#
+write.csv(regimeSummary, outfile, row.names = FALSE)
+## Read in datasets#
+trueRates <- read.csv('dataFiles/trueTipRates.csv', stringsAsFactors=FALSE)#
+estimatedRates <- read.csv('dataFiles/estimatedTipRates.csv', stringsAsFactors=FALSE)#
+treeDat <- read.csv('dataFiles/treeSummary.csv', stringsAsFactors=FALSE)#
+crbd <- read.csv('dataFiles/estimatedCRBD.csv', stringsAsFactors=FALSE)#
+#
+outfile <- 'dataFiles/rateErrorMetrics.csv'#
+#
+options(warn=1)
+trueRatesList <- split(trueRates, trueRates$treeName)#
+estimatedRatesList <- split(estimatedRates, estimatedRates$treeName)#
+#
+# make sure lists are in the same order, and tips are in the same order in each list element#
+identical(names(trueRatesList), names(estimatedRatesList))#
+#
+for (i in 1:length(trueRatesList)) {#
+	xx <- trueRatesList[[i]]$tipName#
+	xx <- sort(xx)#
+	trueRatesList[[i]] <- trueRatesList[[i]][match(xx, trueRatesList[[i]]$tipName),]#
+	estimatedRatesList[[i]] <- estimatedRatesList[[i]][match(xx, estimatedRatesList[[i]]$tipName),]#
+}#
+#
+# put CRBD table in same order#
+ordering <- sapply(names(trueRatesList), function(x) which(crbd$treeName == x))#
+crbd <- crbd[ordering,]
+# merge the two, and add CRBD lambda and mu (identical values across tip names)#
+allRatesList <- vector('list', length = length(trueRatesList))#
+names(allRatesList) <- names(trueRatesList)#
+for (i in 1:length(trueRatesList)) {#
+	allRatesList[[i]] <- cbind.data.frame(trueRatesList[[i]], estimatedRatesList[[i]][, c('lambdaTB', 'lambdaND', 'lambdaDR', 'lambdaBAMM', 'netDivBAMM')], CRBDlambda = crbd[i, 'lambda'], CRBDmu = crbd[i, 'mu'])#
+}
+saveRDS(allRatesList, 'dataFiles/allRatesList.rds', compress = 'xz')
+rmse <- function(estimated, true) {#
+	sqrt(mean((estimated - true) ^ 2))#
+}#
+#
+absoluteError <- function(estimated, true) {#
+	mean(abs(estimated - true))#
+}#
+#
+# PROPORTIONAL ERROR METRICS (from Rabosky et al. 2014 appendix)#
+#
+# estimated = vector of estimated tip values#
+# true = true tip values#
+#
+# overall mean proportional error#
+propError1 <- function(estimated, true) {#
+	sum((estimated - true) / true) / length(true)#
+}#
+#
+# overall mean proportional error#
+propError1abs <- function(estimated, true) {#
+	sum(abs(estimated - true) / true) / length(true)#
+}#
+#
+# overall mean proportional error, weighted by the relative size of the regime#
+# regimeVec is a categorical vector of regimeID of the same length as vec estimated and vec true.#
+# it should represent the relative size of the regime, to the whole tree#
+propError2 <- function(estimated, true, regimeVec) {#
+	regimeVecProp <- setNames(as.numeric(table(regimeVec) / length(regimeVec)), names(table(regimeVec)))#
+	regimeVec <- regimeVecProp[regimeVec]#
+	sum(((estimated - true) / true) * regimeVec)#
+}#
+#
+# mean error over all tips, using log-transformed rates#
+propError3 <- function(estimated, true) {#
+	exp(sum(log(estimated) - log(true)) / length(true))#
+}#
+#
+# mean error over all tips, using log-transformed rates, where rates are weighted by regime size.#
+propError4 <- function(estimated, true, regimeVec) {#
+	regimeVecProp <- setNames(as.numeric(table(regimeVec) / length(regimeVec)), names(table(regimeVec)))#
+	regimeVec <- regimeVecProp[regimeVec]#
+	exp(sum((log(estimated) - log(true)) * regimeVec))#
+}#
+# ols regression R2 and slope#
+olsRegression <- function(estimated, true) {#
+	if (!all(is.na(estimated))) {#
+		ols <- lm(estimated ~ true)#
+		if (nrow(summary(ols)$coefficients) > 1) {#
+			setNames(c(summary(ols)$coefficients[2,1], summary(ols)$adj.r.squared), c('slope','r2'))#
+		} else {#
+			setNames(c(NA, NA), c('slope','r2'))#
+		}#
+	} else {#
+		setNames(c(NA, NA), c('slope','r2'))#
+	}#
+}
+dat <- as.data.frame(matrix(nrow = nrow(crbd), ncol = 6))#
+colnames(dat) <- c('treeName', 'setname', 'nTips', 'nRegimes', 'processType', 'colless')#
+#
+dat[, c('treeName','setname', 'CRBD_lambda', 'CRBD_mu', 'colless')] <- crbd[,c('treeName','setname','lambda','mu','colless')]#
+#
+for (i in 1:nrow(dat)) {#
+	tmp <- treeDat[which(treeDat$treeName == dat[i, 'treeName']),]#
+	dat[i, 'nTips'] <- tmp[1, 'nTips_all']#
+	dat[i, 'nRegimes'] <- nrow(tmp)#
+	if (grepl('Rabosky2014', tmp[1, 'setname'])) {#
+		dat[i, 'processType'] <- 'diversity-dependent'#
+	} else if (tmp[1, 'setname'] == 'evolvingRates') {#
+		dat[i, 'processType'] <- 'evolvingRates'#
+	} else {#
+		dat[i, 'processType'] <- 'birth-death'#
+	}#
+}#
+#
+# check ordering#
+identical(names(allRatesList), dat$treeName)
+head(allRatesList)
+dat <- as.data.frame(matrix(nrow = nrow(crbd), ncol = 6))#
+colnames(dat) <- c('treeName', 'setname', 'nTips', 'nRegimes', 'processType')#
+#
+dat[, c('treeName','setname', 'CRBD_lambda', 'CRBD_mu')] <- crbd[,c('treeName','setname','lambda','mu')]
+for (i in 1:nrow(dat)) {#
+	tmp <- treeDat[which(treeDat$treeName == dat[i, 'treeName']),]#
+	dat[i, 'nTips'] <- tmp[1, 'nTips_all']#
+	dat[i, 'nRegimes'] <- nrow(tmp)#
+	if (grepl('Rabosky2014', tmp[1, 'setname'])) {#
+		dat[i, 'processType'] <- 'diversity-dependent'#
+	} else if (tmp[1, 'setname'] == 'evolvingRates') {#
+		dat[i, 'processType'] <- 'evolvingRates'#
+	} else {#
+		dat[i, 'processType'] <- 'birth-death'#
+	}#
+}
+identical(names(allRatesList), dat$treeName)
+# calculate proportional error of estimated to true lambda tip rates for each different tip rate metric#
+#
+tipMetricHeaders <- c('CRBDlambda','lambdaTB','lambdaND','lambdaDR','lambdaBAMM')#
+tipMetricHeadersNetDiv <- c('CRBDlambda','lambdaTB','lambdaND','lambdaDR','netDivBAMM')
+for (i in 1:nrow(dat)) {#
+	cat(i, '\n')#
+	for (j in 1:length(tipMetricHeaders)) {#
+		# speciation rate#
+		dat[i, paste0('tipLambda_', tipMetricHeaders[j], '_PE1')] <- propError1(allRatesList[[i]][, tipMetricHeaders[j]], allRatesList[[i]]$tipLambda)#
+#
+		dat[i, paste0('tipLambda_', tipMetricHeaders[j], '_PE2')] <- propError2(allRatesList[[i]][, tipMetricHeaders[j]], allRatesList[[i]]$tipLambda, allRatesList[[i]]$regimeID)#
+#
+		dat[i, paste0('tipLambda_', tipMetricHeaders[j], '_PE3')] <- propError3(allRatesList[[i]][, tipMetricHeaders[j]], allRatesList[[i]]$tipLambda)#
+#
+		dat[i, paste0('tipLambda_', tipMetricHeaders[j], '_PE4')] <- propError4(allRatesList[[i]][, tipMetricHeaders[j]], allRatesList[[i]]$tipLambda, allRatesList[[i]]$regimeID)#
+#
+		dat[i, paste0('tipLambda_', tipMetricHeaders[j], '_slope')] <- olsRegression(allRatesList[[i]][, tipMetricHeaders[j]], allRatesList[[i]]$tipLambda)[1]#
+#
+		dat[i, paste0('tipLambda_', tipMetricHeaders[j], '_r2')] <- olsRegression(allRatesList[[i]][, tipMetricHeaders[j]], allRatesList[[i]]$tipLambda)[2]#
+#
+		dat[i, paste0('tipLambda_', tipMetricHeaders[j], '_absoluteError')] <- absoluteError(allRatesList[[i]][, tipMetricHeaders[j]], allRatesList[[i]]$tipLambda)#
+#
+		dat[i, paste0('tipLambda_', tipMetricHeaders[j], '_rmse')] <- rmse(allRatesList[[i]][, tipMetricHeaders[j]], allRatesList[[i]]$tipLambda)#
+		# Net diversification rate#
+		dat[i, paste0('tipNetDiv_', tipMetricHeadersNetDiv[j], '_PE1')] <- propError1(allRatesList[[i]][, tipMetricHeadersNetDiv[j]], allRatesList[[i]]$tipNetDiv)#
+#
+		dat[i, paste0('tipNetDiv_', tipMetricHeadersNetDiv[j], '_PE2')] <- propError2(allRatesList[[i]][, tipMetricHeadersNetDiv[j]], allRatesList[[i]]$tipNetDiv, allRatesList[[i]]$regimeID)#
+#
+		dat[i, paste0('tipNetDiv_', tipMetricHeadersNetDiv[j], '_PE3')] <- propError3(allRatesList[[i]][, tipMetricHeadersNetDiv[j]], allRatesList[[i]]$tipNetDiv)#
+#
+		dat[i, paste0('tipNetDiv_', tipMetricHeadersNetDiv[j], '_PE4')] <- propError4(allRatesList[[i]][, tipMetricHeadersNetDiv[j]], allRatesList[[i]]$tipNetDiv, allRatesList[[i]]$regimeID)#
+#
+		dat[i, paste0('tipNetDiv_', tipMetricHeadersNetDiv[j], '_slope')] <- olsRegression(allRatesList[[i]][, tipMetricHeadersNetDiv[j]], allRatesList[[i]]$tipNetDiv)[1]#
+#
+		dat[i, paste0('tipNetDiv_', tipMetricHeadersNetDiv[j], '_r2')] <- olsRegression(allRatesList[[i]][, tipMetricHeadersNetDiv[j]], allRatesList[[i]]$tipNetDiv)[2]#
+#
+		dat[i, paste0('tipNetDiv_', tipMetricHeadersNetDiv[j], '_absoluteError')] <- absoluteError(allRatesList[[i]][, tipMetricHeadersNetDiv[j]], allRatesList[[i]]$tipNetDiv)#
+#
+		dat[i, paste0('tipNetDiv_', tipMetricHeadersNetDiv[j], '_rmse')] <- rmse(allRatesList[[i]][, tipMetricHeadersNetDiv[j]], allRatesList[[i]]$tipNetDiv)#
+	}#
+}
+head(dat)
+outfile
+write.csv(dat, outfile, row.names=FALSE)
+require(TeachingDemos)
+dat <- read.csv('dataFiles/rateErrorMetrics.csv', stringsAsFactors=FALSE)
+treeDat <- read.csv('dataFiles/treeSummary.csv', stringsAsFactors=FALSE)
+# keep only single regime trees#
+dat_lambda <- dat[which(dat$setname == 'lambdaConstantVariance'),]#
+dat_netdiv <- dat[which(dat$setname == 'netDivConstantVariance'),]#
+#
+# get true relative extinction rate#
+epsVec_lambda <- treeDat[which(treeDat$treeName %in% dat_lambda$treeName),]#
+epsVec_lambda <- setNames(epsVec_lambda$mu0 / epsVec_lambda$lambda0, epsVec_lambda$treeName)#
+epsVec_lambda <- epsVec_lambda[dat_lambda$treeName]#
+#
+epsVec_netdiv <- treeDat[which(treeDat$treeName %in% dat_netdiv$treeName),]#
+epsVec_netdiv <- setNames(epsVec_netdiv$mu0 / epsVec_netdiv$lambda0, epsVec_netdiv$treeName)#
+epsVec_netdiv <- epsVec_netdiv[dat_netdiv$treeName]#
+tipMetrics <- c('lambdaND', 'lambdaDR', 'lambdaBAMM')#
+tipMetricsNetDiv <- c('lambdaND', 'lambdaDR', 'netDivBAMM')#
+errorMetricNames <- c(PE1='Prop. Error 1', PE2='Prop. Error 2', PE3='Prop. Error 3', PE4='Prop. 4', r2='OLS R2', slope='OLS slope', absoluteError='mean absolute error')#
+#
+tipMetricLabel <- c(expression(bold(paste(lambda['ND']))), expression(bold(paste(lambda['DR']))),expression(bold(paste(lambda['BAMM']))))
+# mean absolute error#
+errorMetric <- 'absoluteError'#
+#
+yrange <- c(0,5)#
+insetYrange <- c(0, 0.5)#
+#
+pdf('fig1.pdf', width=9, height=5)#
+#
+layout(matrix(1:6, nrow=2,ncol=3, byrow=T))#
+par(mar = c(3,3,0,0), oma=c(1,1,1,0))#
+for (i in 1:3) {#
+	tipMetric <- tipMetrics[i]#
+	errorLabel <- expression(paste("mean absolute error in ", lambda))#
+	errorCol <- Reduce(intersect, list(grep('tipLambda', colnames(dat)), grep(tipMetric, colnames(dat)), grep(errorMetric, colnames(dat))))#
+	plot.new()#
+	plot.window(xlim = c(0,1), ylim = yrange)#
+	axis(1, at=c(-0.1, axTicks(1)), cex.axis = 0.7)#
+	axis(2, at=c(-5, axTicks(2)), cex.axis = 0.7)#
+	points(epsVec_lambda, dat_lambda[, errorCol], cex=0.3)#
+	if (i == 1) mtext(errorLabel, side = 2, cex=0.7, line = 2.5)#
+	title(main = tipMetricLabel[i], line = -1, cex.main=1.5)#
+	abline(h=0, lty=2, col=gray(0.5), lwd=1)#
+	insetMap <- function() {#
+		plot.new()#
+		plot.window(xlim = c(0,1), ylim = insetYrange)#
+		axis(1, at=c(-0.1, axTicks(1)), cex.axis = 0.7, tcl = -0.2, mgp = c(3,0.3,0), las = 1)#
+		axis(2, at=c(-5, axTicks(2)), cex.axis = 0.7, tcl = -0.2, mgp = c(3,0.3,0), las = 1)#
+		points(epsVec_lambda, dat_lambda[, errorCol], cex=0.3)#
+	}#
+	subplot(insetMap(), x=0.5, y=1.5, vadj=0, hadj=0, size=c(1,1), type='plt')#
+}#
+#
+# second row: net div#
+for (i in 1:3) {#
+	tipMetric <- tipMetricsNetDiv[i]#
+	errorLabel <- expression(paste("mean absolute error in ", italic('r')))#
+	errorCol <- Reduce(intersect, list(grep('tipNetDiv', colnames(dat)), grep(tipMetric, colnames(dat)), grep(errorMetric, colnames(dat))))#
+	plot.new()#
+	plot.window(xlim = c(0,1), ylim = yrange)#
+	axis(1, at=c(-0.1, axTicks(1)), cex.axis=0.7)#
+	axis(2, at=c(-5, axTicks(2)), cex.axis=0.7)#
+	points(epsVec_netdiv, dat_netdiv[, errorCol], cex=0.3)#
+	mtext(expression(mu~'/'~lambda), side = 1, cex=0.8, line = 2.5)#
+	if (i == 1) mtext(errorLabel, side = 2, cex=0.7, line = 2.5)#
+	if (tipMetric == 'netDivBAMM') {#
+		title(main = expression(bold(paste(italic(r)['BAMM']))), line = -2, cex.main=1.5)#
+	}#
+	abline(h=0, lty=2, col=gray(0.5), lwd=1)		#
+}#
+#
+dev.off()#
+####################################################
+#
+# RMSE: Root mean square error#
+errorMetric <- 'rmse'#
+#
+yrange <- c(0,5)#
+insetYrange <- c(0, 0.5)#
+#
+pdf('figS2.pdf', width=9, height=5)#
+#
+layout(matrix(1:6, nrow=2,ncol=3, byrow=T))#
+par(mar = c(3,3,0,0), oma=c(1,1,1,0))#
+for (i in 1:3) {#
+	tipMetric <- tipMetrics[i]#
+	errorLabel <- expression(paste("RMSE in ", lambda))#
+	errorCol <- Reduce(intersect, list(grep('tipLambda', colnames(dat)), grep(tipMetric, colnames(dat)), grep(errorMetric, colnames(dat))))#
+	plot.new()#
+	plot.window(xlim = c(0,1), ylim = yrange)#
+	axis(1, at=c(-0.1, axTicks(1)), cex.axis = 0.7)#
+	axis(2, at=c(-5, axTicks(2)), cex.axis = 0.7)#
+	points(epsVec_lambda, dat_lambda[, errorCol], cex=0.3)#
+	if (i == 1) mtext(errorLabel, side = 2, cex=0.7, line = 2.5)#
+	title(main = tipMetricLabel[i], line = -1, cex.main=1.5)#
+	abline(h=0, lty=2, col=gray(0.5), lwd=1)#
+	insetMap <- function() {#
+		plot.new()#
+		plot.window(xlim = c(0,1), ylim = insetYrange)#
+		axis(1, at=c(-0.1, axTicks(1)), cex.axis = 0.7, tcl = -0.2, mgp = c(3,0.3,0), las = 1)#
+		axis(2, at=c(-5, axTicks(2)), cex.axis = 0.7, tcl = -0.2, mgp = c(3,0.3,0), las = 1)#
+		points(epsVec_lambda, dat_lambda[, errorCol], cex=0.3)#
+	}#
+	subplot(insetMap(), x=0.5, y=1.5, vadj=0, hadj=0, size=c(1,1), type='plt')#
+}#
+#
+# second row: net div#
+for (i in 1:3) {#
+	tipMetric <- tipMetricsNetDiv[i]#
+	errorLabel <- expression(paste("RMSE in ", italic('r')))#
+	errorCol <- Reduce(intersect, list(grep('tipNetDiv', colnames(dat)), grep(tipMetric, colnames(dat)), grep(errorMetric, colnames(dat))))#
+	plot.new()#
+	plot.window(xlim = c(0,1), ylim = yrange)#
+	axis(1, at=c(-0.1, axTicks(1)), cex.axis=0.7)#
+	axis(2, at=c(-5, axTicks(2)), cex.axis=0.7)#
+	points(epsVec_netdiv, dat_netdiv[, errorCol], cex=0.3)#
+	mtext(expression(mu~'/'~lambda), side = 1, cex=0.8, line = 2.5)#
+	if (i == 1) mtext(errorLabel, side = 2, cex=0.7, line = 2.5)#
+	if (tipMetric == 'netDivBAMM') {#
+		title(main = expression(bold(paste(italic(r)['BAMM']))), line = -2, cex.main=1.5)#
+	}#
+	abline(h=0, lty=2, col=gray(0.5), lwd=1)		#
+}#
+#
+dev.off()#
+#
+########################
+# PE1 on log scale#
+#
+errorMetric <- 'PE1'#
+#
+yrangeTop <- c(-0.5,4)#
+yrangeBottom <- c(-1.5,4)#
+insetYrange <- c(-0.4,0.6)#
+constant <- 4#
+width <- 0.03#
+correction <- log(constant)#
+#
+pdf('figS3.pdf', width=9, height=5)#
+#
+layout(matrix(1:6, nrow=2,ncol=3, byrow=T))#
+par(mar = c(3,3,0,0), oma=c(1,1,1,0))#
+for (i in 1:3) {#
+	tipMetric <- tipMetrics[i]#
+	errorLabel <- errorLabel <- expression(paste("log prop. error in ", lambda))#
+	errorCol <- Reduce(intersect, list(grep('tipLambda', colnames(dat)), grep(tipMetric, colnames(dat)), grep(errorMetric, colnames(dat))))#
+	plot.new()#
+	plot.window(xlim = c(0,1), ylim = yrangeTop)#
+	axis(1, at=c(-0.1, axTicks(1)), cex.axis = 0.7)#
+	axis(2, at=c(-5, axTicks(2)), cex.axis = 0.7)#
+	points(epsVec_lambda, log(dat_lambda[, errorCol] + constant) - correction, cex=0.3)#
+	if (i == 1) mtext(errorLabel, side = 2, cex=0.7, line = 2.5)#
+	title(main = tipMetricLabel[i], line = -1, cex.main=1.5)#
+	abline(h=log(0 + constant) - correction, lty=2, col=gray(0.5), lwd=1)#
+	insetMap <- function() {#
+		plot.new()#
+		plot.window(xlim = c(0,1), ylim = insetYrange)#
+		axis(1, at=c(-0.1, axTicks(1)), cex.axis = 0.7, tcl = -0.2, mgp = c(3,0.3,0), las = 1)#
+		axis(2, at=c(-5, axTicks(2)), cex.axis = 0.7, tcl = -0.2, mgp = c(3,0.3,0), las = 1)#
+		points(epsVec_lambda, log(dat_lambda[, errorCol] + constant) - correction, cex=0.3)#
+		abline(h=log(0 + constant) - correction, lty=2, col=gray(0.5), lwd=1)#
+	}#
+	subplot(insetMap(), x=0.5, y=1, vadj=0, hadj=0, size=c(1,1), type='plt')#
+}#
+#
+# second row: net div#
+for (i in 1:3) {#
+	tipMetric <- tipMetricsNetDiv[i]#
+	errorLabel <- expression(paste("log prop. error in ", italic('r')))#
+	errorCol <- Reduce(intersect, list(grep('tipNetDiv', colnames(dat)), grep(tipMetric, colnames(dat)), grep(errorMetric, colnames(dat))))#
+	plot.new()#
+	plot.window(xlim = c(0,1), ylim = yrangeBottom)#
+	axis(1, at=c(-0.1, axTicks(1)), cex.axis = 0.7)#
+	axis(2, at=c(-5, axTicks(2)), cex.axis = 0.7)#
+	points(epsVec_netdiv, log(dat_netdiv[, errorCol] + constant) - correction, cex=0.3)#
+	mtext(expression(mu~'/'~lambda), side = 1, cex=0.8, line = 2.5)#
+	if (i == 1) mtext(errorLabel, side = 2, cex=0.7, line = 2.5)#
+	if (tipMetric == 'netDivBAMM') {#
+		title(main = expression(bold(paste(italic('r')['BAMM']))), line = -2, cex.main=1.5)#
+	}#
+	abline(h=log(0 + constant) - correction, lty=2, col=gray(0.5), lwd=1)#
+}#
+#
+dev.off()#
+########################
+#
+# Separate figure for lambdaTB, compared to lambdaDR and lambdaBAMM#
+tipMetrics <- c('lambdaTB', 'lambdaDR', 'lambdaBAMM')#
+tipMetricsNetDiv <- c('lambdaTB', 'lambdaDR', 'netDivBAMM')#
+errorMetricNames <- c(PE1='Prop. Error 1', PE2='Prop. Error 2', PE3='Prop. Error 3', PE4='Prop. 4', r2='OLS R2', slope='OLS slope', absoluteError='mean absolute error')#
+#
+tipMetricLabel <- c(expression(bold(paste(lambda['TB']))), expression(bold(paste(lambda['DR']))),expression(bold(paste(lambda['BAMM']))))#
+#
+# mean absolute error#
+errorMetric <- 'absoluteError'#
+#
+yrange <- c(0,50)#
+insetYrange <- c(0, 30)#
+width <- 0.03#
+#
+pdf('figS4.pdf', width=9, height=5)#
+layout(matrix(1:6, nrow=2,ncol=3, byrow=T))#
+par(mar = c(3,3,0,0), oma=c(1,1,1,0))#
+for (i in 1:3) {#
+	tipMetric <- tipMetrics[i]#
+	errorLabel <- expression(paste("mean absolute error in ", lambda))#
+	errorCol <- Reduce(intersect, list(grep('tipLambda', colnames(dat)), grep(tipMetric, colnames(dat)), grep(errorMetric, colnames(dat))))#
+	plot.new()#
+	plot.window(xlim = c(0,1), ylim = yrange)#
+	axis(1, at=c(-0.1, axTicks(1)), cex.axis = 0.7)#
+	axis(2, at=c(-5, axTicks(2)), cex.axis = 0.7)#
+	points(epsVec_lambda, dat_lambda[, errorCol], cex=0.3)#
+	if (i == 1) mtext(errorLabel, side = 2, cex=0.7, line = 2.5)#
+	title(main = tipMetricLabel[i], line = -1, cex.main=1.5)#
+	abline(h=0, lty=2, col=gray(0.5), lwd=1)#
+}#
+#
+# second row: net div#
+for (i in 1:3) {#
+	tipMetric <- tipMetricsNetDiv[i]#
+	errorLabel <- expression(paste("mean absolute error in ", italic('r')))#
+	errorCol <- Reduce(intersect, list(grep('tipNetDiv', colnames(dat)), grep(tipMetric, colnames(dat)), grep(errorMetric, colnames(dat))))#
+	plot.new()#
+	plot.window(xlim = c(0,1), ylim = yrange)#
+	axis(1, at=c(-0.1, axTicks(1)), cex.axis=0.7)#
+	axis(2, at=c(-5, axTicks(2)), cex.axis=0.7)#
+	points(epsVec_netdiv, dat_netdiv[, errorCol], cex=0.3)#
+	mtext(expression(mu~'/'~lambda), side = 1, cex=0.8, line = 2.5)#
+	if (i == 1) mtext(errorLabel, side = 2, cex=0.7, line = 2.5)#
+	if (tipMetric == 'netDivBAMM') {#
+		title(main = expression(bold(paste(italic(r)['BAMM']))), line = -2, cex.main=1.5)#
+	}#
+	abline(h=0, lty=2, col=gray(0.5), lwd=1)	#
+}#
+#
+dev.off()
+# for speciation rate, some statistics#
+mean(dat_lambda$tipLambda_lambdaTB_absoluteError)#
+mean(dat_lambda$tipLambda_lambdaND_absoluteError)#
+mean(dat_lambda$tipLambda_lambdaDR_absoluteError)#
+mean(dat_lambda$tipLambda_lambdaBAMM_absoluteError)#
+#
+sd(dat_lambda$tipLambda_lambdaTB_absoluteError)#
+sd(dat_lambda$tipLambda_lambdaND_absoluteError)#
+sd(dat_lambda$tipLambda_lambdaDR_absoluteError)#
+sd(dat_lambda$tipLambda_lambdaBAMM_absoluteError)#
+#
+quantile(dat_lambda$tipLambda_lambdaDR_absoluteError, 0.95)#
+quantile(dat_lambda$tipLambda_lambdaBAMM_absoluteError, 0.95)		#
+#
+quantile(dat_netdiv$tipNetDiv_lambdaDR_absoluteError, 0.95)#
+quantile(dat_netdiv$tipNetDiv_netDivBAMM_absoluteError, 0.95)
+dat <- read.csv('dataFiles/rateErrorMetrics.csv', stringsAsFactors=FALSE)
+# set infinite values to NA#
+for (i in 6:ncol(dat)) {#
+	if (length(which(!is.finite(dat[,i]))) > 0) {#
+		dat[which(!is.finite(dat[,i])), i] <- NA#
+	}#
+}#
+# ---------------------------------------------------------#
+# ---------------------------------------------------------#
+#
+# combined figure of all 5 tip rate metrics, under 3 scenarios#
+## leaving lambdaTB out for a separate figure#
+#
+rateMetrics <- c('CRBDlambda', 'lambdaND', 'lambdaDR', 'lambdaBAMM')#
+errorMetricNames <- c(PE1='Prop. Error 1', PE2='Prop. Error 2', PE3='Prop. Error 3', PE4='Prop. 4', r2='OLS R2', slope='OLS slope', absoluteError='mean absolute error')#
+#
+rateMetricLabels <- c(expression(bold(paste(lambda['CRBD']))), expression(bold(paste(lambda['ND']))), expression(bold(paste(lambda['DR']))),expression(bold(paste(lambda['BAMM']))))
+pdf('fig3.pdf', width=10, height=7)#
+par(mfrow = c(3, 4), mar = c(4,3,3,1), oma = c(0,1,0,0))#
+#
+width <- 0.4#
+rateType <- 'Lambda'#
+qrange <- c(0.05, 0.95)#
+defaultYrange <- c(0, 0.4)#
+xAxisCex <- 1#
+yAxisCex <- 1#
+errorMetric <- 'absoluteError'#
+## time-constant multi-regime#
+dat2 <- dat[which(dat$setname %in% c('MooreEtAl2016','RaboskyEtAl2017','fossilBAMM','MeyerWiens2017')),]#
+#
+datSplit <- split(dat2, dat2$nRegimes)#
+#
+# collapse shift number >= 10 into same category#
+datSplit2 <- datSplit#
+datSplit <- datSplit2[as.character(1:10)]#
+datSplit[['10']] <- do.call(rbind, datSplit2[which(names(datSplit2) == '10'):length(datSplit2)])#
+names(datSplit)[10] <- '>10'#
+#
+for (i in 1:4) {#
+	tipMetric <- rateMetrics[i]#
+	errorCol <- Reduce(intersect, list(grep(rateType, colnames(dat)), grep(rateMetrics[i], colnames(dat)), grep(errorMetric, colnames(dat))))#
+	if (tipMetric != 'lambdaTB') {#
+		yrange <- defaultYrange#
+	} else {#
+		yrange <- c(0, quantile(unlist(sapply(datSplit, function(x) x[, errorCol])), 0.975))#
+	}#
+	plot.new()#
+	plot.window(xlim = c(1, length(datSplit)), ylim = yrange)#
+	axis(1, at = c(0, 1:length(datSplit)), labels = NA)#
+	axis(1, at = c(0, 1:length(datSplit)), tick=FALSE, labels = c(NA, names(datSplit)), lwd=0, cex.axis = xAxisCex, mgp = c(3, 0.7, 0), xpd=NA)#
+	axis(1, at = c(0, 1:length(datSplit)), tick=FALSE, labels = c(rep(NA,10), names(datSplit)[10]), lwd=0, cex.axis = xAxisCex, mgp = c(3, 0.7, 0), xpd=NA)#
+	axis(2, at = c(-10, axTicks(2)), cex.axis = yAxisCex, mgp = c(3, 0.7, 0))#
+	for (j in 1:length(datSplit)) {#
+		qStats <- quantile(datSplit[[j]][, errorCol], c(qrange[1], 0.25, 0.5, 0.75, qrange[2]), na.rm=TRUE)#
+		rect(j - width/2, qStats[2], j + width/2, qStats[4], col=gray(0.75))#
+		segments(j, qStats[1], j, qStats[2], lty=2, lend=1)#
+		segments(j, qStats[4], j, qStats[5], lty=2, lend=1)#
+		segments(j - width/3, qStats[1], j + width/3, qStats[1], lend=1)#
+		segments(j - width/3, qStats[5], j + width/3, qStats[5], lend=1)#
+		segments(j - width/3, qStats[3], j + width/3, qStats[3], lwd=2, lend=1)#
+	}#
+	abline(h=0, lty=3)#
+	mtext('n regimes', side = 1, cex=0.7, line = 2)#
+	if (i == 1) mtext('mean absolute error', side = 2, cex=0.7, line = 2.5)#
+	title(main = rateMetricLabels[i], line = -0.5)#
+}#
+text(x=grconvertX(0.5, "ndc", "user"), y=grconvertY(0.97, "ndc", "user"), 'multi-regime', font=2, cex=1.5, xpd=NA)#
+# multi-regime diversity-dependent#
+dat2 <- dat[which(dat$setname %in% c('Rabosky2014_DD_k1', 'Rabosky2014_DD_k2', 'Rabosky2014_DD_k3', 'Rabosky2014_DD_k4')),]#
+#
+datSplit <- split(dat2, dat2$nRegimes)#
+#
+defaultYrange <- c(0, 0.2)#
+#
+for (i in 1:4) {#
+	tipMetric <- rateMetrics[i]#
+	errorCol <- Reduce(intersect, list(grep(rateType, colnames(dat)), grep(rateMetrics[i], colnames(dat)), grep(errorMetric, colnames(dat))))#
+	if (tipMetric != 'lambdaTB') {#
+		yrange <- defaultYrange#
+	} else {#
+		yrange <- c(0, quantile(unlist(sapply(datSplit, function(x) x[, errorCol])), 0.975))#
+	}#
+	plot.new()#
+	plot.window(xlim = c(1.5, 5.5), ylim = yrange)#
+	axis(1, at = c(1, as.numeric(names(datSplit))), labels = NA)#
+	axis(1, at = c(1, as.numeric(names(datSplit))), tick=FALSE, labels = c(NA, names(datSplit)), lwd=0, cex.axis = xAxisCex, mgp = c(3, 0.7, 0), xpd=NA)#
+	axis(2, at = c(-0.25, axTicks(2)), cex.axis = yAxisCex, mgp = c(3, 0.5, 0))#
+	for (j in as.numeric(names(datSplit))) {#
+		qStats <- quantile(datSplit[[as.character(j)]][, errorCol], c(qrange[1], 0.25, 0.5, 0.75, qrange[2]), na.rm=TRUE)#
+		rect(j - width/2, qStats[2], j + width/2, qStats[4], col=gray(0.75))#
+		segments(j, qStats[1], j, qStats[2], lty=2, lend=1)#
+		segments(j, qStats[4], j, qStats[5], lty=2, lend=1)#
+		segments(j - width/3, qStats[1], j + width/3, qStats[1], lend=1)#
+		segments(j - width/3, qStats[5], j + width/3, qStats[5], lend=1)#
+		segments(j - width/3, qStats[3], j + width/3, qStats[3], lwd=2, lend=1)#
+	}#
+	abline(h=0, lty=3)#
+	mtext('n regimes', side = 1, cex=0.7, line = 2)#
+	if (i == 1) mtext('mean absolute error', side = 2, cex=0.7, line = 2.5)#
+	title(main = rateMetricLabels[i], line = -0.5)#
+}#
+text(x=grconvertX(0.5, "ndc", "user"), y=grconvertY(0.64, "ndc", "user"), 'diversity-dependent', font=2, cex=1.5, xpd=NA)#
+# Evolving Rates#
+#
+treeDat <- read.csv('dataFiles/treeSummary.csv', stringsAsFactors=FALSE)#
+#
+dat2 <- dat[which(dat$setname == 'evolvingRates'),]#
+dat2$sigma <- sapply(dat2$treeName, function(x) treeDat[which(treeDat$treeName == x), 'sigma'])#
+table(dat2$sigma)#
+#
+datSplit <- split(dat2, dat2$sigma)#
+#
+defaultYrange <- c(0, 0.4)#
+#
+for (i in 1:4) {#
+	tipMetric <- rateMetrics[i]#
+	errorCol <- Reduce(intersect, list(grep(rateType, colnames(dat)), grep(rateMetrics[i], colnames(dat)), grep(errorMetric, colnames(dat))))#
+	if (tipMetric != 'lambdaTB') {#
+		yrange <- defaultYrange#
+	} else {#
+		yrange <- c(0, quantile(unlist(sapply(datSplit, function(x) x[, errorCol])), 0.975))#
+	}#
+	plot.new()#
+	plot.window(xlim = c(0.5,3.5), ylim = yrange)#
+	axis(1, at = c(-0.5, 1:3), labels = NA)#
+	axis(1, at = c(-0.5, 1:3), tick=FALSE, labels = c(NA, names(datSplit)), lwd=0, cex.axis = xAxisCex, mgp = c(3, 0.7, 0), xpd=NA)#
+	axis(2, at = c(-10, axTicks(2)), cex.axis = yAxisCex, mgp = c(3, 0.5, 0))#
+	for (j in 1:length(datSplit)) {#
+		qStats <- quantile(datSplit[[j]][, errorCol], c(qrange[1], 0.25, 0.5, 0.75, qrange[2]), na.rm=TRUE)#
+		rect(j - width/2, qStats[2], j + width/2, qStats[4], col=gray(0.75))#
+		segments(j, qStats[1], j, qStats[2], lty=2, lend=1)#
+		segments(j, qStats[4], j, qStats[5], lty=2, lend=1)#
+		segments(j - width/3, qStats[1], j + width/3, qStats[1], lend=1)#
+		segments(j - width/3, qStats[5], j + width/3, qStats[5], lend=1)#
+		segments(j - width/3, qStats[3], j + width/3, qStats[3], lwd=2, lend=1)#
+	}#
+	abline(h=0, lty=3)#
+	mtext(expression(sigma), side = 1, cex=0.7, line = 2)#
+	if (i == 1) mtext('mean absolute error', side = 2, cex=0.7, line = 2.5)#
+	title(main = rateMetricLabels[i], line = -0.5)#
+}#
+text(x=grconvertX(0.5, "ndc", "user"), y=grconvertY(0.3, "ndc", "user"), 'evolving rates', font=2, cex=1.5, xpd=NA)#
+dev.off()#
+##########################
+# Supplemental figure using RMSE (root mean square error)#
+#
+pdf('figS8.pdf', width=10, height=7)#
+par(mfrow = c(3, 4), mar = c(4,3,3,1), oma = c(0,1,0,0))#
+#
+width <- 0.4#
+rateType <- 'Lambda'#
+qrange <- c(0.05, 0.95)#
+defaultYrange <- c(0, 0.8)#
+errorMetric <- 'rmse'#
+## time-constant multi-regime#
+dat2 <- dat[which(dat$setname %in% c('MooreEtAl2016','RaboskyEtAl2017','fossilBAMM','MeyerWiens2017')),]#
+#
+datSplit <- split(dat2, dat2$nRegimes)#
+#
+# collapse shift number >= 10 into same category#
+datSplit2 <- datSplit#
+datSplit <- datSplit2[as.character(1:10)]#
+datSplit[['10']] <- do.call(rbind, datSplit2[which(names(datSplit2) == '10'):length(datSplit2)])#
+names(datSplit)[10] <- '>10'#
+#
+for (i in 1:4) {#
+	tipMetric <- rateMetrics[i]#
+	errorCol <- Reduce(intersect, list(grep(rateType, colnames(dat)), grep(rateMetrics[i], colnames(dat)), grep(errorMetric, colnames(dat))))#
+	if (tipMetric != 'lambdaTB') {#
+		yrange <- defaultYrange#
+	} else {#
+		yrange <- c(0, quantile(unlist(sapply(datSplit, function(x) x[, errorCol])), 0.975))#
+	}#
+	plot.new()#
+	plot.window(xlim = c(1, length(datSplit)), ylim = yrange)#
+	axis(1, at = c(0, 1:length(datSplit)), labels = NA)#
+	axis(1, at = c(0, 1:length(datSplit)), tick=FALSE, labels = c(NA, names(datSplit)), lwd=0, cex.axis = xAxisCex, mgp = c(3, 0.7, 0), xpd=NA)#
+	axis(1, at = c(0, 1:length(datSplit)), tick=FALSE, labels = c(rep(NA,10), names(datSplit)[10]), lwd=0, cex.axis = xAxisCex, mgp = c(3, 0.7, 0), xpd=NA)#
+	axis(2, at = c(-10, axTicks(2)), cex.axis = yAxisCex, mgp = c(3, 0.7, 0))#
+	for (j in 1:length(datSplit)) {#
+		qStats <- quantile(datSplit[[j]][, errorCol], c(qrange[1], 0.25, 0.5, 0.75, qrange[2]), na.rm=TRUE)#
+		rect(j - width/2, qStats[2], j + width/2, qStats[4], col=gray(0.75))#
+		segments(j, qStats[1], j, qStats[2], lty=2, lend=1)#
+		segments(j, qStats[4], j, qStats[5], lty=2, lend=1)#
+		segments(j - width/3, qStats[1], j + width/3, qStats[1], lend=1)#
+		segments(j - width/3, qStats[5], j + width/3, qStats[5], lend=1)#
+		segments(j - width/3, qStats[3], j + width/3, qStats[3], lwd=2, lend=1)#
+	}#
+	abline(h=0, lty=3)#
+	mtext('n regimes', side = 1, cex=0.7, line = 2)#
+	if (i == 1) mtext('RMSE', side = 2, cex=0.7, line = 2.5)#
+	title(main = rateMetricLabels[i], line = -0.5)#
+}#
+text(x=grconvertX(0.5, "ndc", "user"), y=grconvertY(0.97, "ndc", "user"), 'multi-regime', font=2, cex=1.5, xpd=NA)#
+# multi-regime diversity-dependent#
+dat2 <- dat[which(dat$setname %in% c('Rabosky2014_DD_k1', 'Rabosky2014_DD_k2', 'Rabosky2014_DD_k3', 'Rabosky2014_DD_k4')),]#
+#
+datSplit <- split(dat2, dat2$nRegimes)#
+#
+defaultYrange <- c(0, 0.2)#
+#
+for (i in 1:4) {#
+	tipMetric <- rateMetrics[i]#
+	errorCol <- Reduce(intersect, list(grep(rateType, colnames(dat)), grep(rateMetrics[i], colnames(dat)), grep(errorMetric, colnames(dat))))#
+	if (tipMetric != 'lambdaTB') {#
+		yrange <- defaultYrange#
+	} else {#
+		yrange <- c(0, quantile(unlist(sapply(datSplit, function(x) x[, errorCol])), 0.975))#
+	}#
+	plot.new()#
+	plot.window(xlim = c(1.5, 5.5), ylim = yrange)#
+	axis(1, at = c(1, as.numeric(names(datSplit))), labels = NA)#
+	axis(1, at = c(1, as.numeric(names(datSplit))), tick=FALSE, labels = c(NA, names(datSplit)), lwd=0, cex.axis = xAxisCex, mgp = c(3, 0.7, 0), xpd=NA)#
+	axis(2, at = c(-0.10, axTicks(2)), cex.axis = yAxisCex, mgp = c(3, 0.5, 0))#
+	for (j in as.numeric(names(datSplit))) {#
+		qStats <- quantile(datSplit[[as.character(j)]][, errorCol], c(qrange[1], 0.25, 0.5, 0.75, qrange[2]), na.rm=TRUE)#
+		rect(j - width/2, qStats[2], j + width/2, qStats[4], col=gray(0.75))#
+		segments(j, qStats[1], j, qStats[2], lty=2, lend=1)#
+		segments(j, qStats[4], j, qStats[5], lty=2, lend=1)#
+		segments(j - width/3, qStats[1], j + width/3, qStats[1], lend=1)#
+		segments(j - width/3, qStats[5], j + width/3, qStats[5], lend=1)#
+		segments(j - width/3, qStats[3], j + width/3, qStats[3], lwd=2, lend=1)#
+	}#
+	abline(h=0, lty=3)#
+	mtext('n regimes', side = 1, cex=0.7, line = 2)#
+	if (i == 1) mtext('RMSE', side = 2, cex=0.7, line = 2.5)#
+	title(main = rateMetricLabels[i], line = -0.5)#
+}#
+text(x=grconvertX(0.5, "ndc", "user"), y=grconvertY(0.64, "ndc", "user"), 'diversity-dependent', font=2, cex=1.5, xpd=NA)#
+# Evolving Rates#
+#
+treeDat <- read.csv('dataFiles/treeSummary.csv', stringsAsFactors=FALSE)#
+#
+dat2 <- dat[which(dat$setname == 'evolvingRates'),]#
+dat2$sigma <- sapply(dat2$treeName, function(x) treeDat[which(treeDat$treeName == x), 'sigma'])#
+table(dat2$sigma)#
+#
+datSplit <- split(dat2, dat2$sigma)#
+#
+defaultYrange <- c(0, 0.8)#
+#
+for (i in 1:4) {#
+	tipMetric <- rateMetrics[i]#
+	errorCol <- Reduce(intersect, list(grep(rateType, colnames(dat)), grep(rateMetrics[i], colnames(dat)), grep(errorMetric, colnames(dat))))#
+	if (tipMetric != 'lambdaTB') {#
+		yrange <- defaultYrange#
+	} else {#
+		yrange <- c(0, quantile(unlist(sapply(datSplit, function(x) x[, errorCol])), 0.975))#
+	}#
+	plot.new()#
+	plot.window(xlim = c(0.5,3.5), ylim = yrange)#
+	axis(1, at = c(-0.5, 1:3), labels = NA)#
+	axis(1, at = c(-0.5, 1:3), tick=FALSE, labels = c(NA, names(datSplit)), lwd=0, cex.axis = xAxisCex, mgp = c(3, 0.7, 0), xpd=NA)#
+	axis(2, at = c(-10, axTicks(2)), cex.axis = yAxisCex, mgp = c(3, 0.5, 0))#
+	for (j in 1:length(datSplit)) {#
+		qStats <- quantile(datSplit[[j]][, errorCol], c(qrange[1], 0.25, 0.5, 0.75, qrange[2]), na.rm=TRUE)#
+		rect(j - width/2, qStats[2], j + width/2, qStats[4], col=gray(0.75))#
+		segments(j, qStats[1], j, qStats[2], lty=2, lend=1)#
+		segments(j, qStats[4], j, qStats[5], lty=2, lend=1)#
+		segments(j - width/3, qStats[1], j + width/3, qStats[1], lend=1)#
+		segments(j - width/3, qStats[5], j + width/3, qStats[5], lend=1)#
+		segments(j - width/3, qStats[3], j + width/3, qStats[3], lwd=2, lend=1)#
+	}#
+	abline(h=0, lty=3)#
+	mtext(expression(sigma), side = 1, cex=0.7, line = 2)#
+	if (i == 1) mtext('RMSE', side = 2, cex=0.7, line = 2.5)#
+	title(main = rateMetricLabels[i], line = -0.5)#
+}#
+text(x=grconvertX(0.5, "ndc", "user"), y=grconvertY(0.3, "ndc", "user"), 'evolving rates', font=2, cex=1.5, xpd=NA)#
+dev.off()#
+##########################
+# Supplemental version with lambdaTB, compared to lambdaDR and lambdaBAMM#
+rateMetrics <- c('lambdaTB', 'lambdaDR', 'lambdaBAMM')#
+errorMetricNames <- c(PE1='Prop. Error 1', PE2='Prop. Error 2', PE3='Prop. Error 3', PE4='Prop. 4', r2='OLS R2', slope='OLS slope', absoluteError='mean absolute error')#
+#
+rateMetricLabels <- c(expression(bold(paste(lambda['TB']))), expression(bold(paste(lambda['DR']))),expression(bold(paste(lambda['BAMM']))))#
+#
+pdf('figS9.pdf', width=7.5, height=7)#
+par(mfrow = c(3, 3), mar = c(4,3,3,1), oma = c(0,1,0,0))#
+#
+width <- 0.4#
+rateType <- 'Lambda'#
+qrange <- c(0.05, 0.95)#
+defaultYrange <- c(0, 8)#
+errorMetric <- 'absoluteError'#
+## time-constant multi-regime#
+dat2 <- dat[which(dat$setname %in% c('MooreEtAl2016','RaboskyEtAl2017','fossilBAMM','MeyerWiens2017')),]#
+#
+datSplit <- split(dat2, dat2$nRegimes)#
+#
+# collapse shift number >= 10 into same category#
+datSplit2 <- datSplit#
+datSplit <- datSplit2[as.character(1:10)]#
+datSplit[['10']] <- do.call(rbind, datSplit2[which(names(datSplit2) == '10'):length(datSplit2)])#
+names(datSplit)[10] <- '>10'#
+#
+for (i in 1:3) {#
+	tipMetric <- rateMetrics[i]#
+	errorCol <- Reduce(intersect, list(grep(rateType, colnames(dat)), grep(rateMetrics[i], colnames(dat)), grep(errorMetric, colnames(dat))))#
+	plot.new()#
+	plot.window(xlim = c(1, length(datSplit)), ylim = defaultYrange)#
+	axis(1, at = c(0, 1:length(datSplit)), labels = NA)#
+	axis(1, at = c(0, 1:length(datSplit)), tick=FALSE, labels = c(NA, names(datSplit)), lwd=0, cex.axis = xAxisCex, mgp = c(3, 0.7, 0), xpd=NA)#
+	axis(1, at = c(0, 1:length(datSplit)), tick=FALSE, labels = c(rep(NA,10), names(datSplit)[10]), lwd=0, cex.axis = xAxisCex, mgp = c(3, 0.7, 0), xpd=NA)#
+	axis(2, at = c(-10, axTicks(2)))#
+	for (j in 1:length(datSplit)) {#
+		qStats <- quantile(datSplit[[j]][, errorCol], c(qrange[1], 0.25, 0.5, 0.75, qrange[2]), na.rm=TRUE)#
+		rect(j - width/2, qStats[2], j + width/2, qStats[4], col=gray(0.75))#
+		segments(j, qStats[1], j, qStats[2], lty=2, lend=1)#
+		segments(j, qStats[4], j, qStats[5], lty=2, lend=1)#
+		segments(j - width/3, qStats[1], j + width/3, qStats[1], lend=1)#
+		segments(j - width/3, qStats[5], j + width/3, qStats[5], lend=1)#
+		segments(j - width/3, qStats[3], j + width/3, qStats[3], lwd=2, lend=1)#
+	}#
+	abline(h=0, lty=3)#
+	mtext('n regimes', side = 1, cex=0.7, line = 2)#
+	if (i == 1) mtext('mean absolute error', side = 2, cex=0.7, line = 2.5)#
+	title(main = rateMetricLabels[i], line = -0.5)#
+}#
+text(x=grconvertX(0.5, "ndc", "user"), y=grconvertY(0.97, "ndc", "user"), 'multi-regime', font=2, cex=1.5, xpd=NA)#
+# multi-regime diversity-dependent#
+dat2 <- dat[which(dat$setname %in% c('Rabosky2014_DD_k1', 'Rabosky2014_DD_k2', 'Rabosky2014_DD_k3', 'Rabosky2014_DD_k4')),]#
+#
+datSplit <- split(dat2, dat2$nRegimes)#
+#
+defaultYrange <- c(0, 1.5)#
+#
+for (i in 1:3) {#
+	tipMetric <- rateMetrics[i]#
+	errorCol <- Reduce(intersect, list(grep(rateType, colnames(dat)), grep(rateMetrics[i], colnames(dat)), grep(errorMetric, colnames(dat))))#
+	if (tipMetric != 'lambdaTB') {#
+		yrange <- defaultYrange#
+	} else {#
+		yrange <- c(0, quantile(unlist(sapply(datSplit, function(x) x[, errorCol])), 0.975))#
+	}#
+	plot.new()#
+	plot.window(xlim = c(1.5, 5.5), ylim = defaultYrange)#
+	axis(1, at = c(1, as.numeric(names(datSplit))), labels = NA)#
+	axis(1, at = c(1, as.numeric(names(datSplit))), tick=FALSE, labels = c(NA, names(datSplit)), lwd=0, cex.axis = xAxisCex, mgp = c(3, 0.7, 0), xpd=NA)#
+	axis(2, at = c(-1, axTicks(2)))#
+	for (j in as.numeric(names(datSplit))) {#
+		qStats <- quantile(datSplit[[as.character(j)]][, errorCol], c(qrange[1], 0.25, 0.5, 0.75, qrange[2]), na.rm=TRUE)#
+		rect(j - width/2, qStats[2], j + width/2, qStats[4], col=gray(0.75))#
+		segments(j, qStats[1], j, qStats[2], lty=2, lend=1)#
+		segments(j, qStats[4], j, qStats[5], lty=2, lend=1)#
+		segments(j - width/3, qStats[1], j + width/3, qStats[1], lend=1)#
+		segments(j - width/3, qStats[5], j + width/3, qStats[5], lend=1)#
+		segments(j - width/3, qStats[3], j + width/3, qStats[3], lwd=2, lend=1)#
+	}#
+	abline(h=0, lty=3)#
+	mtext('n regimes', side = 1, cex=0.7, line = 2)#
+	if (i == 1) mtext('mean absolute error', side = 2, cex=0.7, line = 2.5)#
+	title(main = rateMetricLabels[i], line = -0.5)#
+}#
+text(x=grconvertX(0.5, "ndc", "user"), y=grconvertY(0.64, "ndc", "user"), 'diversity-dependent', font=2, cex=1.5, xpd=NA)#
+# Evolving Rates#
+#
+treeDat <- read.csv('dataFiles/treeSummary.csv', stringsAsFactors=FALSE)#
+#
+dat2 <- dat[which(dat$setname == 'evolvingRates'),]#
+dat2$sigma <- sapply(dat2$treeName, function(x) treeDat[which(treeDat$treeName == x), 'sigma'])#
+table(dat2$sigma)#
+#
+datSplit <- split(dat2, dat2$sigma)#
+#
+defaultYrange <- c(0, 8)#
+#
+for (i in 1:3) {#
+	tipMetric <- rateMetrics[i]#
+	errorCol <- Reduce(intersect, list(grep(rateType, colnames(dat)), grep(rateMetrics[i], colnames(dat)), grep(errorMetric, colnames(dat))))#
+	if (tipMetric != 'lambdaTB') {#
+		yrange <- defaultYrange#
+	} else {#
+		yrange <- c(0, quantile(unlist(sapply(datSplit, function(x) x[, errorCol])), 0.975))#
+	}#
+	plot.new()#
+	plot.window(xlim = c(0.5,3.5), ylim = defaultYrange)#
+	axis(1, at = c(-0.5, 1:3), labels = NA)#
+	axis(1, at = c(-0.5, 1:3), tick=FALSE, labels = c(NA, names(datSplit)), lwd=0, cex.axis = xAxisCex, mgp = c(3, 0.7, 0), xpd=NA)#
+	axis(2, at = c(-10, axTicks(2)))#
+	for (j in 1:length(datSplit)) {#
+		qStats <- quantile(datSplit[[j]][, errorCol], c(qrange[1], 0.25, 0.5, 0.75, qrange[2]), na.rm=TRUE)#
+		rect(j - width/2, qStats[2], j + width/2, qStats[4], col=gray(0.75))#
+		segments(j, qStats[1], j, qStats[2], lty=2, lend=1, xpd=NA)#
+		segments(j, qStats[4], j, qStats[5], lty=2, lend=1, xpd=NA)#
+		segments(j - width/3, qStats[1], j + width/3, qStats[1], lend=1, xpd=NA)#
+		segments(j - width/3, qStats[5], j + width/3, qStats[5], lend=1, xpd=NA)#
+		segments(j - width/3, qStats[3], j + width/3, qStats[3], lwd=2, lend=1, xpd=NA)#
+	}#
+	abline(h=0, lty=3)#
+	mtext(expression(sigma), side = 1, cex=0.7, line = 2)#
+	if (i == 1) mtext('mean absolute error', side = 2, cex=0.7, line = 2.5)#
+	title(main = rateMetricLabels[i], line = -0.5)#
+}#
+text(x=grconvertX(0.5, "ndc", "user"), y=grconvertY(0.3, "ndc", "user"), 'evolving rates', font=2, cex=1.5, xpd=NA)#
+dev.off()#
+# Explore accuracy in DR and BAMM as compared to CRBD, when all trees are combined:#
+## time-constant multi-regime#
+dat2 <- dat[which(dat$setname %in% c('MooreEtAl2016','RaboskyEtAl2017','fossilBAMM','MeyerWiens2017')),]#
+#
+crbd <- dat2[, 'tipLambda_CRBDlambda_absoluteError']#
+dr <- dat2[, 'tipLambda_lambdaDR_absoluteError']#
+bamm <- dat2[, 'tipLambda_lambdaBAMM_absoluteError']#
+#
+cat('time-constant multi-regime\n')#
+#
+cat('\tCRBD more accurate than DR', round(length(which((crbd < dr) == TRUE)) / length(crbd), 2), '\n')#
+cat('\tCRBD more accurate than BAMM', round(length(which((crbd < bamm) == TRUE)) / length(crbd), 2), '\n\n')#
+# multi-regime diversity-dependent#
+dat2 <- dat[which(dat$setname %in% c('Rabosky2014_DD_k1', 'Rabosky2014_DD_k2', 'Rabosky2014_DD_k3', 'Rabosky2014_DD_k4')),]#
+#
+crbd <- dat2[, 'tipLambda_CRBDlambda_absoluteError']#
+dr <- dat2[, 'tipLambda_lambdaDR_absoluteError']#
+bamm <- dat2[, 'tipLambda_lambdaBAMM_absoluteError']#
+cat('multi-regime diversity-dependent\n')#
+#
+cat('\tCRBD more accurate than DR', round(length(which((crbd < dr) == TRUE)) / length(crbd), 2), '\n')#
+cat('\tCRBD more accurate than BAMM', round(length(which((crbd < bamm) == TRUE)) / length(crbd), 2), '\n\n')#
+treeDat <- read.csv('dataFiles/treeSummary.csv', stringsAsFactors=FALSE)#
+#
+dat2 <- dat[which(dat$setname == 'evolvingRates'),]#
+dat2$sigma <- sapply(dat2$treeName, function(x) treeDat[which(treeDat$treeName == x), 'sigma'])#
+table(dat2$sigma)#
+#
+crbd <- dat2[, 'tipLambda_CRBDlambda_absoluteError']#
+dr <- dat2[, 'tipLambda_lambdaDR_absoluteError']#
+bamm <- dat2[, 'tipLambda_lambdaBAMM_absoluteError']#
+#
+cat('evolving rates\n')#
+#
+cat('\tCRBD more accurate than DR', round(length(which((crbd < dr) == TRUE)) / length(crbd), 2), '\n')#
+cat('\tCRBD more accurate than BAMM', round(length(which((crbd < bamm) == TRUE)) / length(crbd), 2), '\n\n')
+regimeSummary <- read.csv('dataFiles/regimeSummary.csv', stringsAsFactors=FALSE)
+regimeSummary[, 'CRBDnetdiv'] <- regimeSummary$CRBDlambda - regimeSummary$CRBDmu
+----------------------#
+#
+# # Examine strength of estimated-to-true rate correlation across regimes, as a function of regime size. #
+# # Use only multi-regime time-constant trees#
+# # Regime size along x-axis and Pearson correlation coefficient and slope as y-axis#
+#
+regimeSummary2 <- regimeSummary[which(regimeSummary$setname %in% c('MeyerWiens2017','fossilBAMM','MooreEtAl2016','RaboskyEtAl2017')),]#
+#
+maxRegimeCount <- 50#
+#
+regimeSize <- sort(unique(regimeSummary2$nTips))#
+#
+regimeSize <- 1:maxRegimeCount#
+#
+rateMetrics <- c('CRBDlambda','lambdaTB','lambdaND','lambdaDR','lambdaBAMM')#
+rateMetricsNetDiv <- c('CRBDnetdiv','lambdaTB','lambdaND','lambdaDR','netDivBAMM')#
+regimeSizeTable <- as.data.frame(matrix(nrow = length(regimeSize), ncol = 21))#
+colnames(regimeSizeTable) <- c('regimeSize', paste0(rateMetrics, 'lambda_cor'), paste0(rateMetrics, 'lambda_slope'), paste0(rateMetricsNetDiv, 'netdiv_cor'), paste0(rateMetricsNetDiv, 'netdiv_slope'))#
+regimeSizeTable$regimeSize <- regimeSize#
+#
+for (i in 1:length(regimeSize)) {#
+	xx <- regimeSummary2[which(regimeSummary2$nTips >= regimeSize[i]),]#
+	# speciation rate#
+	if (nrow(xx) > 1) {#
+		for (j in 1:length(rateMetrics)) {#
+			regimeSizeTable[i, paste0(rateMetrics[j], 'lambda_cor')] <- cor(xx$tipLambda, xx[, rateMetrics[j]])#
+			regimeSizeTable[i, paste0(rateMetrics[j], 'lambda_slope')] <- summary(lm(xx[, rateMetrics[j]] ~ xx$tipLambda))$coef[2,1]#
+		}#
+	}#
+	# net diversification#
+	if (nrow(xx) > 1) {#
+		for (j in 1:length(rateMetrics)) {#
+			regimeSizeTable[i,paste0(rateMetricsNetDiv[j], 'netdiv_cor')] <- cor(xx$tipNetDiv, xx[, rateMetricsNetDiv[j]])#
+			regimeSizeTable[i,paste0(rateMetricsNetDiv[j], 'netdiv_slope')] <- summary(lm(xx[, rateMetricsNetDiv[j]] ~ xx$tipNetDiv))$coef[2,1]#
+		}#
+	}#
+}
+regimeSummary <- read.csv('dataFiles/regimeSummary.csv', stringsAsFactors=FALSE)#
+#
+regimeSummary[, 'CRBDnetdiv'] <- regimeSummary$CRBDlambda - regimeSummary$CRBDmu#
+# ---------------------------------------------------------#
+# ---------------------------------------------------------#
+#
+# # Examine strength of estimated-to-true rate correlation across regimes, as a function of regime size. #
+# # Use only multi-regime time-constant trees#
+# # Regime size along x-axis and Pearson correlation coefficient and slope as y-axis#
+#
+regimeSummary2 <- regimeSummary[which(regimeSummary$setname %in% c('MeyerWiens2017','fossilBAMM','MooreEtAl2016','RaboskyEtAl2017')),]
+maxRegimeCount <- 50#
+#
+regimeSize <- sort(unique(regimeSummary2$nTips))#
+#
+regimeSize <- 1:maxRegimeCount#
+#
+rateMetrics <- c('CRBDlambda','lambdaTB','lambdaND','lambdaDR','lambdaBAMM')#
+rateMetricsNetDiv <- c('CRBDnetdiv','lambdaTB','lambdaND','lambdaDR','netDivBAMM')#
+regimeSizeTable <- as.data.frame(matrix(nrow = length(regimeSize), ncol = 21))#
+colnames(regimeSizeTable) <- c('regimeSize', paste0(rateMetrics, 'lambda_cor'), paste0(rateMetrics, 'lambda_slope'), paste0(rateMetricsNetDiv, 'netdiv_cor'), paste0(rateMetricsNetDiv, 'netdiv_slope'))#
+regimeSizeTable$regimeSize <- regimeSize#
+#
+for (i in 1:length(regimeSize)) {#
+	xx <- regimeSummary2[which(regimeSummary2$nTips >= regimeSize[i]),]#
+	# speciation rate#
+	if (nrow(xx) > 1) {#
+		for (j in 1:length(rateMetrics)) {#
+			regimeSizeTable[i, paste0(rateMetrics[j], 'lambda_cor')] <- cor(xx$tipLambda, xx[, rateMetrics[j]])#
+			regimeSizeTable[i, paste0(rateMetrics[j], 'lambda_slope')] <- summary(lm(xx[, rateMetrics[j]] ~ xx$tipLambda))$coef[2,1]#
+		}#
+	}#
+	# net diversification#
+	if (nrow(xx) > 1) {#
+		for (j in 1:length(rateMetrics)) {#
+			regimeSizeTable[i,paste0(rateMetricsNetDiv[j], 'netdiv_cor')] <- cor(xx$tipNetDiv, xx[, rateMetricsNetDiv[j]])#
+			regimeSizeTable[i,paste0(rateMetricsNetDiv[j], 'netdiv_slope')] <- summary(lm(xx[, rateMetricsNetDiv[j]] ~ xx$tipNetDiv))$coef[2,1]#
+		}#
+	}#
+}
+# Speciation rate, Pearson correlation#
+tipMetrics <- c('CRBDlambda','lambdaTB','lambdaND','lambdaDR','lambdaBAMM')#
+#
+metricColors <- c('black','dark green','dark orange','red','blue')#
+#
+pdf('fig4.pdf', width=10, height=5)#
+#
+par(mfrow=c(1,2), mar=c(4,4,0,0))#
+#
+# speciation rate, correlation#
+plot.new()#
+plot.window(xlim = range(regimeSize), ylim = c(0,1))#
+axis(1, at = c(-1, axTicks(1)))#
+axis(2, at = c(-1, axTicks(2)))#
+mtext('minimum regime size', side = 1, line = 2.5, cex=1)#
+mtext('Pearson correlation', side = 2, line = 2.5, cex=1)#
+for (i in 1:length(rateMetrics)) {#
+	lines(regimeSize, regimeSizeTable[, paste0(rateMetrics[i], 'lambda_cor')], col= metricColors[i], lwd=2)#
+}#
+abline(h=1, lty=3)#
+mtext('(a)', outer = TRUE, line = -1.5, at = 0.02, font=2)#
+#
+legend(35, 0.55, legend = c(expression(lambda['CRBD']), expression(lambda['TB']), expression(lambda['ND']), expression(lambda['DR']), expression(lambda['BAMM'])), col = metricColors, lwd=2, bty='n', xpd=NA, cex=1.2)#
+#
+# speciation rate, slope#
+plot.new()#
+plot.window(xlim = range(regimeSize), ylim = c(0,1.5))#
+axis(1, at = c(-1, axTicks(1)))#
+axis(2, at = c(-1, axTicks(2)))#
+mtext('minimum regime size', side = 1, line = 2.5, cex=1)#
+mtext('OLS slope', side = 2, line = 2.5, cex=1)#
+for (i in 1:length(rateMetrics)) {#
+	lines(regimeSize, regimeSizeTable[, paste0(rateMetrics[i], 'lambda_slope')], col= metricColors[i], lwd=2)#
+}#
+abline(h=1, lty=3)#
+mtext('(b)', outer = TRUE, line = -1.5, at = 0.52, font=2)#
+#
+dev.off()#
+# Now, net div#
+#
+pdf('figS10.pdf', width=10, height=5)#
+#
+par(mfrow=c(1,2), mar=c(4,4,0,0))#
+#
+# net div rate, correlation#
+plot.new()#
+plot.window(xlim = range(regimeSize), ylim = c(0,1))#
+axis(1, at = c(-1, axTicks(1)))#
+axis(2, at = c(-1, axTicks(2)))#
+mtext('minimum regime size', side = 1, line = 2.5, cex=1)#
+mtext('Pearson correlation', side = 2, line = 2.5, cex=1)#
+for (i in 1:length(rateMetrics)) {#
+	lines(regimeSize, regimeSizeTable[, paste0(rateMetricsNetDiv[i], 'netdiv_cor')], col= metricColors[i], lwd=2)#
+}#
+abline(h=1, lty=3)#
+mtext('(a)', outer = TRUE, line = -1.5, at = 0.02, font=2)#
+#
+legend(35, 0.97, legend = c(expression(italic(r)['CRBD']), expression(lambda['TB']), expression(lambda['ND']), expression(lambda['DR']), expression(italic(r)['BAMM'])), col = metricColors, lwd=2, bty='n', xpd=NA, cex=1.2)#
+# net div rate, slope#
+plot.new()#
+plot.window(xlim = range(regimeSize), ylim = c(0,1.5))#
+axis(1, at = c(-1, axTicks(1)))#
+axis(2, at = c(-1, axTicks(2)))#
+mtext('minimum regime size', side = 1, line = 2.5, cex=1)#
+mtext('OLS slope', side = 2, line = 2.5, cex=1)#
+#
+for (i in 1:length(rateMetrics)) {#
+	lines(regimeSize, regimeSizeTable[, paste0(rateMetricsNetDiv[i], 'netdiv_slope')], col= metricColors[i], lwd=2)#
+}#
+abline(h=1, lty=3)#
+mtext('(b)', outer = TRUE, line = -1.5, at = 0.52, font=2)#
+#
+dev.off()
+allRatesList <- readRDS('dataFiles/allRatesList.rds')
+listnames <- names(allRatesList)#
+listnames <- sapply(listnames, function(x) strsplit(x, '_')[[1]][1], USE.NAMES=FALSE)#
+allRatesList <- allRatesList[which(listnames %in% c('MeyerWiens2017','fossilBAMM','MooreEtAl2016','RaboskyEtAl2017'))]#
+#
+# combine treeName and regimeID to create one big lookup table#
+for (i in 1:length(allRatesList)) {#
+	allRatesList[[i]]$regimeID <- paste0(allRatesList[[i]]$treeName, '_', allRatesList[[i]]$regimeID)#
+}#
+allRates <- do.call(rbind, allRatesList)#
+allRates$CRBDnetdiv <- allRates$CRBDlambda - allRates$CRBDmu#
+#
+# average each regime #
+regimeAvg <- matrix(nrow = length(unique(allRates$regimeID)), ncol = 11)#
+colnames(regimeAvg) <- c('treeName', 'regimeSize', 'tipLambda', 'tipNetDiv', 'lambdaTB', 'lambdaND', 'lambdaDR', 'lambdaBAMM', 'netDivBAMM', 'CRBDlambda', 'CRBDnetdiv')#
+regimeAvg <- as.data.frame(regimeAvg, stringsAsFactors=FALSE)#
+for (i in 1:length(unique(allRates$regimeID))) {#
+	qq <- allRates[which(allRates$regimeID == unique(allRates$regimeID)[i]),]#
+	regimeAvg[i, 'treeName'] <- qq[1, 'treeName']#
+	regimeAvg[i, 'regimeSize'] <- nrow(qq)#
+	regimeAvg[i, 'tipLambda'] <- mean(qq[, 'tipLambda'])#
+	regimeAvg[i, 'tipNetDiv'] <- mean(qq[, 'tipNetDiv'])#
+	regimeAvg[i, 'lambdaTB'] <- mean(qq[, 'lambdaTB'])#
+	regimeAvg[i, 'lambdaND'] <- mean(qq[, 'lambdaND'])#
+	regimeAvg[i, 'lambdaDR'] <- mean(qq[, 'lambdaDR'])#
+	regimeAvg[i, 'lambdaBAMM'] <- mean(qq[, 'lambdaBAMM'])#
+	regimeAvg[i, 'netDivBAMM'] <- mean(qq[, 'netDivBAMM'])#
+	regimeAvg[i, 'CRBDlambda'] <- mean(qq[, 'CRBDlambda'])#
+	regimeAvg[i, 'CRBDnetdiv'] <- mean(qq[, 'CRBDnetdiv'])#
+}#
+#
+regimeAvgError <- matrix(nrow = nrow(regimeAvg), ncol = 12)#
+colnames(regimeAvgError) <- c('treeName','regimeSize','lambdaError_lambdaTB', 'lambdaError_lambdaND', 'lambdaError_lambdaDR', 'lambdaError_lambdaBAMM', 'lambdaError_CRBDlambda', 'netdivError_lambdaTB', 'netdivError_lambdaND', 'netdivError_lambdaDR', 'netdivError_netDivBAMM', 'netdivError_CRBDnetdiv')#
+regimeAvgError <- as.data.frame(regimeAvgError, stringsAsFactors=FALSE)#
+#
+for (i in 1:nrow(regimeAvg)) {#
+	regimeAvgError[i, 'treeName'] <- regimeAvg[i, 'treeName']#
+	regimeAvgError[i, 'regimeSize'] <- regimeAvg[i, 'regimeSize']#
+	regimeAvgError[i, 'lambdaError_lambdaTB'] <- abs(regimeAvg[i, 'tipLambda'] - regimeAvg[i, 'lambdaTB'])#
+	regimeAvgError[i, 'lambdaError_lambdaND'] <- abs(regimeAvg[i, 'tipLambda'] - regimeAvg[i, 'lambdaND'])#
+	regimeAvgError[i, 'lambdaError_lambdaDR'] <- abs(regimeAvg[i, 'tipLambda'] - regimeAvg[i, 'lambdaDR'])#
+	regimeAvgError[i, 'lambdaError_lambdaBAMM'] <- abs(regimeAvg[i, 'tipLambda'] - regimeAvg[i, 'lambdaBAMM'])#
+	regimeAvgError[i, 'lambdaError_CRBDlambda'] <- abs(regimeAvg[i, 'tipLambda'] - regimeAvg[i, 'CRBDlambda'])#
+#
+	regimeAvgError[i, 'netdivError_lambdaTB'] <- abs(regimeAvg[i, 'tipNetDiv'] - regimeAvg[i, 'lambdaTB'])#
+	regimeAvgError[i, 'netdivError_lambdaND'] <- abs(regimeAvg[i, 'tipNetDiv'] - regimeAvg[i, 'lambdaND'])#
+	regimeAvgError[i, 'netdivError_lambdaDR'] <- abs(regimeAvg[i, 'tipNetDiv'] - regimeAvg[i, 'lambdaDR'])#
+	regimeAvgError[i, 'netdivError_netDivBAMM'] <- abs(regimeAvg[i, 'tipNetDiv'] - regimeAvg[i, 'netDivBAMM'])#
+	regimeAvgError[i, 'netdivError_CRBDnetdiv'] <- abs(regimeAvg[i, 'tipNetDiv'] - regimeAvg[i, 'CRBDnetdiv'])#
+}#
+#
+rateMetrics <- c('CRBDlambda','lambdaND','lambdaDR','lambdaBAMM')#
+rateMetricsNetDiv <- c('CRBDnetdiv','lambdaND','lambdaDR','netDivBAMM')#
+#
+# bin into 10 tip groupings#
+#
+brks <- c(1,10,20,30,40,50)#
+#
+yrange <- c(0, 0.5)#
+width <- 0.4#
+#
+rateMetricLabels <- c(expression(bold(lambda['CRBD'])), expression(bold(lambda['ND'])), expression(bold(lambda['DR'])),expression(bold(lambda['BAMM'])))#
+#
+rateMetricLabelsNetDiv <- c(expression(bold(italic(r)['CRBD'])), expression(bold(lambda['TB'])), expression(bold(lambda['ND'])), expression(bold(lambda['DR'])),expression(bold(italic(r)['BAMM'])))#
+#
+pdf('fig5.pdf', width=10, height=3)#
+par(mfrow = c(1, 4), mar = c(5,3,0,0), oma = c(0,1,1,0))#
+for (i in 1:length(rateMetrics)) {#
+	tipMetric <- rateMetrics[i]#
+	errorCol <- intersect(grep('lambdaError', colnames(regimeAvgError)), grep(tipMetric, colnames(regimeAvgError)))#
+	plot.new()#
+	plot.window(xlim = c(0.5,6.5), ylim = yrange)#
+	axis(1, at = c(-0.5, 1:6), labels = FALSE)#
+	text(x = (1:6) + 0.35, y = -0.05, labels = c('1-10', '11-20','21-30','31-40','41-50','> 50'), srt=35, pos=2, xpd=NA)#
+	axis(2, at = c(-10, axTicks(2)))#
+	for (j in 1:length(brks)) {#
+#
+		if (j < 6) {#
+			qStats <- quantile(regimeAvgError[which(regimeAvgError[, 'regimeSize'] > brks[j] & regimeAvgError[, 'regimeSize'] <= brks[j+1]), errorCol], c(0.05, 0.25, 0.5, 0.75, 0.95))#
+		} else {#
+			qStats <- quantile(regimeAvgError[which(regimeAvgError[, 'regimeSize'] > brks[j]), errorCol], c(0.05, 0.25, 0.5, 0.75, 0.95))#
+		}#
+		rect(j - width/2, qStats[2], j + width/2, qStats[4], col=gray(0.75))#
+		segments(j, qStats[1], j, qStats[2], lty=2, lend=1, xpd =NA)#
+		segments(j, qStats[4], j, qStats[5], lty=2, lend=1, xpd =NA)#
+		segments(j - width/3, qStats[1], j + width/3, qStats[1], lend=1, xpd =NA)#
+		segments(j - width/3, qStats[5], j + width/3, qStats[5], lend=1, xpd =NA)#
+		segments(j - width/3, qStats[3], j + width/3, qStats[3], lwd=2, lend=1, xpd =NA)#
+	}#
+	abline(h=0, lty=3)#
+	mtext('regime size', side = 1, cex=0.7, line = 3)#
+	if (i == 1) mtext('absolute error', side = 2, cex=0.7, line = 2.5)#
+	title(main = rateMetricLabels[i], line = -0.6, cex.main=1.2)#
+}#
+#
+dev.off()
+require(LSD)
+allRatesList <- readRDS('dataFiles/allRatesList.rds')#
+dat <- do.call(rbind, allRatesList)#
+table(dat$setname)#
+resolution <- 300#
+# ---------------------------------
+setlist <- list('multi-regime'= c('fossilBAMM', 'lambdaConstantVariance','MeyerWiens2017','MooreEtAl2016','RaboskyEtAl2017'), 'diversity-dependent'=c('Rabosky2014_DD_k1', 'Rabosky2014_DD_k2', 'Rabosky2014_DD_k3', 'Rabosky2014_DD_k4'), 'evolving rates'='evolvingRates')#
+#
+tipMetrics <- c('lambdaND','lambdaDR','lambdaBAMM')
+require(BAMMtools)#
+require(phytools)
+source('sourceScripts/tipRateFunctions.R')
+source('sourceScripts/sourceFxns.R')
+setwd('conceptualFigTrees/toytree')
+toytree <- read.tree('tree.tre')#
+toytree <- ladderize(toytree)
+# create bamm object based on true parameters#
+true <- as.data.frame(matrix(nrow = 2, ncol = 8)) #
+colnames(true) <- c('generation', 'leftchild', 'rightchild', 'abstime', 'lambdainit', 'lambdashift', 'muinit', 'mushift')#
+true[, 'generation'] <- 1#
+true[, 'abstime'] <- c(0, 75)#
+true[, 'lambdainit'] <- c(0.02995732, 0.1360479)#
+true[, 'lambdashift'] <- 0#
+true[, 'muinit'] <- 0#
+true[, 'mushift'] <- 0#
+true[, 'leftchild'] <- c('t38', 's1')#
+true[, 'rightchild'] <- c('t35', 's30')
+trueEd <- getEventData(toytree, true)#
+trueTips <- getTipRates(trueEd)$lambda.avg
+checkBAMMconvergence(burnin=0.25)
+ed <- getEventData(toytree, 'event_data.txt', nsamples=1000, burnin=0.25)
+bamm <- getTipRates(ed)$lambda.avg#
+dr <- DRstat(toytree)
+tipOrder <- sapply(toytree$tip.label, function(x) which(toytree$edge[,2] == which(toytree$tip.label == x)))#
+tipOrder <- names(sort(tipOrder))
+trueTips <- trueTips[tipOrder]#
+bamm <- bamm[tipOrder]#
+dr <- dr[tipOrder]#
+#
+# shift-specific means#
+tipRegimes <- rep(0, length(toytree$tip.label))#
+names(tipRegimes) <- tipOrder#
+tipRegimes[names(tipRegimes) %in% tips(toytree, getMRCA(toytree, c('s1','s30')))] <- 1#
+#
+regime0MeanDR <- mean(dr[names(tipRegimes)[which(tipRegimes == 0)]])#
+regime1MeanDR <- mean(dr[names(tipRegimes)[which(tipRegimes == 1)]])#
+regime0MeanBAMM <- mean(bamm[names(tipRegimes)[which(tipRegimes == 0)]])#
+regime1MeanBAMM <- mean(bamm[names(tipRegimes)[which(tipRegimes == 1)]])
+# other option involving error in rates#
+layout(matrix(1:3, nrow=1, ncol=3), widths=c(0.3, 0.35, 0.35))#
+par(mar = c(5,4,4,0))#
+plot.phylo(toytree, show.tip.label = FALSE, edge.width=1.5)#
+addBAMMshifts(trueEd, par.reset=F, bg='orange', cex=2.5)#
+par(mar = c(5,0,4,2))#
+plot.new()#
+plot.window(xlim = c(0, 0.3), ylim = c(0, 69))#
+axis(1)#
+points(trueTips, 1:length(toytree$tip.label), pch=20)#
+lines(trueTips, 1:length(toytree$tip.label), lwd=1)#
+points(bamm, 1:length(toytree$tip.label), col='blue', pch=20)#
+lines(bamm, 1:length(toytree$tip.label), lwd=0.5, col='blue')#
+points(dr, 1:length(toytree$tip.label), col='red', pch=20)#
+lines(dr, 1:length(toytree$tip.label), lwd=0.5, col='red')#
+mtext('speciation rate', side = 1, line = 2.5)#
+#
+legend(0.15, 69, legend = c(expression(paste(lambda['TRUE'])), expression(paste(lambda['BAMM'])), expression(paste(lambda['DR']))), fill=c('black', 'blue','red'), bty='n', cex=1.5)#
+#
+plot.new()#
+plot.window(xlim = c(0, 0.2), ylim = c(0, 69))#
+axis(1)#
+segments(abs(bamm - trueTips), 1:length(toytree$tip.label), abs(dr - trueTips), 1:length(toytree$tip.label), lwd=0.5)#
+points(abs(bamm - trueTips), 1:length(toytree$tip.label), pch=20, col='blue')#
+points(abs(dr - trueTips), 1:length(toytree$tip.label), pch=20, col='red')#
+abline(v=0, lty=3)#
+#
+# add means#
+points(mean(abs(bamm - trueTips)), -1, col='blue', pch=8)#
+points(mean(abs(dr - trueTips)), -1, col='red', pch=8)#
+#
+mtext('absolute error', side = 1, line = 2.5)
+setwd('conceptualFigTrees/evolvingRates_250')
+setwd('../conceptualFigTrees/evolvingRates_250')
+setwd('../../conceptualFigTrees/evolvingRates_250')
+alltipRates <- readRDS('../../dataFiles/allRatesList.rds')
+trueTips <- alltipRates[['evolvingRates_250']]$tipLambda
+names(trueTips) <- alltipRates[['evolvingRates_250']]$tipName
+tr <- read.tree(grep('\\.tre$', list.files(), value=TRUE))#
+tr <- ladderize(tr)#
+#
+ed <- getEventData(tr, grep('event_data', list.files(), value=TRUE), nsamples=1000, burnin=0.5)#
+bamm <- getTipRates(ed)$lambda.avg#
+dr <- DRstat(tr)#
+#
+tipOrder <- sapply(tr$tip.label, function(x) which(tr$edge[,2] == which(tr$tip.label == x)))#
+tipOrder <- names(sort(tipOrder))#
+#
+trueTips <- trueTips[tipOrder]#
+bamm <- bamm[tipOrder]#
+dr <- dr[tipOrder]#
+#
+ptsize <- 0.5
+layout(matrix(1:3, nrow=1, ncol=3), widths=c(0.3, 0.35, 0.35))#
+par(mar = c(5,4,4,0))#
+plot.phylo(tr, show.tip.label = FALSE, edge.width=1.5)#
+par(mar = c(5,0,4,2))#
+plot.new()#
+plot.window(xlim = c(0, max(c(max(trueTips), max(bamm), max(dr)))), ylim = c(0, length(tr$tip.label)))#
+axis(1)#
+points(trueTips, 1:length(tr$tip.label), pch=20, cex= ptsize)#
+lines(trueTips, 1:length(tr$tip.label), lwd=1)#
+points(bamm, 1:length(tr$tip.label), col='blue', pch=20, cex= ptsize)#
+lines(bamm, 1:length(tr$tip.label), lwd=0.5, col='blue')#
+points(dr, 1:length(tr$tip.label), col='red', pch=20, cex= ptsize)#
+lines(dr, 1:length(tr$tip.label), lwd=0.5, col='red')#
+mtext('speciation rate', side = 1, line = 2.5)#
+#
+legend(0.4, 207, legend = c(expression(paste(lambda['TRUE'])), expression(paste(lambda['BAMM'])), expression(paste(lambda['DR']))), fill=c('black', 'blue','red'), bty='n', cex=1.5)#
+#
+plot.new()#
+plot.window(xlim = c(0, 0.7), ylim = c(0, length(tr$tip.label)))#
+axis(1)#
+segments(abs(bamm - trueTips), 1:length(tr$tip.label), abs(dr - trueTips), 1:length(tr$tip.label), lwd=0.5)#
+points(abs(bamm - trueTips), 1:length(tr$tip.label), pch=20, col='blue', cex= ptsize)#
+points(abs(dr - trueTips), 1:length(tr$tip.label), pch=20, col='red', cex= ptsize)#
+abline(v=0, lty=3)#
+#
+# add means#
+points(mean(abs(bamm - trueTips)), -5, col='blue', pch=8)#
+points(mean(abs(dr - trueTips)), -5, col='red', pch=8)#
+mtext('absolute error', side = 1, line = 2.5)
+mean(abs(bamm - trueTips))#
+mean(abs(dr - trueTips))#
+#
+var(abs(bamm - trueTips))#
+var(abs(dr - trueTips))

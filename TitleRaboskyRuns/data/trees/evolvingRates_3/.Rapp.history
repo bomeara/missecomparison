@@ -1,0 +1,1914 @@
+treeDepth <- max(branching.times(treeset[[1]]))
+arrows(x0 = treeDepth + 0.2, y0 = 18, x1 = treeDepth + 0.1, y1 = 18)
+layout(matrix(1:3, nrow=1, ncol=3), widths=c(30,35,35))
+par(oma = c(0,0,0,0))
+plot.phylo(treeset[[1]], no.margin=TRUE, show.tip.label=FALSE, edge.width = edgeVec)
+arrows(x0 = treeDepth + 0.2, y0 = 18, x1 = treeDepth + 0.1, y1 = 18, xpd=NA)
+arrows(x0 = treeDepth + 0.4, y0 = 18, x1 = treeDepth + 0.1, y1 = 18, xpd=NA)
+arrows(x0 = treeDepth + 1, y0 = 18, x1 = treeDepth + 0.1, y1 = 18, xpd=NA)
+arrows(x0 = treeDepth + 5, y0 = 18, x1 = treeDepth + 0.1, y1 = 18, xpd=NA)
+layout(matrix(1:3, nrow=1, ncol=3), widths=c(30,35,35))#
+#
+par(oma = c(0,0,0,0))#
+#
+# phylo fig#
+edgeVec <- rep(1, nrow(treeset[[1]]$edge))#
+edgeVec[which(treeset[[1]]$edge[,2] %in% 1:50)[18]] <- 4#
+plot.phylo(treeset[[1]], no.margin=TRUE, show.tip.label=FALSE, edge.width = edgeVec)#
+#
+treeDepth <- max(branching.times(treeset[[1]]))#
+arrows(x0 = treeDepth + 5, y0 = 18, x1 = treeDepth + 1, y1 = 18, xpd=NA)
+arrows(x0 = treeDepth + 5, y0 = 18, x1 = treeDepth + 1, y1 = 18, length = 0.1xpd=NA)
+arrows(x0 = treeDepth + 5, y0 = 18, x1 = treeDepth + 1, y1 = 18, length = 0.1, xpd=NA)
+layout(matrix(1:3, nrow=1, ncol=3), widths=c(30,35,35))#
+#
+par(oma = c(0,0,0,0))#
+#
+# phylo fig#
+edgeVec <- rep(1, nrow(treeset[[1]]$edge))#
+edgeVec[which(treeset[[1]]$edge[,2] %in% 1:50)[18]] <- 4#
+plot.phylo(treeset[[1]], no.margin=TRUE, show.tip.label=FALSE, edge.width = edgeVec)#
+#
+treeDepth <- max(branching.times(treeset[[1]]))#
+arrows(x0 = treeDepth + 5, y0 = 18, x1 = treeDepth + 1, y1 = 18, length = 0.1, xpd=NA)
+arrows(x0 = treeDepth + 5, y0 = 18, x1 = treeDepth + 1, y1 = 18, length = 0.1, lwd=2, xpd=NA)
+pdf('~/Dropbox/tipRatesProject/preliminaryplots/introFig.pdf', width=8.5, height=3)#
+layout(matrix(1:3, nrow=1, ncol=3), widths=c(30,35,35))#
+#
+par(oma = c(0,0,0,0))#
+#
+# phylo fig#
+edgeVec <- rep(1, nrow(treeset[[1]]$edge))#
+edgeVec[which(treeset[[1]]$edge[,2] %in% 1:50)[18]] <- 4#
+plot.phylo(treeset[[1]], no.margin=TRUE, show.tip.label=FALSE, edge.width = edgeVec)#
+#
+treeDepth <- max(branching.times(treeset[[1]]))#
+arrows(x0 = treeDepth + 5, y0 = 18, x1 = treeDepth + 1, y1 = 18, length = 0.1, lwd=2, xpd=NA)#
+#
+par(mar = c(4,4,0,0))#
+#
+axisRange <- c(-4, 0.5) # for logged rates#
+# axisRange <- c(0, 1.5)#
+# range(c(log(trueparams), log(crbdVec), log(DRvec)))#
+#
+# CRBD estimate ~ true#
+plot.new()#
+plot.window(axisRange, axisRange)#
+axis(1, c(-5, axTicks(1)))#
+axis(2, c(-5, axTicks(2)))#
+points(log(trueparams), log(crbdVec), cex=0.5, pch=20)#
+#points(trueparams, crbdVec, cex=0.5, pch=20)#
+segments(axisRange[1], axisRange[1], axisRange[2], axisRange[2], lty=3)#
+mtext('true speciation rate', side = 1, line = 2.5, cex=0.7)#
+mtext('CRBD speciation rate', side = 2, line = 2.5, cex=0.7)#
+#
+# DR ~ true#
+plot.new()#
+plot.window(axisRange, axisRange)#
+axis(1, c(-5, axTicks(1)))#
+axis(2, c(-5, axTicks(2)))#
+points(log(trueparams), log(DRvec), cex=0.5, pch=20)#
+#points(trueparams, DRvec, cex=0.5, pch=20)#
+segments(axisRange[1], axisRange[1], axisRange[2], axisRange[2], lty=3)#
+mtext('true speciation rate', side = 1, line = 2.5, cex=0.7)#
+mtext('DR', side = 2, line = 2.5, cex=0.7)#
+#
+dev.off()
+layout(matrix(1:3, nrow=1, ncol=3), widths=c(30,35,35))#
+#
+par(oma = c(0,0,0,0))#
+#
+# phylo fig#
+edgeVec <- rep(1, nrow(treeset[[1]]$edge))#
+edgeVec[which(treeset[[1]]$edge[,2] %in% 1:50)[18]] <- 4#
+plot.phylo(treeset[[1]], no.margin=TRUE, show.tip.label=FALSE, edge.width = edgeVec)#
+#
+treeDepth <- max(branching.times(treeset[[1]]))#
+arrows(x0 = treeDepth + 5, y0 = 18, x1 = treeDepth + 1, y1 = 18, length = 0.1, lwd=2, xpd=NA)
+mtext('a', font = 2, side = 2, line = 2)
+mtext('a', font = 2, side = 2, line = 2, xpd=NA)
+mtext('a', font = 2, side = 2, line = -2, xpd=NA)
+mtext('a', font = 2, side = 3, line = -2, xpd=NA)
+mtext('a', font = 2, side = 3, line = -3, xpd=NA)
+mtext('a', font = 2, side = 3, line = -3, at = 0.1, xpd=NA)
+mtext('a', font = 2, side = 3, line = -3, at = 0.2, xpd=NA)
+mtext('a', font = 2, side = 3, line = -3, at = 0.15, xpd=NA)
+mtext('a', font = 2, side = 3, line = -3, at = 0.05, xpd=NA)
+mtext('a', font = 2, side = 3, line = -3, at = 0.1, xpd=NA)
+layout(matrix(1:3, nrow=1, ncol=3), widths=c(30,35,35))#
+#
+par(oma = c(0,0,0,0))#
+#
+# phylo fig#
+edgeVec <- rep(1, nrow(treeset[[1]]$edge))#
+edgeVec[which(treeset[[1]]$edge[,2] %in% 1:50)[18]] <- 4#
+plot.phylo(treeset[[1]], no.margin=TRUE, show.tip.label=FALSE, edge.width = edgeVec)#
+#
+treeDepth <- max(branching.times(treeset[[1]]))#
+arrows(x0 = treeDepth + 5, y0 = 18, x1 = treeDepth + 1, y1 = 18, length = 0.1, lwd=2, xpd=NA)#
+#
+mtext('a', font = 2, side = 3, line = -3, at = 0.1, xpd=NA)
+mtext('a', font = 2, side = 3, line = -3, at = 0.12, xpd=NA)
+mtext('a', font = 2, side = 3, line = -3, at = 0.15, xpd=NA)
+mtext('a', font = 2, side = 3, line = -3, at = 1, xpd=NA)
+mtext('a', font = 2, side = 3, line = -3, at = 2, xpd=NA)
+mtext('a', font = 2, side = 3, line = -3, at = 3, xpd=NA)
+layout(matrix(1:3, nrow=1, ncol=3), widths=c(30,35,35))#
+#
+par(oma = c(0,0,0,0))#
+#
+# phylo fig#
+edgeVec <- rep(1, nrow(treeset[[1]]$edge))#
+edgeVec[which(treeset[[1]]$edge[,2] %in% 1:50)[18]] <- 4#
+plot.phylo(treeset[[1]], no.margin=TRUE, show.tip.label=FALSE, edge.width = edgeVec)#
+#
+treeDepth <- max(branching.times(treeset[[1]]))#
+arrows(x0 = treeDepth + 5, y0 = 18, x1 = treeDepth + 1, y1 = 18, length = 0.1, lwd=2, xpd=NA)#
+#
+mtext('a', font = 2, side = 3, line = -3, at = 3, xpd=NA)
+par(mar = c(4,4,0,0))#
+#
+axisRange <- c(-4, 0.5) # for logged rates#
+# axisRange <- c(0, 1.5)#
+# range(c(log(trueparams), log(crbdVec), log(DRvec)))#
+#
+# CRBD estimate ~ true#
+plot.new()#
+plot.window(axisRange, axisRange)#
+axis(1, c(-5, axTicks(1)))#
+axis(2, c(-5, axTicks(2)))#
+points(log(trueparams), log(crbdVec), cex=0.5, pch=20)#
+#points(trueparams, crbdVec, cex=0.5, pch=20)#
+segments(axisRange[1], axisRange[1], axisRange[2], axisRange[2], lty=3)#
+mtext('true speciation rate', side = 1, line = 2.5, cex=0.7)#
+mtext('CRBD speciation rate', side = 2, line = 2.5, cex=0.7)
+mtext('b', font = 2, side = 3, line = -3, at = -4.5, xpd=NA)
+mtext('b', font = 2, side = 3, line = -3, at = -5, xpd=NA)
+# DR ~ true#
+plot.new()#
+plot.window(axisRange, axisRange)#
+axis(1, c(-5, axTicks(1)))#
+axis(2, c(-5, axTicks(2)))#
+points(log(trueparams), log(DRvec), cex=0.5, pch=20)#
+#points(trueparams, DRvec, cex=0.5, pch=20)#
+segments(axisRange[1], axisRange[1], axisRange[2], axisRange[2], lty=3)#
+mtext('true speciation rate', side = 1, line = 2.5, cex=0.7)#
+mtext('DR', side = 2, line = 2.5, cex=0.7)
+mtext('c', font = 2, side = 3, line = -3, at = -5, xpd=NA)
+pdf('~/Dropbox/tipRatesProject/preliminaryplots/introFig.pdf', width=8.5, height=3)#
+layout(matrix(1:3, nrow=1, ncol=3), widths=c(30,35,35))#
+#
+par(oma = c(0,0,0,0))#
+#
+# phylo fig#
+edgeVec <- rep(1, nrow(treeset[[1]]$edge))#
+edgeVec[which(treeset[[1]]$edge[,2] %in% 1:50)[18]] <- 4#
+plot.phylo(treeset[[1]], no.margin=TRUE, show.tip.label=FALSE, edge.width = edgeVec)#
+#
+treeDepth <- max(branching.times(treeset[[1]]))#
+arrows(x0 = treeDepth + 5, y0 = 18, x1 = treeDepth + 1, y1 = 18, length = 0.1, lwd=2, xpd=NA)#
+#
+mtext('a', font = 2, side = 3, line = -3, at = 3, xpd=NA)#
+#
+par(mar = c(4,4,0,0))#
+#
+axisRange <- c(-4, 0.5) # for logged rates#
+# axisRange <- c(0, 1.5)#
+# range(c(log(trueparams), log(crbdVec), log(DRvec)))#
+#
+# CRBD estimate ~ true#
+plot.new()#
+plot.window(axisRange, axisRange)#
+axis(1, c(-5, axTicks(1)))#
+axis(2, c(-5, axTicks(2)))#
+points(log(trueparams), log(crbdVec), cex=0.5, pch=20)#
+#points(trueparams, crbdVec, cex=0.5, pch=20)#
+segments(axisRange[1], axisRange[1], axisRange[2], axisRange[2], lty=3)#
+mtext('true speciation rate', side = 1, line = 2.5, cex=0.7)#
+mtext('CRBD speciation rate', side = 2, line = 2.5, cex=0.7)#
+#
+mtext('b', font = 2, side = 3, line = -3, at = -5, xpd=NA)#
+#
+# DR ~ true#
+plot.new()#
+plot.window(axisRange, axisRange)#
+axis(1, c(-5, axTicks(1)))#
+axis(2, c(-5, axTicks(2)))#
+points(log(trueparams), log(DRvec), cex=0.5, pch=20)#
+#points(trueparams, DRvec, cex=0.5, pch=20)#
+segments(axisRange[1], axisRange[1], axisRange[2], axisRange[2], lty=3)#
+mtext('true speciation rate', side = 1, line = 2.5, cex=0.7)#
+mtext('DR', side = 2, line = 2.5, cex=0.7)#
+#
+mtext('c', font = 2, side = 3, line = -3, at = -5, xpd=NA)#
+#
+dev.off()
+dat <- read.csv('~/Dropbox/tipRatesProject/rateErrorMetrics.csv', stringsAsFactors=FALSE)#
+treeDat <- read.csv('~/Dropbox/tipRatesProject/treeSummary.csv', stringsAsFactors=FALSE)#
+# ---------------------------------------------------------#
+# ---------------------------------------------------------#
+## Proportional error of lambda and lambda - mu against eps#
+# first for single regime trees#
+# keep only single regime trees#
+dat_lambda <- dat[which(dat$setname == 'lambdaConstantVariance'),]#
+dat_netdiv <- dat[which(dat$setname == 'netDivConstantVariance'),]#
+#
+# get true relative extinction rate#
+epsVec_lambda <- treeDat[which(treeDat$treeName %in% dat_lambda$treeName),]#
+epsVec_lambda <- setNames(epsVec_lambda$mu0 / epsVec_lambda$lambda0, epsVec_lambda$treeName)#
+epsVec_lambda <- epsVec_lambda[dat_lambda$treeName]#
+#
+epsVec_netdiv <- treeDat[which(treeDat$treeName %in% dat_netdiv$treeName),]#
+epsVec_netdiv <- setNames(epsVec_netdiv$mu0 / epsVec_netdiv$lambda0, epsVec_netdiv$treeName)#
+epsVec_netdiv <- epsVec_netdiv[dat_netdiv$treeName]
+tipMetrics <- c('lambdaTB', 'lambdaND', 'lambdaDR', 'lambdaBAMM')#
+tipMetricsNetDiv <- c('lambdaTB', 'lambdaND', 'lambdaDR', 'netDivBAMM')#
+errorMetricNames <- c(PE1='Prop. Error 1', PE2='Prop. Error 2', PE3='Prop. Error 3', PE4='Prop. 4', r2='OLS R2', slope='OLS slope', absoluteError='mean absolute error')#
+#
+tipMetricLabel <- c(expression(bold(paste(lambda['TB']))), expression(bold(paste(lambda['ND']))), expression(bold(paste(lambda['DR']))),expression(bold(paste(lambda['BAMM']))))#
+#
+# mean absolute error#
+errorMetric <- 'absoluteError'#
+#
+defaultYrange <- c(0, 5)#
+TBrange <- c(0, 70)
+par(mfrow=c(2,4), mar = c(4,4,1,1))
+for (i in 1:4) {#
+		tipMetric <- tipMetrics[i]#
+		errorLabel <- expression(paste("mean absolute error in ", lambda))#
+		errorCol <- Reduce(intersect, list(grep('tipLambda', colnames(dat)), grep(tipMetric, colnames(dat)), grep(errorMetric, colnames(dat))))#
+		plot.new()#
+		yrange <- defaultYrange#
+		if (tipMetric == 'lambdaTB') {#
+			#yrange <- c(0, quantile(dat_lambda[, errorCol], 0.95, na.rm=TRUE))#
+			yrange <- TBrange#
+		}#
+		plot.window(xlim = c(0,1), ylim = yrange)#
+		axis(1, at=c(-0.1, axTicks(1)))#
+		axis(2, at=c(-5, axTicks(2)))#
+		points(epsVec_lambda, dat_lambda[, errorCol], cex=0.3)#
+		mtext('epsilon', side = 1, cex=0.7, line = 2.5)#
+		mtext(errorLabel, side = 2, cex=0.7, line = 2.5)#
+		title(main = tipMetricLabel[i], line = -1, cex.main=1.5)#
+		if (errorMetric %in% c('PE1','PE2', 'absoluteError')) {#
+			abline(h=0, lty=3)#
+		} else if (errorMetric %in% c('PE3','PE4')) {	#
+			abline(h=1, lty=3)#
+		}#
+	}
+defaultYrange <- c(0, 0.5)
+par(mfrow=c(2,4), mar = c(4,4,1,1))#
+	for (i in 1:4) {#
+		tipMetric <- tipMetrics[i]#
+		errorLabel <- expression(paste("mean absolute error in ", lambda))#
+		errorCol <- Reduce(intersect, list(grep('tipLambda', colnames(dat)), grep(tipMetric, colnames(dat)), grep(errorMetric, colnames(dat))))#
+		plot.new()#
+		yrange <- defaultYrange#
+		if (tipMetric == 'lambdaTB') {#
+			#yrange <- c(0, quantile(dat_lambda[, errorCol], 0.95, na.rm=TRUE))#
+			yrange <- TBrange#
+		}#
+		plot.window(xlim = c(0,1), ylim = yrange)#
+		axis(1, at=c(-0.1, axTicks(1)))#
+		axis(2, at=c(-5, axTicks(2)))#
+		points(epsVec_lambda, dat_lambda[, errorCol], cex=0.3)#
+		mtext('epsilon', side = 1, cex=0.7, line = 2.5)#
+		mtext(errorLabel, side = 2, cex=0.7, line = 2.5)#
+		title(main = tipMetricLabel[i], line = -1, cex.main=1.5)#
+		if (errorMetric %in% c('PE1','PE2', 'absoluteError')) {#
+			abline(h=0, lty=3)#
+		} else if (errorMetric %in% c('PE3','PE4')) {	#
+			abline(h=1, lty=3)#
+		}#
+	}
+defaultYrange_netdiv <- c(0, 5)
+for (i in 1:4) {#
+		tipMetric <- tipMetrics[i]#
+		errorLabel <- expression(paste("mean absolute error in ", lambda))#
+		errorCol <- Reduce(intersect, list(grep('tipLambda', colnames(dat)), grep(tipMetric, colnames(dat)), grep(errorMetric, colnames(dat))))#
+		plot.new()#
+		yrange <- defaultYrange#
+		if (tipMetric == 'lambdaTB') {#
+			#yrange <- c(0, quantile(dat_lambda[, errorCol], 0.95, na.rm=TRUE))#
+			#yrange <- TBrange#
+		}#
+		plot.window(xlim = c(0,1), ylim = yrange)#
+		axis(1, at=c(-0.1, axTicks(1)))#
+		axis(2, at=c(-5, axTicks(2)))#
+		points(epsVec_lambda, dat_lambda[, errorCol], cex=0.3)#
+		mtext('epsilon', side = 1, cex=0.7, line = 2.5)#
+		mtext(errorLabel, side = 2, cex=0.7, line = 2.5)#
+		title(main = tipMetricLabel[i], line = -1, cex.main=1.5)#
+		if (errorMetric %in% c('PE1','PE2', 'absoluteError')) {#
+			abline(h=0, lty=3)#
+		} else if (errorMetric %in% c('PE3','PE4')) {	#
+			abline(h=1, lty=3)#
+		}#
+	}
+par(mfrow=c(2,4), mar = c(4,4,1,1))#
+	for (i in 1:4) {#
+		tipMetric <- tipMetrics[i]#
+		errorLabel <- expression(paste("mean absolute error in ", lambda))#
+		errorCol <- Reduce(intersect, list(grep('tipLambda', colnames(dat)), grep(tipMetric, colnames(dat)), grep(errorMetric, colnames(dat))))#
+		plot.new()#
+		yrange <- defaultYrange#
+		if (tipMetric == 'lambdaTB') {#
+			#yrange <- c(0, quantile(dat_lambda[, errorCol], 0.95, na.rm=TRUE))#
+			#yrange <- TBrange#
+		}#
+		plot.window(xlim = c(0,1), ylim = yrange)#
+		axis(1, at=c(-0.1, axTicks(1)))#
+		axis(2, at=c(-5, axTicks(2)))#
+		points(epsVec_lambda, dat_lambda[, errorCol], cex=0.3)#
+		mtext('epsilon', side = 1, cex=0.7, line = 2.5)#
+		mtext(errorLabel, side = 2, cex=0.7, line = 2.5)#
+		title(main = tipMetricLabel[i], line = -1, cex.main=1.5)#
+		if (errorMetric %in% c('PE1','PE2', 'absoluteError')) {#
+			abline(h=0, lty=3)#
+		} else if (errorMetric %in% c('PE3','PE4')) {	#
+			abline(h=1, lty=3)#
+		}#
+	}
+for (i in 1:4) {#
+		tipMetric <- tipMetricsNetDiv[i]#
+		errorLabel <- expression(paste("mean absolute error in ", lambda, ' - ', mu))#
+		errorCol <- Reduce(intersect, list(grep('tipNetDiv', colnames(dat)), grep(tipMetric, colnames(dat)), grep(errorMetric, colnames(dat))))#
+		plot.new()#
+		yrange <- defaultYrange_netdiv#
+		if (tipMetric == 'lambdaTB') {#
+			# yrange <- c(0, quantile(dat_netdiv[, errorCol], 0.95, na.rm=TRUE))#
+			yrange <- TBrange#
+		}#
+		plot.window(xlim = c(0,1), ylim = yrange)#
+		axis(1, at=c(-0.1, axTicks(1)))#
+		axis(2, at=c(-5, axTicks(2)))#
+		points(epsVec_netdiv, dat_netdiv[, errorCol], cex=0.3)#
+		mtext('epsilon', side = 1, cex=0.7, line = 2.5)#
+		mtext(errorLabel, side = 2, cex=0.7, line = 2.5)#
+		if (tipMetric == 'netDivBAMM') {#
+			title(main = expression(bold(paste(lambda - mu['BAMM']))), line = -1, cex.main=1.5)#
+		}#
+		if (errorMetric %in% c('PE1','PE2','absoluteError')) {#
+			abline(h=0, lty=3)#
+		} else if (errorMetric %in% c('PE3','PE4')) {	#
+			abline(h=1, lty=3)#
+		}#
+	}
+mtext(expression(mu~/~lambda), side = 1, cex=0.7, line = 2.5)
+mtext(expression(mu~'/'~lambda), side = 1, cex=0.7, line = 2.5)
+par(mfrow=c(2,4), mar = c(4,4,1,1))#
+	for (i in 1:4) {#
+		tipMetric <- tipMetrics[i]#
+		errorLabel <- expression(paste("mean absolute error in ", lambda))#
+		errorCol <- Reduce(intersect, list(grep('tipLambda', colnames(dat)), grep(tipMetric, colnames(dat)), grep(errorMetric, colnames(dat))))#
+		plot.new()#
+		yrange <- defaultYrange#
+		if (tipMetric == 'lambdaTB') {#
+			#yrange <- c(0, quantile(dat_lambda[, errorCol], 0.95, na.rm=TRUE))#
+			#yrange <- TBrange#
+		}#
+		plot.window(xlim = c(0,1), ylim = yrange)#
+		axis(1, at=c(-0.1, axTicks(1)))#
+		axis(2, at=c(-5, axTicks(2)))#
+		points(epsVec_lambda, dat_lambda[, errorCol], cex=0.3)#
+		mtext(expression(mu~'/'~lambda), side = 1, cex=0.7, line = 2.5)#
+		mtext(errorLabel, side = 2, cex=0.7, line = 2.5)#
+		title(main = tipMetricLabel[i], line = -1, cex.main=1.5)#
+		if (errorMetric %in% c('PE1','PE2', 'absoluteError')) {#
+			abline(h=0, lty=3)#
+		} else if (errorMetric %in% c('PE3','PE4')) {	#
+			abline(h=1, lty=3)#
+		}#
+	}
+par(mfrow=c(2,4), mar = c(4,4,1,1))#
+	for (i in 1:4) {#
+		tipMetric <- tipMetrics[i]#
+		errorLabel <- expression(paste("mean absolute error in ", lambda))#
+		errorCol <- Reduce(intersect, list(grep('tipLambda', colnames(dat)), grep(tipMetric, colnames(dat)), grep(errorMetric, colnames(dat))))#
+		plot.new()#
+		yrange <- defaultYrange#
+		if (tipMetric == 'lambdaTB') {#
+			#yrange <- c(0, quantile(dat_lambda[, errorCol], 0.95, na.rm=TRUE))#
+			#yrange <- TBrange#
+		}#
+		plot.window(xlim = c(0,1), ylim = yrange)#
+		axis(1, at=c(-0.1, axTicks(1)))#
+		axis(2, at=c(-5, axTicks(2)))#
+		points(epsVec_lambda, dat_lambda[, errorCol], cex=0.3)#
+		mtext(expression(mu~'/'~lambda), side = 1, cex=0.7, line = 2.5)#
+		mtext(errorLabel, side = 2, cex=0.7, line = 2.5)#
+		title(main = tipMetricLabel[i], line = -1, cex.main=1.5)#
+		if (errorMetric %in% c('PE1','PE2', 'absoluteError')) {#
+			abline(h=0, lty=3)#
+		} else if (errorMetric %in% c('PE3','PE4')) {	#
+			abline(h=1, lty=3)#
+		}#
+	}#
+#
+	# second row: net div#
+	for (i in 1:4) {#
+		tipMetric <- tipMetricsNetDiv[i]#
+		errorLabel <- expression(paste("mean absolute error in ", lambda, ' - ', mu))#
+		errorCol <- Reduce(intersect, list(grep('tipNetDiv', colnames(dat)), grep(tipMetric, colnames(dat)), grep(errorMetric, colnames(dat))))#
+		plot.new()#
+		yrange <- defaultYrange_netdiv#
+		if (tipMetric == 'lambdaTB') {#
+			# yrange <- c(0, quantile(dat_netdiv[, errorCol], 0.95, na.rm=TRUE))#
+			yrange <- TBrange#
+		}#
+		plot.window(xlim = c(0,1), ylim = yrange)#
+		axis(1, at=c(-0.1, axTicks(1)))#
+		axis(2, at=c(-5, axTicks(2)))#
+		points(epsVec_netdiv, dat_netdiv[, errorCol], cex=0.3)#
+		mtext(expression(mu~'/'~lambda), side = 1, cex=0.7, line = 2.5)#
+		mtext(errorLabel, side = 2, cex=0.7, line = 2.5)#
+		if (tipMetric == 'netDivBAMM') {#
+			title(main = expression(bold(paste(lambda - mu['BAMM']))), line = -1, cex.main=1.5)#
+		}#
+		if (errorMetric %in% c('PE1','PE2','absoluteError')) {#
+			abline(h=0, lty=3)#
+		} else if (errorMetric %in% c('PE3','PE4')) {	#
+			abline(h=1, lty=3)#
+		}#
+	}
+defaultYrange_netdiv <- c(0, 10)
+defaultYrange <- c(0, 0.5)#
+defaultYrange_netdiv <- c(0, 5)#
+TBrange <- c(0, 10)#
+TBrange_netdiv <- c(0, 70)
+par(mfrow=c(2,4), mar = c(4,4,1,1))#
+	for (i in 1:4) {#
+		tipMetric <- tipMetrics[i]#
+		errorLabel <- expression(paste("mean absolute error in ", lambda))#
+		errorCol <- Reduce(intersect, list(grep('tipLambda', colnames(dat)), grep(tipMetric, colnames(dat)), grep(errorMetric, colnames(dat))))#
+		plot.new()#
+		yrange <- defaultYrange#
+		if (tipMetric == 'lambdaTB') {#
+			#yrange <- c(0, quantile(dat_lambda[, errorCol], 0.95, na.rm=TRUE))#
+			yrange <- TBrange#
+		}#
+		plot.window(xlim = c(0,1), ylim = yrange)#
+		axis(1, at=c(-0.1, axTicks(1)))#
+		axis(2, at=c(-5, axTicks(2)))#
+		points(epsVec_lambda, dat_lambda[, errorCol], cex=0.3)#
+		mtext(expression(mu~'/'~lambda), side = 1, cex=0.7, line = 2.5)#
+		mtext(errorLabel, side = 2, cex=0.7, line = 2.5)#
+		title(main = tipMetricLabel[i], line = -1, cex.main=1.5)#
+		if (errorMetric %in% c('PE1','PE2', 'absoluteError')) {#
+			abline(h=0, lty=3)#
+		} else if (errorMetric %in% c('PE3','PE4')) {	#
+			abline(h=1, lty=3)#
+		}#
+	}#
+#
+	# second row: net div#
+	for (i in 1:4) {#
+		tipMetric <- tipMetricsNetDiv[i]#
+		errorLabel <- expression(paste("mean absolute error in ", lambda, ' - ', mu))#
+		errorCol <- Reduce(intersect, list(grep('tipNetDiv', colnames(dat)), grep(tipMetric, colnames(dat)), grep(errorMetric, colnames(dat))))#
+		plot.new()#
+		yrange <- defaultYrange_netdiv#
+		if (tipMetric == 'lambdaTB') {#
+			# yrange <- c(0, quantile(dat_netdiv[, errorCol], 0.95, na.rm=TRUE))#
+			yrange <- TBrange_netdiv#
+		}#
+		plot.window(xlim = c(0,1), ylim = yrange)#
+		axis(1, at=c(-0.1, axTicks(1)))#
+		axis(2, at=c(-5, axTicks(2)))#
+		points(epsVec_netdiv, dat_netdiv[, errorCol], cex=0.3)#
+		mtext(expression(mu~'/'~lambda), side = 1, cex=0.7, line = 2.5)#
+		mtext(errorLabel, side = 2, cex=0.7, line = 2.5)#
+		if (tipMetric == 'netDivBAMM') {#
+			title(main = expression(bold(paste(lambda - mu['BAMM']))), line = -1, cex.main=1.5)#
+		}#
+		if (errorMetric %in% c('PE1','PE2','absoluteError')) {#
+			abline(h=0, lty=3)#
+		} else if (errorMetric %in% c('PE3','PE4')) {	#
+			abline(h=1, lty=3)#
+		}#
+	}
+defaultYrange <- c(0, 0.5)#
+defaultYrange_netdiv <- c(0, 5)#
+TBrange <- c(0, 20)#
+TBrange_netdiv <- c(0, 70)
+par(mfrow=c(2,4), mar = c(4,4,1,1))#
+	for (i in 1:4) {#
+		tipMetric <- tipMetrics[i]#
+		errorLabel <- expression(paste("mean absolute error in ", lambda))#
+		errorCol <- Reduce(intersect, list(grep('tipLambda', colnames(dat)), grep(tipMetric, colnames(dat)), grep(errorMetric, colnames(dat))))#
+		plot.new()#
+		yrange <- defaultYrange#
+		if (tipMetric == 'lambdaTB') {#
+			#yrange <- c(0, quantile(dat_lambda[, errorCol], 0.95, na.rm=TRUE))#
+			yrange <- TBrange#
+		}#
+		plot.window(xlim = c(0,1), ylim = yrange)#
+		axis(1, at=c(-0.1, axTicks(1)))#
+		axis(2, at=c(-5, axTicks(2)))#
+		points(epsVec_lambda, dat_lambda[, errorCol], cex=0.3)#
+		mtext(expression(mu~'/'~lambda), side = 1, cex=0.7, line = 2.5)#
+		mtext(errorLabel, side = 2, cex=0.7, line = 2.5)#
+		title(main = tipMetricLabel[i], line = -1, cex.main=1.5)#
+		if (errorMetric %in% c('PE1','PE2', 'absoluteError')) {#
+			abline(h=0, lty=3)#
+		} else if (errorMetric %in% c('PE3','PE4')) {	#
+			abline(h=1, lty=3)#
+		}#
+	}#
+#
+	# second row: net div#
+	for (i in 1:4) {#
+		tipMetric <- tipMetricsNetDiv[i]#
+		errorLabel <- expression(paste("mean absolute error in ", lambda, ' - ', mu))#
+		errorCol <- Reduce(intersect, list(grep('tipNetDiv', colnames(dat)), grep(tipMetric, colnames(dat)), grep(errorMetric, colnames(dat))))#
+		plot.new()#
+		yrange <- defaultYrange_netdiv#
+		if (tipMetric == 'lambdaTB') {#
+			# yrange <- c(0, quantile(dat_netdiv[, errorCol], 0.95, na.rm=TRUE))#
+			yrange <- TBrange_netdiv#
+		}#
+		plot.window(xlim = c(0,1), ylim = yrange)#
+		axis(1, at=c(-0.1, axTicks(1)))#
+		axis(2, at=c(-5, axTicks(2)))#
+		points(epsVec_netdiv, dat_netdiv[, errorCol], cex=0.3)#
+		mtext(expression(mu~'/'~lambda), side = 1, cex=0.7, line = 2.5)#
+		mtext(errorLabel, side = 2, cex=0.7, line = 2.5)#
+		if (tipMetric == 'netDivBAMM') {#
+			title(main = expression(bold(paste(lambda - mu['BAMM']))), line = -1, cex.main=1.5)#
+		}#
+		if (errorMetric %in% c('PE1','PE2','absoluteError')) {#
+			abline(h=0, lty=3)#
+		} else if (errorMetric %in% c('PE3','PE4')) {	#
+			abline(h=1, lty=3)#
+		}#
+	}
+pdf('~/Dropbox/tipRatesProject/preliminaryplots/errorAcrossEpsilon_lambdaAndNetDiv_absoluteError.pdf', width=10, height=5)#
+	par(mfrow=c(2,4), mar = c(4,4,1,1))#
+	for (i in 1:4) {#
+		tipMetric <- tipMetrics[i]#
+		errorLabel <- expression(paste("mean absolute error in ", lambda))#
+		errorCol <- Reduce(intersect, list(grep('tipLambda', colnames(dat)), grep(tipMetric, colnames(dat)), grep(errorMetric, colnames(dat))))#
+		plot.new()#
+		yrange <- defaultYrange#
+		if (tipMetric == 'lambdaTB') {#
+			#yrange <- c(0, quantile(dat_lambda[, errorCol], 0.95, na.rm=TRUE))#
+			yrange <- TBrange#
+		}#
+		plot.window(xlim = c(0,1), ylim = yrange)#
+		axis(1, at=c(-0.1, axTicks(1)))#
+		axis(2, at=c(-5, axTicks(2)))#
+		points(epsVec_lambda, dat_lambda[, errorCol], cex=0.3)#
+		mtext(expression(mu~'/'~lambda), side = 1, cex=0.7, line = 2.5)#
+		mtext(errorLabel, side = 2, cex=0.7, line = 2.5)#
+		title(main = tipMetricLabel[i], line = -1, cex.main=1.5)#
+		if (errorMetric %in% c('PE1','PE2', 'absoluteError')) {#
+			abline(h=0, lty=3)#
+		} else if (errorMetric %in% c('PE3','PE4')) {	#
+			abline(h=1, lty=3)#
+		}#
+	}#
+#
+	# second row: net div#
+	for (i in 1:4) {#
+		tipMetric <- tipMetricsNetDiv[i]#
+		errorLabel <- expression(paste("mean absolute error in ", lambda, ' - ', mu))#
+		errorCol <- Reduce(intersect, list(grep('tipNetDiv', colnames(dat)), grep(tipMetric, colnames(dat)), grep(errorMetric, colnames(dat))))#
+		plot.new()#
+		yrange <- defaultYrange_netdiv#
+		if (tipMetric == 'lambdaTB') {#
+			# yrange <- c(0, quantile(dat_netdiv[, errorCol], 0.95, na.rm=TRUE))#
+			yrange <- TBrange_netdiv#
+		}#
+		plot.window(xlim = c(0,1), ylim = yrange)#
+		axis(1, at=c(-0.1, axTicks(1)))#
+		axis(2, at=c(-5, axTicks(2)))#
+		points(epsVec_netdiv, dat_netdiv[, errorCol], cex=0.3)#
+		mtext(expression(mu~'/'~lambda), side = 1, cex=0.7, line = 2.5)#
+		mtext(errorLabel, side = 2, cex=0.7, line = 2.5)#
+		if (tipMetric == 'netDivBAMM') {#
+			title(main = expression(bold(paste(lambda - mu['BAMM']))), line = -1, cex.main=1.5)#
+		}#
+		if (errorMetric %in% c('PE1','PE2','absoluteError')) {#
+			abline(h=0, lty=3)#
+		} else if (errorMetric %in% c('PE3','PE4')) {	#
+			abline(h=1, lty=3)#
+		}#
+	}#
+#	mtext('lambda', side=2, outer=TRUE, adj=0.85, line = -1)#
+#	mtext('lambda - mu', side=2, outer=TRUE, adj=0.18, line = -1)#
+	dev.off()
+dat <- read.csv('~/Dropbox/tipRatesProject/rateErrorMetrics.csv', stringsAsFactors=FALSE)#
+treeDat <- read.csv('~/Dropbox/tipRatesProject/treeSummary.csv', stringsAsFactors=FALSE)#
+# ---------------------------------------------------------#
+# ---------------------------------------------------------#
+## Proportional error of lambda and lambda - mu against eps#
+# first for single regime trees#
+# keep only single regime trees#
+dat_lambda <- dat[which(dat$setname == 'lambdaConstantVariance'),]#
+dat_netdiv <- dat[which(dat$setname == 'netDivConstantVariance'),]#
+#
+# get true relative extinction rate#
+epsVec_lambda <- treeDat[which(treeDat$treeName %in% dat_lambda$treeName),]#
+epsVec_lambda <- setNames(epsVec_lambda$mu0 / epsVec_lambda$lambda0, epsVec_lambda$treeName)#
+epsVec_lambda <- epsVec_lambda[dat_lambda$treeName]#
+#
+epsVec_netdiv <- treeDat[which(treeDat$treeName %in% dat_netdiv$treeName),]#
+epsVec_netdiv <- setNames(epsVec_netdiv$mu0 / epsVec_netdiv$lambda0, epsVec_netdiv$treeName)#
+epsVec_netdiv <- epsVec_netdiv[dat_netdiv$treeName]#
+tipMetrics <- c('lambdaTB', 'lambdaND', 'lambdaDR', 'lambdaBAMM')#
+tipMetricsNetDiv <- c('lambdaTB', 'lambdaND', 'lambdaDR', 'netDivBAMM')#
+errorMetricNames <- c(PE1='Prop. Error 1', PE2='Prop. Error 2', PE3='Prop. Error 3', PE4='Prop. 4', r2='OLS R2', slope='OLS slope', absoluteError='mean absolute error')#
+#
+tipMetricLabel <- c(expression(bold(paste(lambda['TB']))), expression(bold(paste(lambda['ND']))), expression(bold(paste(lambda['DR']))),expression(bold(paste(lambda['BAMM']))))#
+#
+# mean absolute error#
+errorMetric <- 'absoluteError'#
+#
+defaultYrange <- c(0, 0.5)#
+defaultYrange_netdiv <- c(0, 5)#
+TBrange <- c(0, 20)#
+TBrange_netdiv <- c(0, 70)
+errorMetric <- 'PE1'#
+defaultYrange <- c(-1,5)#
+TBrange <- c(-1, 10)#
+constant <- 4
+par(mfrow=c(2,4), mar = c(4,4,2,2))#
+#
+for (i in 1:4) {#
+	tipMetric <- tipMetrics[i]#
+	errorLabel <- errorLabel <- expression(paste("log prop. error in ", lambda))#
+	errorCol <- Reduce(intersect, list(grep('tipLambda', colnames(dat)), grep(tipMetric, colnames(dat)), grep(errorMetric, colnames(dat))))#
+	plot.new()#
+	yrange <- defaultYrange#
+	if (tipMetric == 'lambdaTB') {#
+		yrange <- TBrange#
+	}#
+	plot.window(xlim = c(0,1), ylim = yrange)#
+	axis(1, at=c(-0.1, axTicks(1)))#
+	axis(2, at=c(-5, axTicks(2)))#
+	points(epsVec_lambda, log(dat_lambda[, errorCol] + constant), cex=0.3)#
+	mtext('epsilon', side = 1, cex=0.7, line = 2.5)#
+	mtext(errorLabel, side = 2, cex=0.7, line = 2.5)#
+	title(main = tipMetricLabel[i], line = -1, cex.main=1.5)#
+	# abline(h=0, lty=3)#
+	abline(h=log(0 + constant), lty=3)#
+}#
+#
+# second row: net div#
+for (i in 1:4) {#
+	tipMetric <- tipMetricsNetDiv[i]#
+	errorLabel <- expression(paste("log prop. error in ", lambda, ' - ', mu))#
+	errorCol <- Reduce(intersect, list(grep('tipNetDiv', colnames(dat)), grep(tipMetric, colnames(dat)), grep(errorMetric, colnames(dat))))#
+	plot.new()#
+	yrange <- defaultYrange#
+	if (tipMetric == 'lambdaTB') {#
+		yrange <- TBrange#
+	}	#
+	plot.window(xlim = c(0,1), ylim = yrange)#
+	axis(1, at=c(-0.1, axTicks(1)))#
+	axis(2, at=c(-5, axTicks(2)))#
+	points(epsVec_netdiv, log(dat_netdiv[, errorCol] + constant), cex=0.3)#
+	mtext('epsilon', side = 1, cex=0.5, line = 2)#
+	mtext(errorLabel, side = 2, cex=0.7, line = 2.5)#
+	if (tipMetric == 'netDivBAMM') {#
+		title(main = expression(bold(paste(lambda - mu['BAMM']))), line = -1, cex.main=1.5)#
+	}#
+	# abline(h=0, lty=3)#
+	abline(h=log(0 + constant), lty=3)#
+}
+errorMetric <- 'PE1'#
+defaultYrange <- c(-1,2)#
+defaultYrange_netdiv <- c(-1,5)#
+TBrange <- c(-1, 10)#
+constant <- 4
+par(mfrow=c(2,4), mar = c(4,4,2,2))#
+#
+for (i in 1:4) {#
+	tipMetric <- tipMetrics[i]#
+	errorLabel <- errorLabel <- expression(paste("log prop. error in ", lambda))#
+	errorCol <- Reduce(intersect, list(grep('tipLambda', colnames(dat)), grep(tipMetric, colnames(dat)), grep(errorMetric, colnames(dat))))#
+	plot.new()#
+	yrange <- defaultYrange#
+	if (tipMetric == 'lambdaTB') {#
+		yrange <- TBrange#
+	}#
+	plot.window(xlim = c(0,1), ylim = yrange)#
+	axis(1, at=c(-0.1, axTicks(1)))#
+	axis(2, at=c(-5, axTicks(2)))#
+	points(epsVec_lambda, log(dat_lambda[, errorCol] + constant), cex=0.3)#
+	mtext('epsilon', side = 1, cex=0.7, line = 2.5)#
+	mtext(errorLabel, side = 2, cex=0.7, line = 2.5)#
+	title(main = tipMetricLabel[i], line = -1, cex.main=1.5)#
+	# abline(h=0, lty=3)#
+	abline(h=log(0 + constant), lty=3)#
+}#
+#
+# second row: net div#
+for (i in 1:4) {#
+	tipMetric <- tipMetricsNetDiv[i]#
+	errorLabel <- expression(paste("log prop. error in ", lambda, ' - ', mu))#
+	errorCol <- Reduce(intersect, list(grep('tipNetDiv', colnames(dat)), grep(tipMetric, colnames(dat)), grep(errorMetric, colnames(dat))))#
+	plot.new()#
+	yrange <- defaultYrange_netdiv#
+	if (tipMetric == 'lambdaTB') {#
+		yrange <- TBrange#
+	}	#
+	plot.window(xlim = c(0,1), ylim = yrange)#
+	axis(1, at=c(-0.1, axTicks(1)))#
+	axis(2, at=c(-5, axTicks(2)))#
+	points(epsVec_netdiv, log(dat_netdiv[, errorCol] + constant), cex=0.3)#
+	mtext('epsilon', side = 1, cex=0.5, line = 2)#
+	mtext(errorLabel, side = 2, cex=0.7, line = 2.5)#
+	if (tipMetric == 'netDivBAMM') {#
+		title(main = expression(bold(paste(lambda - mu['BAMM']))), line = -1, cex.main=1.5)#
+	}#
+	# abline(h=0, lty=3)#
+	abline(h=log(0 + constant), lty=3)#
+}
+defaultYrange <- c(0,2)
+par(mfrow=c(2,4), mar = c(4,4,2,2))#
+#
+for (i in 1:4) {#
+	tipMetric <- tipMetrics[i]#
+	errorLabel <- errorLabel <- expression(paste("log prop. error in ", lambda))#
+	errorCol <- Reduce(intersect, list(grep('tipLambda', colnames(dat)), grep(tipMetric, colnames(dat)), grep(errorMetric, colnames(dat))))#
+	plot.new()#
+	yrange <- defaultYrange#
+	if (tipMetric == 'lambdaTB') {#
+		yrange <- TBrange#
+	}#
+	plot.window(xlim = c(0,1), ylim = yrange)#
+	axis(1, at=c(-0.1, axTicks(1)))#
+	axis(2, at=c(-5, axTicks(2)))#
+	points(epsVec_lambda, log(dat_lambda[, errorCol] + constant), cex=0.3)#
+	mtext('epsilon', side = 1, cex=0.7, line = 2.5)#
+	mtext(errorLabel, side = 2, cex=0.7, line = 2.5)#
+	title(main = tipMetricLabel[i], line = -1, cex.main=1.5)#
+	# abline(h=0, lty=3)#
+	abline(h=log(0 + constant), lty=3)#
+}#
+#
+# second row: net div#
+for (i in 1:4) {#
+	tipMetric <- tipMetricsNetDiv[i]#
+	errorLabel <- expression(paste("log prop. error in ", lambda, ' - ', mu))#
+	errorCol <- Reduce(intersect, list(grep('tipNetDiv', colnames(dat)), grep(tipMetric, colnames(dat)), grep(errorMetric, colnames(dat))))#
+	plot.new()#
+	yrange <- defaultYrange_netdiv#
+	if (tipMetric == 'lambdaTB') {#
+		yrange <- TBrange#
+	}	#
+	plot.window(xlim = c(0,1), ylim = yrange)#
+	axis(1, at=c(-0.1, axTicks(1)))#
+	axis(2, at=c(-5, axTicks(2)))#
+	points(epsVec_netdiv, log(dat_netdiv[, errorCol] + constant), cex=0.3)#
+	mtext('epsilon', side = 1, cex=0.5, line = 2)#
+	mtext(errorLabel, side = 2, cex=0.7, line = 2.5)#
+	if (tipMetric == 'netDivBAMM') {#
+		title(main = expression(bold(paste(lambda - mu['BAMM']))), line = -1, cex.main=1.5)#
+	}#
+	# abline(h=0, lty=3)#
+	abline(h=log(0 + constant), lty=3)#
+}
+defaultYrange <- c(1, 2)
+par(mfrow=c(2,4), mar = c(4,4,2,2))#
+#
+for (i in 1:4) {#
+	tipMetric <- tipMetrics[i]#
+	errorLabel <- errorLabel <- expression(paste("log prop. error in ", lambda))#
+	errorCol <- Reduce(intersect, list(grep('tipLambda', colnames(dat)), grep(tipMetric, colnames(dat)), grep(errorMetric, colnames(dat))))#
+	plot.new()#
+	yrange <- defaultYrange#
+	if (tipMetric == 'lambdaTB') {#
+		yrange <- TBrange#
+	}#
+	plot.window(xlim = c(0,1), ylim = yrange)#
+	axis(1, at=c(-0.1, axTicks(1)))#
+	axis(2, at=c(-5, axTicks(2)))#
+	points(epsVec_lambda, log(dat_lambda[, errorCol] + constant), cex=0.3)#
+	mtext('epsilon', side = 1, cex=0.7, line = 2.5)#
+	mtext(errorLabel, side = 2, cex=0.7, line = 2.5)#
+	title(main = tipMetricLabel[i], line = -1, cex.main=1.5)#
+	# abline(h=0, lty=3)#
+	abline(h=log(0 + constant), lty=3)#
+}#
+#
+# second row: net div#
+for (i in 1:4) {#
+	tipMetric <- tipMetricsNetDiv[i]#
+	errorLabel <- expression(paste("log prop. error in ", lambda, ' - ', mu))#
+	errorCol <- Reduce(intersect, list(grep('tipNetDiv', colnames(dat)), grep(tipMetric, colnames(dat)), grep(errorMetric, colnames(dat))))#
+	plot.new()#
+	yrange <- defaultYrange_netdiv#
+	if (tipMetric == 'lambdaTB') {#
+		yrange <- TBrange#
+	}	#
+	plot.window(xlim = c(0,1), ylim = yrange)#
+	axis(1, at=c(-0.1, axTicks(1)))#
+	axis(2, at=c(-5, axTicks(2)))#
+	points(epsVec_netdiv, log(dat_netdiv[, errorCol] + constant), cex=0.3)#
+	mtext('epsilon', side = 1, cex=0.5, line = 2)#
+	mtext(errorLabel, side = 2, cex=0.7, line = 2.5)#
+	if (tipMetric == 'netDivBAMM') {#
+		title(main = expression(bold(paste(lambda - mu['BAMM']))), line = -1, cex.main=1.5)#
+	}#
+	# abline(h=0, lty=3)#
+	abline(h=log(0 + constant), lty=3)#
+}
+pdf('~/Dropbox/tipRatesProject/preliminaryplots/errorAcrossEpsilon_lambdaAndNetDiv_logPE1.pdf', width=10, height=5)#
+#
+par(mfrow=c(2,4), mar = c(4,4,2,2))#
+#
+for (i in 1:4) {#
+	tipMetric <- tipMetrics[i]#
+	errorLabel <- errorLabel <- expression(paste("log prop. error in ", lambda))#
+	errorCol <- Reduce(intersect, list(grep('tipLambda', colnames(dat)), grep(tipMetric, colnames(dat)), grep(errorMetric, colnames(dat))))#
+	plot.new()#
+	yrange <- defaultYrange#
+	if (tipMetric == 'lambdaTB') {#
+		yrange <- TBrange#
+	}#
+	plot.window(xlim = c(0,1), ylim = yrange)#
+	axis(1, at=c(-0.1, axTicks(1)))#
+	axis(2, at=c(-5, axTicks(2)))#
+	points(epsVec_lambda, log(dat_lambda[, errorCol] + constant), cex=0.3)#
+	mtext(expression(mu~'/'~lambda), side = 1, cex=0.7, line = 2.5)#
+	mtext(errorLabel, side = 2, cex=0.7, line = 2.5)#
+	title(main = tipMetricLabel[i], line = -1, cex.main=1.5)#
+	# abline(h=0, lty=3)#
+	abline(h=log(0 + constant), lty=3)#
+}#
+#
+# second row: net div#
+for (i in 1:4) {#
+	tipMetric <- tipMetricsNetDiv[i]#
+	errorLabel <- expression(paste("log prop. error in ", lambda, ' - ', mu))#
+	errorCol <- Reduce(intersect, list(grep('tipNetDiv', colnames(dat)), grep(tipMetric, colnames(dat)), grep(errorMetric, colnames(dat))))#
+	plot.new()#
+	yrange <- defaultYrange_netdiv#
+	if (tipMetric == 'lambdaTB') {#
+		yrange <- TBrange#
+	}	#
+	plot.window(xlim = c(0,1), ylim = yrange)#
+	axis(1, at=c(-0.1, axTicks(1)))#
+	axis(2, at=c(-5, axTicks(2)))#
+	points(epsVec_netdiv, log(dat_netdiv[, errorCol] + constant), cex=0.3)#
+	mtext(expression(mu~'/'~lambda), side = 1, cex=0.5, line = 2)#
+	mtext(errorLabel, side = 2, cex=0.7, line = 2.5)#
+	if (tipMetric == 'netDivBAMM') {#
+		title(main = expression(bold(paste(lambda - mu['BAMM']))), line = -1, cex.main=1.5)#
+	}#
+	# abline(h=0, lty=3)#
+	abline(h=log(0 + constant), lty=3)#
+}#
+#
+dev.off()
+pdf('~/Dropbox/tipRatesProject/preliminaryplots/errorAcrossEpsilon_lambdaAndNetDiv_logPE1.pdf', width=10, height=5)#
+#
+par(mfrow=c(2,4), mar = c(4,4,2,2))#
+#
+for (i in 1:4) {#
+	tipMetric <- tipMetrics[i]#
+	errorLabel <- errorLabel <- expression(paste("log prop. error in ", lambda))#
+	errorCol <- Reduce(intersect, list(grep('tipLambda', colnames(dat)), grep(tipMetric, colnames(dat)), grep(errorMetric, colnames(dat))))#
+	plot.new()#
+	yrange <- defaultYrange#
+	if (tipMetric == 'lambdaTB') {#
+		yrange <- TBrange#
+	}#
+	plot.window(xlim = c(0,1), ylim = yrange)#
+	axis(1, at=c(-0.1, axTicks(1)))#
+	axis(2, at=c(-5, axTicks(2)))#
+	points(epsVec_lambda, log(dat_lambda[, errorCol] + constant), cex=0.3)#
+	mtext(expression(mu~'/'~lambda), side = 1, cex=0.7, line = 2.5)#
+	mtext(errorLabel, side = 2, cex=0.7, line = 2.5)#
+	title(main = tipMetricLabel[i], line = -1, cex.main=1.5)#
+	# abline(h=0, lty=3)#
+	abline(h=log(0 + constant), lty=3, col=gray(0.5))#
+}#
+#
+# second row: net div#
+for (i in 1:4) {#
+	tipMetric <- tipMetricsNetDiv[i]#
+	errorLabel <- expression(paste("log prop. error in ", lambda, ' - ', mu))#
+	errorCol <- Reduce(intersect, list(grep('tipNetDiv', colnames(dat)), grep(tipMetric, colnames(dat)), grep(errorMetric, colnames(dat))))#
+	plot.new()#
+	yrange <- defaultYrange_netdiv#
+	if (tipMetric == 'lambdaTB') {#
+		yrange <- TBrange#
+	}	#
+	plot.window(xlim = c(0,1), ylim = yrange)#
+	axis(1, at=c(-0.1, axTicks(1)))#
+	axis(2, at=c(-5, axTicks(2)))#
+	points(epsVec_netdiv, log(dat_netdiv[, errorCol] + constant), cex=0.3)#
+	mtext(expression(mu~'/'~lambda), side = 1, cex=0.5, line = 2)#
+	mtext(errorLabel, side = 2, cex=0.7, line = 2.5)#
+	if (tipMetric == 'netDivBAMM') {#
+		title(main = expression(bold(paste(lambda - mu['BAMM']))), line = -1, cex.main=1.5)#
+	}#
+	# abline(h=0, lty=3)#
+	abline(h=log(0 + constant), lty=3, col=gray(0.5))#
+}#
+#
+dev.off()
+pdf('~/Dropbox/tipRatesProject/preliminaryplots/errorAcrossEpsilon_lambdaAndNetDiv_logPE1.pdf', width=10, height=5)#
+#
+par(mfrow=c(2,4), mar = c(4,4,2,2))#
+#
+for (i in 1:4) {#
+	tipMetric <- tipMetrics[i]#
+	errorLabel <- errorLabel <- expression(paste("log prop. error in ", lambda))#
+	errorCol <- Reduce(intersect, list(grep('tipLambda', colnames(dat)), grep(tipMetric, colnames(dat)), grep(errorMetric, colnames(dat))))#
+	plot.new()#
+	yrange <- defaultYrange#
+	if (tipMetric == 'lambdaTB') {#
+		yrange <- TBrange#
+	}#
+	plot.window(xlim = c(0,1), ylim = yrange)#
+	axis(1, at=c(-0.1, axTicks(1)))#
+	axis(2, at=c(-5, axTicks(2)))#
+	points(epsVec_lambda, log(dat_lambda[, errorCol] + constant), cex=0.3)#
+	mtext(expression(mu~'/'~lambda), side = 1, cex=0.7, line = 2.5)#
+	mtext(errorLabel, side = 2, cex=0.7, line = 2.5)#
+	title(main = tipMetricLabel[i], line = -1, cex.main=1.5)#
+	# abline(h=0, lty=3)#
+	abline(h=log(0 + constant), lty=3, col=gray(0.5), lwd=2)#
+}#
+#
+# second row: net div#
+for (i in 1:4) {#
+	tipMetric <- tipMetricsNetDiv[i]#
+	errorLabel <- expression(paste("log prop. error in ", lambda, ' - ', mu))#
+	errorCol <- Reduce(intersect, list(grep('tipNetDiv', colnames(dat)), grep(tipMetric, colnames(dat)), grep(errorMetric, colnames(dat))))#
+	plot.new()#
+	yrange <- defaultYrange_netdiv#
+	if (tipMetric == 'lambdaTB') {#
+		yrange <- TBrange#
+	}	#
+	plot.window(xlim = c(0,1), ylim = yrange)#
+	axis(1, at=c(-0.1, axTicks(1)))#
+	axis(2, at=c(-5, axTicks(2)))#
+	points(epsVec_netdiv, log(dat_netdiv[, errorCol] + constant), cex=0.3)#
+	mtext(expression(mu~'/'~lambda), side = 1, cex=0.5, line = 2)#
+	mtext(errorLabel, side = 2, cex=0.7, line = 2.5)#
+	if (tipMetric == 'netDivBAMM') {#
+		title(main = expression(bold(paste(lambda - mu['BAMM']))), line = -1, cex.main=1.5)#
+	}#
+	# abline(h=0, lty=3)#
+	abline(h=log(0 + constant), lty=3, col=gray(0.5), lwd=2)#
+}#
+#
+dev.off()
+pdf('~/Dropbox/tipRatesProject/preliminaryplots/errorAcrossEpsilon_lambdaAndNetDiv_logPE1.pdf', width=10, height=5)#
+#
+par(mfrow=c(2,4), mar = c(4,4,2,2))#
+#
+for (i in 1:4) {#
+	tipMetric <- tipMetrics[i]#
+	errorLabel <- errorLabel <- expression(paste("log prop. error in ", lambda))#
+	errorCol <- Reduce(intersect, list(grep('tipLambda', colnames(dat)), grep(tipMetric, colnames(dat)), grep(errorMetric, colnames(dat))))#
+	plot.new()#
+	yrange <- defaultYrange#
+	if (tipMetric == 'lambdaTB') {#
+		yrange <- TBrange#
+	}#
+	plot.window(xlim = c(0,1), ylim = yrange)#
+	axis(1, at=c(-0.1, axTicks(1)))#
+	axis(2, at=c(-5, axTicks(2)))#
+	points(epsVec_lambda, log(dat_lambda[, errorCol] + constant), cex=0.3)#
+	mtext(expression(mu~'/'~lambda), side = 1, cex=0.7, line = 2.5)#
+	mtext(errorLabel, side = 2, cex=0.7, line = 2.5)#
+	title(main = tipMetricLabel[i], line = -1, cex.main=1.5)#
+	# abline(h=0, lty=3)#
+	abline(h=log(0 + constant), lty=2, col=gray(0.5), lwd=2)#
+}#
+#
+# second row: net div#
+for (i in 1:4) {#
+	tipMetric <- tipMetricsNetDiv[i]#
+	errorLabel <- expression(paste("log prop. error in ", lambda, ' - ', mu))#
+	errorCol <- Reduce(intersect, list(grep('tipNetDiv', colnames(dat)), grep(tipMetric, colnames(dat)), grep(errorMetric, colnames(dat))))#
+	plot.new()#
+	yrange <- defaultYrange_netdiv#
+	if (tipMetric == 'lambdaTB') {#
+		yrange <- TBrange#
+	}	#
+	plot.window(xlim = c(0,1), ylim = yrange)#
+	axis(1, at=c(-0.1, axTicks(1)))#
+	axis(2, at=c(-5, axTicks(2)))#
+	points(epsVec_netdiv, log(dat_netdiv[, errorCol] + constant), cex=0.3)#
+	mtext(expression(mu~'/'~lambda), side = 1, cex=0.5, line = 2)#
+	mtext(errorLabel, side = 2, cex=0.7, line = 2.5)#
+	if (tipMetric == 'netDivBAMM') {#
+		title(main = expression(bold(paste(lambda - mu['BAMM']))), line = -1, cex.main=1.5)#
+	}#
+	# abline(h=0, lty=3)#
+	abline(h=log(0 + constant), lty=3, col=gray(0.5), lwd=2)#
+}#
+#
+dev.off()
+# mean absolute error#
+errorMetric <- 'absoluteError'#
+#
+defaultYrange <- c(0, 0.5)#
+defaultYrange_netdiv <- c(0, 5)#
+TBrange <- c(0, 20)#
+TBrange_netdiv <- c(0, 70)#
+#
+	pdf('~/Dropbox/tipRatesProject/preliminaryplots/errorAcrossEpsilon_lambdaAndNetDiv_absoluteError.pdf', width=10, height=5)#
+	par(mfrow=c(2,4), mar = c(4,4,1,1))#
+	for (i in 1:4) {#
+		tipMetric <- tipMetrics[i]#
+		errorLabel <- expression(paste("mean absolute error in ", lambda))#
+		errorCol <- Reduce(intersect, list(grep('tipLambda', colnames(dat)), grep(tipMetric, colnames(dat)), grep(errorMetric, colnames(dat))))#
+		plot.new()#
+		yrange <- defaultYrange#
+		if (tipMetric == 'lambdaTB') {#
+			#yrange <- c(0, quantile(dat_lambda[, errorCol], 0.95, na.rm=TRUE))#
+			yrange <- TBrange#
+		}#
+		plot.window(xlim = c(0,1), ylim = yrange)#
+		axis(1, at=c(-0.1, axTicks(1)))#
+		axis(2, at=c(-5, axTicks(2)))#
+		points(epsVec_lambda, dat_lambda[, errorCol], cex=0.3)#
+		mtext(expression(mu~'/'~lambda), side = 1, cex=0.7, line = 2.5)#
+		mtext(errorLabel, side = 2, cex=0.7, line = 2.5)#
+		title(main = tipMetricLabel[i], line = -1, cex.main=1.5)#
+		abline(h=0, lty=2, col=gray(0.5), lwd=2)#
+	}#
+#
+	# second row: net div#
+	for (i in 1:4) {#
+		tipMetric <- tipMetricsNetDiv[i]#
+		errorLabel <- expression(paste("mean absolute error in ", lambda, ' - ', mu))#
+		errorCol <- Reduce(intersect, list(grep('tipNetDiv', colnames(dat)), grep(tipMetric, colnames(dat)), grep(errorMetric, colnames(dat))))#
+		plot.new()#
+		yrange <- defaultYrange_netdiv#
+		if (tipMetric == 'lambdaTB') {#
+			# yrange <- c(0, quantile(dat_netdiv[, errorCol], 0.95, na.rm=TRUE))#
+			yrange <- TBrange_netdiv#
+		}#
+		plot.window(xlim = c(0,1), ylim = yrange)#
+		axis(1, at=c(-0.1, axTicks(1)))#
+		axis(2, at=c(-5, axTicks(2)))#
+		points(epsVec_netdiv, dat_netdiv[, errorCol], cex=0.3)#
+		mtext(expression(mu~'/'~lambda), side = 1, cex=0.7, line = 2.5)#
+		mtext(errorLabel, side = 2, cex=0.7, line = 2.5)#
+		if (tipMetric == 'netDivBAMM') {#
+			title(main = expression(bold(paste(lambda - mu['BAMM']))), line = -1, cex.main=1.5)#
+		}#
+		abline(h=0, lty=2, col=gray(0.5), lwd=2)		#
+	}#
+#	mtext('lambda', side=2, outer=TRUE, adj=0.85, line = -1)#
+#	mtext('lambda - mu', side=2, outer=TRUE, adj=0.18, line = -1)#
+	dev.off()#
+######
+# PE1 on log scale#
+#
+errorMetric <- 'PE1'#
+defaultYrange <- c(1, 2)#
+defaultYrange_netdiv <- c(-1,5)#
+TBrange <- c(-1, 10)#
+constant <- 4#
+#
+pdf('~/Dropbox/tipRatesProject/preliminaryplots/errorAcrossEpsilon_lambdaAndNetDiv_logPE1.pdf', width=10, height=5)#
+#
+par(mfrow=c(2,4), mar = c(4,4,2,2))#
+#
+for (i in 1:4) {#
+	tipMetric <- tipMetrics[i]#
+	errorLabel <- errorLabel <- expression(paste("log prop. error in ", lambda))#
+	errorCol <- Reduce(intersect, list(grep('tipLambda', colnames(dat)), grep(tipMetric, colnames(dat)), grep(errorMetric, colnames(dat))))#
+	plot.new()#
+	yrange <- defaultYrange#
+	if (tipMetric == 'lambdaTB') {#
+		yrange <- TBrange#
+	}#
+	plot.window(xlim = c(0,1), ylim = yrange)#
+	axis(1, at=c(-0.1, axTicks(1)))#
+	axis(2, at=c(-5, axTicks(2)))#
+	points(epsVec_lambda, log(dat_lambda[, errorCol] + constant), cex=0.3)#
+	mtext(expression(mu~'/'~lambda), side = 1, cex=0.7, line = 2.5)#
+	mtext(errorLabel, side = 2, cex=0.7, line = 2.5)#
+	title(main = tipMetricLabel[i], line = -1, cex.main=1.5)#
+	# abline(h=0, lty=3)#
+	abline(h=log(0 + constant), lty=2, col=gray(0.5), lwd=2)#
+}#
+#
+# second row: net div#
+for (i in 1:4) {#
+	tipMetric <- tipMetricsNetDiv[i]#
+	errorLabel <- expression(paste("log prop. error in ", lambda, ' - ', mu))#
+	errorCol <- Reduce(intersect, list(grep('tipNetDiv', colnames(dat)), grep(tipMetric, colnames(dat)), grep(errorMetric, colnames(dat))))#
+	plot.new()#
+	yrange <- defaultYrange_netdiv#
+	if (tipMetric == 'lambdaTB') {#
+		yrange <- TBrange#
+	}	#
+	plot.window(xlim = c(0,1), ylim = yrange)#
+	axis(1, at=c(-0.1, axTicks(1)))#
+	axis(2, at=c(-5, axTicks(2)))#
+	points(epsVec_netdiv, log(dat_netdiv[, errorCol] + constant), cex=0.3)#
+	mtext(expression(mu~'/'~lambda), side = 1, cex=0.5, line = 2)#
+	mtext(errorLabel, side = 2, cex=0.7, line = 2.5)#
+	if (tipMetric == 'netDivBAMM') {#
+		title(main = expression(bold(paste(lambda - mu['BAMM']))), line = -1, cex.main=1.5)#
+	}#
+	# abline(h=0, lty=3)#
+	abline(h=log(0 + constant), lty=2, col=gray(0.5), lwd=2)#
+}#
+#
+dev.off()
+require(TreeSim)
+set1params <- read.csv('~/Dropbox/tipRatesProject/simulations/constantVariance/set1params.csv')
+set2params <- read.csv('~/Dropbox/tipRatesProject/simulations/constantVariance/set2params.csv')
+set1Trees <- read.tree('~/Dropbox/tipRatesProject/simulations/constantVariance/set1Trees.tre')
+set2Trees <- read.tree('~/Dropbox/tipRatesProject/simulations/constantVariance/set2Trees.tre')
+m <- matrix(c(1,1,2,3,4,4,5,6), nrow=4, ncol=2, byrow=TRUE)#
+layout(m, heights=c(0.1, 0.4, 0.1, 0.4))#
+#
+par(mar=c(4,4,0,1))#
+#
+plot.new()#
+text(0.5, 0.2, 'simulations for evaluating speciation rate', pos=1, cex=1.5, font=2, xpd=NA)#
+plot.new()#
+plot.window(xlim = c(0,1), ylim = c(0, 0.3))#
+axis(1, at = c(-0.5, axTicks(1)))#
+axis(2, at = c(-0.5, axTicks(2)))#
+points(set1params$eps, set1params$lambda, cex=0.5)#
+mtext('relative extinction rate', side=1, line=2.5)#
+mtext('speciation rate', side=2, line=2.5)#
+#
+plot.new()#
+plot.window(xlim = c(0,1), ylim = c(0, 0.3))#
+axis(1, at = c(-0.5, axTicks(1)))#
+axis(2, at = c(-0.5, axTicks(2)))#
+points(set1params$eps, set1params$netdiv, cex=0.5)#
+mtext(expression(mu~'/'~lambda), side=1, line=2.5)#
+mtext('net div. rate', side=2, line=2.5)#
+#
+plot.new()#
+text(0.5, 0.2, 'simulations for evaluating net div. rate', pos=1, cex=1.5, font=2, xpd=NA)#
+plot.new()#
+plot.window(xlim = c(0,1), ylim = c(0, 10))#
+axis(1, at = c(-0.5, axTicks(1)))#
+axis(2, at = c(-0.5, axTicks(2)))#
+points(set2params$eps, set2params$lambda, cex=0.5)#
+mtext(expression(mu~'/'~lambda), side=1, line=2.5)#
+mtext('speciation rate', side=2, line=2.5)#
+#
+plot.new()#
+plot.window(xlim = c(0,1), ylim = c(0, 0.3))#
+axis(1, at = c(-0.5, axTicks(1)))#
+axis(2, at = c(-0.5, axTicks(2)))#
+points(set2params$eps, set2params$netdiv, cex=0.5)#
+mtext(expression(mu~'/'~lambda), side=1, line=2.5)#
+mtext('net div. rate', side=2, line=2.5)
+m <- matrix(c(1,1,2,3,4,4,5,6), nrow=4, ncol=2, byrow=TRUE)#
+layout(m, heights=c(0.1, 0.4, 0.1, 0.4))#
+#
+par(mar=c(4,4,0,1))#
+#
+plot.new()#
+text(0.5, 0.2, 'simulations for evaluating speciation rate', pos=1, cex=1.5, font=2, xpd=NA)#
+plot.new()#
+plot.window(xlim = c(0,1), ylim = c(0, 0.3))#
+axis(1, at = c(-0.5, axTicks(1)))#
+axis(2, at = c(-0.5, axTicks(2)))#
+points(set1params$eps, set1params$lambda, cex=0.5)#
+mtext(expression(mu~'/'~lambda), side=1, line=2.5)#
+mtext(expression(lambda), side=2, line=2.5)#
+#
+plot.new()#
+plot.window(xlim = c(0,1), ylim = c(0, 0.3))#
+axis(1, at = c(-0.5, axTicks(1)))#
+axis(2, at = c(-0.5, axTicks(2)))#
+points(set1params$eps, set1params$netdiv, cex=0.5)#
+mtext(expression(mu~'/'~lambda), side=1, line=2.5)#
+mtext(expression(lambda~'-'~mu), side=2, line=2.5)#
+#
+plot.new()#
+text(0.5, 0.2, 'simulations for evaluating net div. rate', pos=1, cex=1.5, font=2, xpd=NA)#
+plot.new()#
+plot.window(xlim = c(0,1), ylim = c(0, 10))#
+axis(1, at = c(-0.5, axTicks(1)))#
+axis(2, at = c(-0.5, axTicks(2)))#
+points(set2params$eps, set2params$lambda, cex=0.5)#
+mtext(expression(mu~'/'~lambda), side=1, line=2.5)#
+mtext(expression(lambda), side=2, line=2.5)#
+#
+plot.new()#
+plot.window(xlim = c(0,1), ylim = c(0, 0.3))#
+axis(1, at = c(-0.5, axTicks(1)))#
+axis(2, at = c(-0.5, axTicks(2)))#
+points(set2params$eps, set2params$netdiv, cex=0.5)#
+mtext(expression(mu~'/'~lambda), side=1, line=2.5)#
+mtext(expression(lambda~'-'~mu), side=2, line=2.5)
+pdf('~/Dropbox/tipRatesProject/preliminaryplots/epsilonSimulationPlots.pdf', width=7, height=7)#
+m <- matrix(c(1,1,2,3,4,4,5,6), nrow=4, ncol=2, byrow=TRUE)#
+layout(m, heights=c(0.1, 0.4, 0.1, 0.4))#
+#
+par(mar=c(4,4,0,1))#
+#
+plot.new()#
+text(0.5, 0.2, 'simulations for evaluating speciation rate', pos=1, cex=1.5, font=2, xpd=NA)#
+plot.new()#
+plot.window(xlim = c(0,1), ylim = c(0, 0.3))#
+axis(1, at = c(-0.5, axTicks(1)))#
+axis(2, at = c(-0.5, axTicks(2)))#
+points(set1params$eps, set1params$lambda, cex=0.5)#
+mtext(expression(mu~'/'~lambda), side=1, line=2.5)#
+mtext(expression(lambda), side=2, line=2.5)#
+#
+plot.new()#
+plot.window(xlim = c(0,1), ylim = c(0, 0.3))#
+axis(1, at = c(-0.5, axTicks(1)))#
+axis(2, at = c(-0.5, axTicks(2)))#
+points(set1params$eps, set1params$netdiv, cex=0.5)#
+mtext(expression(mu~'/'~lambda), side=1, line=2.5)#
+mtext(expression(lambda~'-'~mu), side=2, line=2.5)#
+#
+plot.new()#
+text(0.5, 0.2, 'simulations for evaluating net div. rate', pos=1, cex=1.5, font=2, xpd=NA)#
+plot.new()#
+plot.window(xlim = c(0,1), ylim = c(0, 10))#
+axis(1, at = c(-0.5, axTicks(1)))#
+axis(2, at = c(-0.5, axTicks(2)))#
+points(set2params$eps, set2params$lambda, cex=0.5)#
+mtext(expression(mu~'/'~lambda), side=1, line=2.5)#
+mtext(expression(lambda), side=2, line=2.5)#
+#
+plot.new()#
+plot.window(xlim = c(0,1), ylim = c(0, 0.3))#
+axis(1, at = c(-0.5, axTicks(1)))#
+axis(2, at = c(-0.5, axTicks(2)))#
+points(set2params$eps, set2params$netdiv, cex=0.5)#
+mtext(expression(mu~'/'~lambda), side=1, line=2.5)#
+mtext(expression(lambda~'-'~mu), side=2, line=2.5)#
+#
+dev.off()
+require(TreeSim)#
+require(pbapply)
+source('~/Dropbox/tipRatesProject/tipRateFunctions.R')
+trueparams <- readRDS('~/Dropbox/tipRatesProject/introFig.rds')[[1]]#
+treeset <- readRDS('~/Dropbox/tipRatesProject/introFig.rds')[[2]]#
+#
+DRlist <- pblapply(treeset, DRstat)#
+#
+CRBDlist <- pblapply(treeset, function(x) fitCRBD(x))
+tipIndex <- 25
+# CRBD lambda vec for one tip of each tree#
+crbdVec <- sapply(CRBDlist, function(x) x[1])#
+range(crbdVec)#
+#
+# DR vec for the tipIndex tip of each tree#
+DRvec <- sapply(DRlist, function(x) x[tipIndex])
+layout(matrix(1:3, nrow=1, ncol=3), widths=c(30,35,35))#
+#
+par(oma = c(0,0,0,0))#
+#
+# phylo fig#
+edgeVec <- rep(1, nrow(treeset[[1]]$edge))#
+edgeVec[which(treeset[[1]]$edge[,2] %in% 1:50)[18]] <- 4#
+plot.phylo(treeset[[1]], no.margin=TRUE, show.tip.label=FALSE, edge.width = edgeVec)
+treeDepth <- max(branching.times(treeset[[1]]))#
+arrows(x0 = treeDepth + 5, y0 = 18, x1 = treeDepth + 1, y1 = 18, length = 0.1, lwd=2, xpd=NA)#
+#
+mtext('a', font = 2, side = 3, line = -3, at = 3, xpd=NA)#
+#
+par(mar = c(4,4,0,0))#
+#
+axisRange <- c(-4, 0.5) # for logged rates#
+# axisRange <- c(0, 1.5)#
+# range(c(log(trueparams), log(crbdVec), log(DRvec)))#
+#
+# CRBD estimate ~ true#
+plot.new()#
+plot.window(axisRange, axisRange)#
+axis(1, c(-5, axTicks(1)))#
+axis(2, c(-5, axTicks(2)))#
+points(log(trueparams), log(crbdVec), cex=0.5, pch=20)#
+#points(trueparams, crbdVec, cex=0.5, pch=20)#
+segments(axisRange[1], axisRange[1], axisRange[2], axisRange[2], lty=3)
+mtext(expression(lambda['TRUE']), side = 1, line = 2.5, cex=0.7)
+mtext(expression(lambda['CRBD']), side = 2, line = 2.5, cex=0.7)
+pdf('~/Dropbox/tipRatesProject/preliminaryplots/introFig.pdf', width=8.5, height=3)#
+layout(matrix(1:3, nrow=1, ncol=3), widths=c(30,35,35))#
+#
+par(oma = c(0,0,0,0))#
+#
+# phylo fig#
+edgeVec <- rep(1, nrow(treeset[[1]]$edge))#
+edgeVec[which(treeset[[1]]$edge[,2] %in% 1:50)[18]] <- 4#
+plot.phylo(treeset[[1]], no.margin=TRUE, show.tip.label=FALSE, edge.width = edgeVec)#
+#
+treeDepth <- max(branching.times(treeset[[1]]))#
+arrows(x0 = treeDepth + 5, y0 = 18, x1 = treeDepth + 1, y1 = 18, length = 0.1, lwd=2, xpd=NA)#
+#
+mtext('a', font = 2, side = 3, line = -3, at = 3, xpd=NA)#
+#
+par(mar = c(4,4,0,0))#
+#
+axisRange <- c(-4, 0.5) # for logged rates#
+# axisRange <- c(0, 1.5)#
+# range(c(log(trueparams), log(crbdVec), log(DRvec)))#
+#
+# CRBD estimate ~ true#
+plot.new()#
+plot.window(axisRange, axisRange)#
+axis(1, c(-5, axTicks(1)))#
+axis(2, c(-5, axTicks(2)))#
+points(log(trueparams), log(crbdVec), cex=0.5, pch=20)#
+#points(trueparams, crbdVec, cex=0.5, pch=20)#
+segments(axisRange[1], axisRange[1], axisRange[2], axisRange[2], lty=3)#
+mtext(expression(lambda['TRUE']), side = 1, line = 2.5, cex=0.7)#
+mtext(expression(lambda['CRBD']), side = 2, line = 2.5, cex=0.7)#
+#
+mtext('b', font = 2, side = 3, line = -3, at = -5, xpd=NA)#
+#
+# DR ~ true#
+plot.new()#
+plot.window(axisRange, axisRange)#
+axis(1, c(-5, axTicks(1)))#
+axis(2, c(-5, axTicks(2)))#
+points(log(trueparams), log(DRvec), cex=0.5, pch=20)#
+#points(trueparams, DRvec, cex=0.5, pch=20)#
+segments(axisRange[1], axisRange[1], axisRange[2], axisRange[2], lty=3)#
+mtext(expression(lambda['TRUE']), side = 1, line = 2.5, cex=0.7)#
+mtext(expression(lambda['DR']), side = 2, line = 2.5, cex=0.7)#
+#
+mtext('c', font = 2, side = 3, line = -3, at = -5, xpd=NA)#
+#
+dev.off()
+pdf('~/Dropbox/tipRatesProject/preliminaryplots/introFig.pdf', width=8.5, height=3)#
+layout(matrix(1:3, nrow=1, ncol=3), widths=c(30,35,35))#
+#
+par(oma = c(0,0,0,0))#
+#
+# phylo fig#
+edgeVec <- rep(1, nrow(treeset[[1]]$edge))#
+edgeVec[which(treeset[[1]]$edge[,2] %in% 1:50)[18]] <- 4#
+plot.phylo(treeset[[1]], no.margin=TRUE, show.tip.label=FALSE, edge.width = edgeVec)#
+#
+treeDepth <- max(branching.times(treeset[[1]]))#
+arrows(x0 = treeDepth + 5, y0 = 18, x1 = treeDepth + 1, y1 = 18, length = 0.1, lwd=2, xpd=NA)#
+#
+mtext('a', font = 2, side = 3, line = -2.5, at = 3, xpd=NA)#
+#
+par(mar = c(4,4,0,0))#
+#
+axisRange <- c(-4, 0.5) # for logged rates#
+# axisRange <- c(0, 1.5)#
+# range(c(log(trueparams), log(crbdVec), log(DRvec)))#
+#
+# CRBD estimate ~ true#
+plot.new()#
+plot.window(axisRange, axisRange)#
+axis(1, c(-5, axTicks(1)))#
+axis(2, c(-5, axTicks(2)))#
+points(log(trueparams), log(crbdVec), cex=0.5, pch=20)#
+#points(trueparams, crbdVec, cex=0.5, pch=20)#
+segments(axisRange[1], axisRange[1], axisRange[2], axisRange[2], lty=3)#
+mtext(expression(lambda['TRUE']), side = 1, line = 2.5, cex=0.7)#
+mtext(expression(lambda['CRBD']), side = 2, line = 2.5, cex=0.7)#
+#
+mtext('b', font = 2, side = 3, line = -2.5, at = -5, xpd=NA)#
+#
+# DR ~ true#
+plot.new()#
+plot.window(axisRange, axisRange)#
+axis(1, c(-5, axTicks(1)))#
+axis(2, c(-5, axTicks(2)))#
+points(log(trueparams), log(DRvec), cex=0.5, pch=20)#
+#points(trueparams, DRvec, cex=0.5, pch=20)#
+segments(axisRange[1], axisRange[1], axisRange[2], axisRange[2], lty=3)#
+mtext(expression(lambda['TRUE']), side = 1, line = 2.5, cex=0.7)#
+mtext(expression(lambda['DR']), side = 2, line = 2.5, cex=0.7)#
+#
+mtext('c', font = 2, side = 3, line = -2.5, at = -5, xpd=NA)#
+#
+dev.off()
+require(TreeSim)#
+require(pbapply)
+source('~/Dropbox/tipRatesProject/tipRateFunctions.R')
+trueparams <- readRDS('~/Dropbox/tipRatesProject/introFig.rds')[[1]]#
+treeset <- readRDS('~/Dropbox/tipRatesProject/introFig.rds')[[2]]#
+#
+DRlist <- pblapply(treeset, DRstat)#
+#
+CRBDlist <- pblapply(treeset, function(x) fitCRBD(x))
+tipIndex <- 25
+# CRBD lambda vec for one tip of each tree#
+crbdVec <- sapply(CRBDlist, function(x) x[1])#
+range(crbdVec)#
+#
+# DR vec for the tipIndex tip of each tree#
+DRvec <- sapply(DRlist, function(x) x[tipIndex])
+layout(matrix(1:3, nrow=1, ncol=3), widths=c(30,35,35))#
+#
+par(oma = c(0,0,0,0))#
+#
+# phylo fig#
+edgeVec <- rep(1, nrow(treeset[[1]]$edge))#
+edgeVec[which(treeset[[1]]$edge[,2] %in% 1:50)[18]] <- 4#
+plot.phylo(treeset[[1]], no.margin=TRUE, show.tip.label=FALSE, edge.width = edgeVec)#
+#
+treeDepth <- max(branching.times(treeset[[1]]))#
+arrows(x0 = treeDepth + 5, y0 = 18, x1 = treeDepth + 1, y1 = 18, length = 0.1, lwd=2, xpd=NA)#
+#
+mtext('a', font = 2, side = 3, line = -2.5, at = 3, xpd=NA)#
+#
+par(mar = c(4,4,0,0))#
+#
+axisRange <- c(-4, 0.5) # for logged rates#
+# axisRange <- c(0, 1.5)#
+# range(c(log(trueparams), log(crbdVec), log(DRvec)))#
+#
+# CRBD estimate ~ true#
+plot.new()#
+plot.window(axisRange, axisRange)#
+axis(1, c(-5, axTicks(1)))#
+axis(2, c(-5, axTicks(2)))#
+points(log(trueparams), log(crbdVec), cex=0.5, pch=20)#
+#points(trueparams, crbdVec, cex=0.5, pch=20)#
+segments(axisRange[1], axisRange[1], axisRange[2], axisRange[2], lty=3)#
+mtext(expression('log'~lambda['TRUE']), side = 1, line = 2.5, cex=0.7)#
+mtext(expression('log'~lambda['CRBD']), side = 2, line = 2.5, cex=0.7)#
+#
+mtext('b', font = 2, side = 3, line = -2.5, at = -5, xpd=NA)
+pdf('~/Dropbox/tipRatesProject/preliminaryplots/introFig.pdf', width=8.5, height=3)#
+layout(matrix(1:3, nrow=1, ncol=3), widths=c(30,35,35))#
+#
+par(oma = c(0,0,0,0))#
+#
+# phylo fig#
+edgeVec <- rep(1, nrow(treeset[[1]]$edge))#
+edgeVec[which(treeset[[1]]$edge[,2] %in% 1:50)[18]] <- 4#
+plot.phylo(treeset[[1]], no.margin=TRUE, show.tip.label=FALSE, edge.width = edgeVec)#
+#
+treeDepth <- max(branching.times(treeset[[1]]))#
+arrows(x0 = treeDepth + 5, y0 = 18, x1 = treeDepth + 1, y1 = 18, length = 0.1, lwd=2, xpd=NA)#
+#
+mtext('a', font = 2, side = 3, line = -2.5, at = 3, xpd=NA)#
+#
+par(mar = c(4,4,0,0))#
+#
+axisRange <- c(-4, 0.5) # for logged rates#
+# axisRange <- c(0, 1.5)#
+# range(c(log(trueparams), log(crbdVec), log(DRvec)))#
+#
+# CRBD estimate ~ true#
+plot.new()#
+plot.window(axisRange, axisRange)#
+axis(1, c(-5, axTicks(1)))#
+axis(2, c(-5, axTicks(2)))#
+points(log(trueparams), log(crbdVec), cex=0.5, pch=20)#
+#points(trueparams, crbdVec, cex=0.5, pch=20)#
+segments(axisRange[1], axisRange[1], axisRange[2], axisRange[2], lty=3)#
+mtext(expression('log'~lambda['TRUE']), side = 1, line = 2.5, cex=0.7)#
+mtext(expression('log'~lambda['CRBD']), side = 2, line = 2.5, cex=0.7)#
+#
+mtext('b', font = 2, side = 3, line = -2.5, at = -5, xpd=NA)#
+#
+# DR ~ true#
+plot.new()#
+plot.window(axisRange, axisRange)#
+axis(1, c(-5, axTicks(1)))#
+axis(2, c(-5, axTicks(2)))#
+points(log(trueparams), log(DRvec), cex=0.5, pch=20)#
+#points(trueparams, DRvec, cex=0.5, pch=20)#
+segments(axisRange[1], axisRange[1], axisRange[2], axisRange[2], lty=3)#
+mtext(expression('log'~lambda['TRUE']), side = 1, line = 2.5, cex=0.7)#
+mtext(expression('log'~lambda['DR']), side = 2, line = 2.5, cex=0.7)#
+#
+mtext('c', font = 2, side = 3, line = -2.5, at = -5, xpd=NA)#
+#
+dev.off()
+trueparams[1]
+require(TreeSim)#
+require(pbapply)
+source('~/Dropbox/tipRatesProject/tipRateFunctions.R')
+bigtree <- sim.bd.taxa(5000, 1, lambda=0.5, mu=0, complete=FALSE)[[1]]
+plot(bigtree)
+dr <- DRstat(bigtree)
+crbd <- fitCRBD(bigtree)[1]
+crbd
+hist(dr)
+hist(dr, breaks=50)
+hist(dr, breaks=50, col=gray(0.8))
+hist(dr, breaks=50, col=gray(0.8), border='white')
+hist(dr, breaks=50, col=gray(0.7), border='white')
+hist(dr, breaks=50, col=gray(0.5), border='white')
+hist(dr, breaks=50, col=gray(0.6), border='white')
+plot.new()
+plot.window(xlim = c(0, 3.5), ylim = c(0, 500))
+axis(1, at = c(-1, axTicks(1)))
+axis(2, at = c(-50, axTicks(2)))
+hist(dr, breaks=50, col=gray(0.6), border='white', add=TRUE)
+plot.new()#
+plot.window(xlim = c(0, 3.5), ylim = c(0, 400))#
+axis(1, at = c(-1, axTicks(1)))#
+axis(2, at = c(-50, axTicks(2)))#
+hist(dr, breaks=50, col=gray(0.6), border='white', add=TRUE)
+hist(dr, breaks=30, col=gray(0.6), border='white', add=TRUE)
+plot.new()#
+plot.window(xlim = c(0, 3.5), ylim = c(0, 600))#
+axis(1, at = c(-1, axTicks(1)))#
+axis(2, at = c(-50, axTicks(2)))#
+hist(dr, breaks=30, col=gray(0.6), border='white', add=TRUE)
+plot.new()#
+plot.window(xlim = c(0, 3.5), ylim = c(0, 1000))#
+axis(1, at = c(-1, axTicks(1)))#
+axis(2, at = c(-50, axTicks(2)))#
+hist(dr, breaks=30, col=gray(0.6), border='white', add=TRUE)
+plot.new()#
+plot.window(xlim = c(0, 3.5), ylim = c(0, 800))#
+axis(1, at = c(-1, axTicks(1)))#
+axis(2, at = c(-50, axTicks(2)))#
+hist(dr, breaks=30, col=gray(0.6), border='white', add=TRUE)
+abline(v=0.5, col='red')
+abline(v=0.5, col='red', lwd=2)
+abline(v=0.5, col='red', lwd=3)
+plot.new()#
+plot.window(xlim = c(0, 3.5), ylim = c(0, 800))#
+axis(1, at = c(-1, axTicks(1)))#
+axis(2, at = c(-50, axTicks(2)))#
+hist(dr, breaks=30, col=gray(0.6), border='white', add=TRUE)#
+segments(x0 = 0.5, y0 = 0, x1 = 0.5, y1 = 800, col='red', lwd=3)
+segments(x0 = 0.5, y0 = 0, x1 = 0.5, y1 = 800, col='red', lwd=3, lend='butt')
+plot.new()#
+plot.window(xlim = c(0, 3.5), ylim = c(0, 800))#
+axis(1, at = c(-1, axTicks(1)))#
+axis(2, at = c(-50, axTicks(2)))#
+hist(dr, breaks=30, col=gray(0.6), border='white', add=TRUE)#
+segments(x0 = 0.5, y0 = 0, x1 = 0.5, y1 = 800, col='red', lwd=3, lend='butt')
+segments(x0 = 0.5, y0 = 0, x1 = 0.5, y1 = 800, col='red', lwd=5, lend='butt')
+mtext('DR', side = 1, line = 2.5)
+text(0.5, 800, expression(lambda['TRUE']))
+text(0.5, 800, expression(lambda['TRUE']), pos=3)
+text(0.5, 800, expression(lambda['TRUE']), pos=3, xpd=NA, cex=1.5)
+plot.new()#
+plot.window(xlim = c(0, 3.5), ylim = c(0, 800))#
+axis(1, at = c(-1, axTicks(1)))#
+axis(2, at = c(-50, axTicks(2)))#
+hist(dr, breaks=30, col=gray(0.6), border='white', add=TRUE)#
+segments(x0 = 0.5, y0 = 0, x1 = 0.5, y1 = 800, col='red', lwd=5, lend='butt')#
+mtext('DR', side = 1, line = 2.5)#
+text(0.5, 800, expression(lambda['TRUE']), pos=3, xpd=NA, cex=1.5)
+text(0.5, 800, expression(lambda['TRUE']), pos=4, xpd=NA, cex=1.5)
+plot.new()#
+plot.window(xlim = c(0, 3.5), ylim = c(0, 800))#
+axis(1, at = c(-1, axTicks(1)))#
+axis(2, at = c(-50, axTicks(2)))#
+hist(dr, breaks=30, col=gray(0.6), border='white', add=TRUE)#
+segments(x0 = 0.5, y0 = 0, x1 = 0.5, y1 = 800, col='red', lwd=5, lend='butt')#
+mtext('DR', side = 1, line = 2.5)#
+text(0.5, 800, expression(lambda['TRUE']), pos=4, xpd=NA, cex=1.5)
+hist(dr)
+plot.new()#
+plot.window(xlim = c(0, 3.5), ylim = c(0, 800))#
+axis(1, at = c(-1, axTicks(1)))#
+axis(2, at = c(-50, axTicks(2)))#
+hist(dr, breaks=30, col=gray(0.6), border='white', add=TRUE)#
+segments(x0 = 0.5, y0 = 0, x1 = 0.5, y1 = 800, col='red', lwd=5, lend='butt')#
+mtext('DR', side = 1, line = 2.5)#
+mtext('frequency', side = 1, line = 2.5)#
+text(0.5, 800, expression(lambda['TRUE']), pos=4, xpd=NA, cex=1.5)
+plot.new()#
+plot.window(xlim = c(0, 3.5), ylim = c(0, 800))#
+axis(1, at = c(-1, axTicks(1)))#
+axis(2, at = c(-50, axTicks(2)))#
+hist(dr, breaks=30, col=gray(0.6), border='white', add=TRUE)#
+segments(x0 = 0.5, y0 = 0, x1 = 0.5, y1 = 800, col='red', lwd=5, lend='butt')#
+mtext('DR', side = 1, line = 2.5)#
+mtext('frequency', side = 2, line = 2.5)#
+text(0.5, 800, expression(lambda['TRUE']), pos=4, xpd=NA, cex=1.5)#
+# trueparams <- numeric(1000)
+plot.new()#
+plot.window(xlim = c(0, 3.5), ylim = c(0, 800))#
+axis(1, at = c(-1, axTicks(1)))#
+axis(2, at = c(-50, axTicks(2)))#
+hist(dr, breaks=30, col=gray(0.6), border='white', add=TRUE)#
+segments(x0 = 0.5, y0 = 0, x1 = 0.5, y1 = 800, col='red', lwd=5, lend='butt')#
+mtext('DR', side = 1, line = 2.5)#
+mtext('frequency', side = 2, line = 2.5)#
+text(0.5, 800, expression(lambda['TRUE']), pos=4, xpd=NA, cex=1.5)
+crbd
+segments(x0 = crbd, y0 = 0, x1 = crbd, y1 = 800, col='blue', lwd=5, lend='butt')
+pdf('~/Dropbox/tipRatesProject/preliminaryplots/introFig2.pdf', width=6, height=6)#
+plot.new()#
+plot.window(xlim = c(0, 3.5), ylim = c(0, 800))#
+axis(1, at = c(-1, axTicks(1)))#
+axis(2, at = c(-50, axTicks(2)))#
+hist(dr, breaks=30, col=gray(0.6), border='white', add=TRUE)#
+segments(x0 = 0.5, y0 = 0, x1 = 0.5, y1 = 800, col='red', lwd=5, lend='butt')#
+#segments(x0 = crbd, y0 = 0, x1 = crbd, y1 = 800, col='blue', lwd=5, lend='butt')#
+mtext('DR', side = 1, line = 2.5)#
+mtext('frequency', side = 2, line = 2.5)#
+text(0.5, 800, expression(lambda['TRUE']), pos=4, xpd=NA, cex=1.5)#
+dev.off()
+require(BAMMtools)#
+require(phytools)#
+require(pbapply)
+install.packages('pbapply')
+require(BAMMtools)#
+require(phytools)#
+require(pbapply)
+source('~/Dropbox/tipRatesProject/tipRateFunctions.R')#
+source('~/Dropbox/tipRatesProject/sourceFxns.R')
+install.packages('diversitree')
+source('~/Dropbox/tipRatesProject/tipRateFunctions.R')#
+source('~/Dropbox/tipRatesProject/sourceFxns.R')
+tr <- read.tree('~/Dropbox/tipRatesProject/trees/fossilBAMM_75/fossilBAMM_75.tre')
+tr
+plot(tr)
+require(RPANDA)
+res <- spectR(tr)
+res$eigengap
+bic <- BICompare(tr, res$eigengap)
+plot_BICompare(tr, bic)
+# identify the modalities that have tips#
+terminalNodes <- 1:length(tr$tip.label)#
+tipOrder <- sapply(tr$tip.label, function(x) which(tr$edge[,2] == which(tr$tip.label == x)))#
+tipOrder <- names(sort(tipOrder))#
+#
+modList <- vector('list', length(unique(bic$clusters[terminalNodes])))#
+for (i in 1:length(unique(bic$clusters[terminalNodes]))) {#
+	mod <- unique(bic$clusters[terminalNodes])[i]#
+	mod <- intersect(terminalNodes, names(which(bic$clusters == mod)))#
+	modList[[i]] <- tipOrder[as.numeric(mod)]#
+}
+modNodes <- sort(unlist(sapply(modList, function(x) getMRCA(tr, x))))
+modNodes <- as.numeric(names(sort(branching.times(tr)[as.character(modNodes)], decreasing=TRUE)))
+plot(tr, cex=0.5)#
+nodelabels(node=modNodes, cex=0.3)
+plot(tr, cex=0.5, no.margin=T)#
+nodelabels(node=modNodes, cex=0.3)
+dev.new()
+plot_BICompare(tr, bic)
+newDR <- numeric(length(tr$tip.label))#
+names(newDR) <- tr$tip.label#
+for (i in 1:length(modNodes)) {#
+	modClade <- extract.clade(tr, modNodes[i])#
+	#z <- nodeDensity(modClade)#
+	#z <- DRstat(modClade)#
+	z <- fitCRBD(modClade)#
+	newDR[names(z)] <- z#
+}
+i
+modNodes
+modClade <- extract.clade(tr, modNodes[i])
+modClade
+plot(modClade)
+is.ultrametric(modClade)
+is.ultrametric(modClade, method=2)
+is.ultrametric(modClade, method=1)
+?is.ultrametric
+is.ultrametric(modClade, option = 1)
+is.ultrametric(modClade, option = 2)
+!is.ultrametric(tr)
+tr <- force.ultrametric(tr, method = 'nnls')
+is.ultrametric(modClade, method=2)
+is.ultrametric(tr)
+require(RPANDA)#
+res <- spectR(tr)#
+res$eigengap#
+bic <- BICompare(tr, res$eigengap)#
+plot_BICompare(tr, bic)#
+#
+# identify the modalities that have tips#
+terminalNodes <- 1:length(tr$tip.label)#
+tipOrder <- sapply(tr$tip.label, function(x) which(tr$edge[,2] == which(tr$tip.label == x)))#
+tipOrder <- names(sort(tipOrder))#
+#
+modList <- vector('list', length(unique(bic$clusters[terminalNodes])))#
+for (i in 1:length(unique(bic$clusters[terminalNodes]))) {#
+	mod <- unique(bic$clusters[terminalNodes])[i]#
+	mod <- intersect(terminalNodes, names(which(bic$clusters == mod)))#
+	modList[[i]] <- tipOrder[as.numeric(mod)]#
+}#
+#
+modNodes <- sort(unlist(sapply(modList, function(x) getMRCA(tr, x))))#
+# sort nodes chronologically#
+modNodes <- as.numeric(names(sort(branching.times(tr)[as.character(modNodes)], decreasing=TRUE)))#
+#
+plot(tr, cex=0.5)#
+nodelabels(node=modNodes, cex=0.3)
+newDR <- numeric(length(tr$tip.label))#
+names(newDR) <- tr$tip.label#
+for (i in 1:length(modNodes)) {#
+	modClade <- extract.clade(tr, modNodes[i])#
+	#z <- nodeDensity(modClade)#
+	#z <- DRstat(modClade)#
+	z <- fitCRBD(modClade)#
+	newDR[names(z)] <- z#
+}
+newDR
+newDR <- numeric(length(tr$tip.label))#
+names(newDR) <- tr$tip.label#
+for (i in 1:length(modNodes)) {#
+	modClade <- extract.clade(tr, modNodes[i])#
+	#z <- nodeDensity(modClade)#
+	#z <- DRstat(modClade)#
+	z <- fitCRBD(modClade)#
+	names(z) <- modClade$tip.label#
+	newDR[names(z)] <- z#
+}
+i
+z <- rep(z, length(modClade$tip.label))
+names(z) <- modClade$tip.label
+newDR <- numeric(length(tr$tip.label))#
+names(newDR) <- tr$tip.label#
+for (i in 1:length(modNodes)) {#
+	modClade <- extract.clade(tr, modNodes[i])#
+	#z <- nodeDensity(modClade)#
+	#z <- DRstat(modClade)#
+	z <- fitCRBD(modClade)#
+	z <- rep(z, length(modClade$tip.label))#
+	names(z) <- modClade$tip.label#
+	newDR[names(z)] <- z#
+}
+newDR
+modClade$tip.label
+i
+i<-1
+modClade <- extract.clade(tr, modNodes[i])
+z <- fitCRBD(modClade)
+z
+z <- fitCRBD(modClade)$lambda
+fitCRBD(modClade)
+fitCRBD(modClade)$lambda
+fitCRBD(modClade)[1]
+z <- fitCRBD(modClade)[1]
+z <- rep(z, length(modClade$tip.label))
+newDR <- numeric(length(tr$tip.label))#
+names(newDR) <- tr$tip.label#
+for (i in 1:length(modNodes)) {#
+	modClade <- extract.clade(tr, modNodes[i])#
+	#z <- nodeDensity(modClade)#
+	#z <- DRstat(modClade)#
+#
+	# crbd#
+	z <- fitCRBD(modClade)[1]#
+	z <- rep(z, length(modClade$tip.label))#
+	names(z) <- modClade$tip.label#
+#
+	newDR[names(z)] <- z#
+}
+newDR
+basepath <- '~/Dropbox/tipRatesProject/trees/'#
+treefolders <- list.files(basepath)#
+#
+outfile <- '~/Dropbox/tipRatesProject/estimatedTipRates.csv'#
+#
+require(ape)#
+require(geiger)#
+require(BAMMtools)#
+require(phangorn)#
+require(phytools)
+source('~/Dropbox/tipRatesProject/tipRateFunctions.R')#
+source('~/Dropbox/tipRatesProject/sourceFxns.R')
+tipTableColumns <- c('treeName','setname','tipName','lambdaTB','lambdaND','lambdaDR','lambdaBAMM', 'netDivBAMM', 'lambdaSpectr', 'netDivSpectr')
+# reorder treefolders#
+treefolders <- treefolders[order(gsub('(.+)_(\\d+)$', '\\1', treefolders), as.numeric(gsub('(.+)_(\\d+)$', '\\2', treefolders)))]#
+#
+estimRatesList <- vector('list', length(treefolders))#
+names(estimRatesList) <- treefolders
+i<-1
+cat(i, 'of', length(treefolders), '\n')#
+	setwd(paste0(basepath, treefolders[i]))#
+	files <- list.files()
+tr <- read.tree(grep('\\.tre$', files, value = TRUE))
+tipTable <- as.data.frame(matrix(nrow = length(tr$tip.label), ncol = length(tipTableColumns)))#
+	colnames(tipTable) <- tipTableColumns#
+	tipTable$treeName <- treefolders[i]#
+	tipTable$setname <- gsub('(.+)_(\\d+)$', '\\1', treefolders[i])#
+	tipTable$tipName <- tr$tip.label
+spectral <- try(spectrCRBD(tr))
+spectral
+class(spectral)
+tipTable
+skipped
+for (i in 1:10) {
+cat(i, 'of', length(treefolders), '\n')#
+	setwd(paste0(basepath, treefolders[i]))#
+	files <- list.files()#
+	tr <- read.tree(grep('\\.tre$', files, value = TRUE))#
+	tipTable <- as.data.frame(matrix(nrow = length(tr$tip.label), ncol = length(tipTableColumns)))#
+	colnames(tipTable) <- tipTableColumns#
+	tipTable$treeName <- treefolders[i]#
+	tipTable$setname <- gsub('(.+)_(\\d+)$', '\\1', treefolders[i])#
+	tipTable$tipName <- tr$tip.label#
+#
+	# RPANDA spectR with CRBD#
+	# if tree is too large and memory is exhausted, it will move on#
+	spectral <- try(spectrCRBD(tr))#
+	if (class(spectral) == 'list') {#
+		tipTable$lambdaSpectr <- spectral[[1]]#
+		tipTable$netDivSpectr <- spectral[[1]] - spectral[[2]]#
+	} else {#
+		skipped <- c(skipped, i)#
+	}#
+}
+estimatedTipRates <- do.call(rbind, estimRatesList)
+estimatedTipRates
+tipTableColumns <- c('treeName','setname','tipName', 'lambdaSpectr', 'netDivSpectr')
+# reorder treefolders#
+treefolders <- treefolders[order(gsub('(.+)_(\\d+)$', '\\1', treefolders), as.numeric(gsub('(.+)_(\\d+)$', '\\2', treefolders)))]#
+#
+estimRatesList <- vector('list', length(treefolders))#
+names(estimRatesList) <- treefolders
+skipped <- c()
+for (i in 1:10) {
+cat(i, 'of', length(treefolders), '\n')#
+	setwd(paste0(basepath, treefolders[i]))#
+	files <- list.files()#
+	tr <- read.tree(grep('\\.tre$', files, value = TRUE))#
+	tipTable <- as.data.frame(matrix(nrow = length(tr$tip.label), ncol = length(tipTableColumns)))#
+	colnames(tipTable) <- tipTableColumns#
+	tipTable$treeName <- treefolders[i]#
+	tipTable$setname <- gsub('(.+)_(\\d+)$', '\\1', treefolders[i])#
+	tipTable$tipName <- tr$tip.label#
+#
+	# RPANDA spectR with CRBD#
+	# if tree is too large and memory is exhausted, it will move on#
+	spectral <- try(spectrCRBD(tr))#
+	if (class(spectral) == 'list') {#
+		tipTable$lambdaSpectr <- spectral[[1]]#
+		tipTable$netDivSpectr <- spectral[[1]] - spectral[[2]]#
+	} else {#
+		skipped <- c(skipped, i)#
+	}#
+	estimRatesList[[treefolders[i]]] <- tipTable#
+}
+estimRatesList
+estimatedTipRates <- do.call(rbind, estimRatesList)
+head(estimatedTipRates)
+skipped
+for (i in 1208:1211) {
+cat(i, 'of', length(treefolders), '\n')#
+	setwd(paste0(basepath, treefolders[i]))#
+	files <- list.files()#
+	tr <- read.tree(grep('\\.tre$', files, value = TRUE))#
+	tipTable <- as.data.frame(matrix(nrow = length(tr$tip.label), ncol = length(tipTableColumns)))#
+	colnames(tipTable) <- tipTableColumns#
+	tipTable$treeName <- treefolders[i]#
+	tipTable$setname <- gsub('(.+)_(\\d+)$', '\\1', treefolders[i])#
+	tipTable$tipName <- tr$tip.label#
+#
+	# RPANDA spectR with CRBD#
+	# if tree is too large and memory is exhausted, it will move on#
+	spectral <- try(spectrCRBD(tr))#
+	if (class(spectral) == 'list') {#
+		tipTable$lambdaSpectr <- spectral[[1]]#
+		tipTable$netDivSpectr <- spectral[[1]] - spectral[[2]]#
+	} else {#
+		skipped <- c(skipped, i)#
+	}#
+	estimRatesList[[treefolders[i]]] <- tipTable#
+}
+estimatedRatesList[[1208]]
+head(estimRatesList[[1208]])
+head(estimRatesList[[1210]])
+head(estimRatesList[[1211]])
+cat('\t', length(tr$tip.label), 'tips\n')
+cat(i, 'of', length(treefolders), '\n')#
+	setwd(paste0(basepath, treefolders[i]))#
+	files <- list.files()#
+	tr <- read.tree(grep('\\.tre$', files, value = TRUE))#
+	cat('\t', length(tr$tip.label), 'tips\n')
+skipped
+for (i in 1:10) {
+cat(i, 'of', length(treefolders), '\n')#
+	setwd(paste0(basepath, treefolders[i]))#
+	files <- list.files()#
+	tr <- read.tree(grep('\\.tre$', files, value = TRUE))#
+	cat('\t', length(tr$tip.label), 'tips\n\n')#
+	tipTable <- as.data.frame(matrix(nrow = length(tr$tip.label), ncol = length(tipTableColumns)))#
+	colnames(tipTable) <- tipTableColumns#
+	tipTable$treeName <- treefolders[i]#
+	tipTable$setname <- gsub('(.+)_(\\d+)$', '\\1', treefolders[i])#
+	tipTable$tipName <- tr$tip.label#
+#
+	# RPANDA spectR with CRBD#
+	# if tree is too large and memory is exhausted, it will move on#
+	spectral <- try(spectrCRBD(tr))#
+	if (class(spectral) == 'list') {#
+		tipTable$lambdaSpectr <- spectral[[1]]#
+		tipTable$netDivSpectr <- spectral[[1]] - spectral[[2]]#
+	} else {#
+		skipped <- c(skipped, i)#
+	}#
+	estimRatesList[[treefolders[i]]] <- tipTable#
+}
+estimatedTipRates <- do.call(rbind, estimRatesList)
+head(estimatedTipRates)
+tail(estimatedTipRates)
+write.csv(estimatedTipRates, outfile, row.names=FALSE)
+cat('\n\nskipped:\n\n')#
+for (i in 1:length(skipped)) {#
+	cat('\t', skipped[i], '\n')#
+}
+outfile
+outfile <- '~/Dropbox/tipRatesProject/estimatedTipRates_spectralCRBD.csv'
+write.csv(estimatedTipRates, outfile, row.names=FALSE)

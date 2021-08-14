@@ -1,0 +1,2380 @@
+i
+plot.new()#
+	plot.window(xlim = c(1, length(datSplit)), ylim = yrange)#
+	axis(1, at = c(0, 1:length(datSplit)), labels = c(NA, names(datSplit)))#
+	axis(2, at = c(-10, axTicks(2)))
+pdf('~/Dropbox/tipRatesProject/preliminaryplots/heterogeneity_allboxplots.pdf', width=12, height=7)#
+par(mfrow = c(3, 5), mar = c(4,4,3,1))#
+#
+width <- 0.4#
+rateType <- 'Lambda'#
+qrange <- c(0.05, 0.95)#
+defaultYrange <- c(0, 0.4)#
+errorMetric <- 'absoluteError'#
+## time-constant multi-regime#
+dat2 <- dat[which(dat$setname %in% c('MooreEtAl2016','RaboskyEtAl2017','fossilBAMM','MeyerWiens2017')),]#
+#
+datSplit <- split(dat2, dat2$nRegimes)#
+#
+# collapse shift number >= 10 into same category#
+datSplit2 <- datSplit#
+datSplit <- datSplit2[as.character(1:10)]#
+datSplit[['10']] <- do.call(rbind, datSplit2[which(names(datSplit2) == '10'):length(datSplit2)])#
+names(datSplit)[10] <- '>10'#
+#
+for (i in 1:5) {#
+	tipMetric <- rateMetrics[i]#
+	errorCol <- Reduce(intersect, list(grep(rateType, colnames(dat)), grep(rateMetrics[i], colnames(dat)), grep(errorMetric, colnames(dat))))#
+	if (tipMetric != 'lambdaTB') {#
+		yrange <- defaultYrange#
+	} else {#
+		yrange <- c(0, quantile(unlist(sapply(datSplit, function(x) x[, errorCol])), 0.975))#
+	}#
+	plot.new()#
+	plot.window(xlim = c(1, length(datSplit)), ylim = yrange)#
+	axis(1, at = c(0, 1:length(datSplit)), labels = c(NA, names(datSplit)))#
+	axis(2, at = c(-10, axTicks(2)))#
+	for (j in 1:length(datSplit)) {#
+		qStats <- quantile(datSplit[[j]][, errorCol], c(qrange[1], 0.25, 0.5, 0.75, qrange[2]), na.rm=TRUE)#
+		rect(j - width/2, qStats[2], j + width/2, qStats[4], col=gray(0.75))#
+		segments(j, qStats[1], j, qStats[2], lty=2, lend=1)#
+		segments(j, qStats[4], j, qStats[5], lty=2, lend=1)#
+		segments(j - width/3, qStats[1], j + width/3, qStats[1], lend=1)#
+		segments(j - width/3, qStats[5], j + width/3, qStats[5], lend=1)#
+		segments(j - width/3, qStats[3], j + width/3, qStats[3], lwd=2, lend=1)#
+	}#
+	abline(h=0, lty=3)#
+	mtext('n regimes', side = 1, cex=0.7, line = 2)#
+	mtext('mean absolute error', side = 2, cex=0.7, line = 2.5)#
+	title(main = rateMetricLabels[i], line = -0.5)#
+	if (i == 3) {#
+		title(main = 'multi-regime, time-constant', line = 1.5, cex.main=1.5, xpd=NA)#
+	}#
+}#
+# multi-regime diversity-dependent#
+dat2 <- dat[which(dat$setname %in% c('Rabosky2014_DD_k1', 'Rabosky2014_DD_k2', 'Rabosky2014_DD_k3', 'Rabosky2014_DD_k4')),]#
+#
+datSplit <- split(dat2, dat2$nRegimes)#
+#
+defaultYrange <- c(0, 0.2)#
+#
+for (i in 1:5) {#
+	tipMetric <- rateMetrics[i]#
+	errorCol <- Reduce(intersect, list(grep(rateType, colnames(dat)), grep(rateMetrics[i], colnames(dat)), grep(errorMetric, colnames(dat))))#
+	if (tipMetric != 'lambdaTB') {#
+		yrange <- defaultYrange#
+	} else {#
+		yrange <- c(0, quantile(unlist(sapply(datSplit, function(x) x[, errorCol])), 0.975))#
+	}#
+	plot.new()#
+	plot.window(xlim = c(1.5, 5.5), ylim = yrange)#
+	axis(1, at = c(1, as.numeric(names(datSplit))), labels = c(NA, names(datSplit)))#
+	axis(2, at = c(-0.25, axTicks(2)))#
+	for (j in as.numeric(names(datSplit))) {#
+		qStats <- quantile(datSplit[[as.character(j)]][, errorCol], c(qrange[1], 0.25, 0.5, 0.75, qrange[2]), na.rm=TRUE)#
+		rect(j - width/2, qStats[2], j + width/2, qStats[4], col=gray(0.75))#
+		segments(j, qStats[1], j, qStats[2], lty=2, lend=1)#
+		segments(j, qStats[4], j, qStats[5], lty=2, lend=1)#
+		segments(j - width/3, qStats[1], j + width/3, qStats[1], lend=1)#
+		segments(j - width/3, qStats[5], j + width/3, qStats[5], lend=1)#
+		segments(j - width/3, qStats[3], j + width/3, qStats[3], lwd=2, lend=1)#
+	}#
+	abline(h=0, lty=3)#
+	mtext('n regimes', side = 1, cex=0.7, line = 2)#
+	mtext('mean absolute error', side = 2, cex=0.7, line = 2.5)#
+	title(main = rateMetricLabels[i], line = -0.5)#
+	if (i == 3) {#
+		title(main = 'multi-regime, diversity-dependent', line = 1.5, cex.main=1.5, xpd=NA)#
+	}#
+}#
+# Evolving Rates#
+#
+treeDat <- read.csv('~/Dropbox/tipRatesProject/treeSummary.csv', stringsAsFactors=FALSE)#
+#
+dat2 <- dat[which(dat$setname == 'evolvingRates'),]#
+dat2$sigma <- sapply(dat2$treeName, function(x) treeDat[which(treeDat$treeName == x), 'sigma'])#
+table(dat2$sigma)#
+#
+datSplit <- split(dat2, dat2$sigma)#
+#
+defaultYrange <- c(0, 0.4)#
+#
+for (i in 1:5) {#
+	tipMetric <- rateMetrics[i]#
+	errorCol <- Reduce(intersect, list(grep(rateType, colnames(dat)), grep(rateMetrics[i], colnames(dat)), grep(errorMetric, colnames(dat))))#
+	if (tipMetric != 'lambdaTB') {#
+		yrange <- defaultYrange#
+	} else {#
+		yrange <- c(0, quantile(unlist(sapply(datSplit, function(x) x[, errorCol])), 0.975))#
+	}#
+	plot.new()#
+	plot.window(xlim = c(0.5,3.5), ylim = yrange)#
+	axis(1, at = c(-0.5, 1:3), labels = c(NA, names(datSplit)))#
+	axis(2, at = c(-10, axTicks(2)))#
+	for (j in 1:length(datSplit)) {#
+		qStats <- quantile(datSplit[[j]][, errorCol], c(qrange[1], 0.25, 0.5, 0.75, qrange[2]), na.rm=TRUE)#
+		rect(j - width/2, qStats[2], j + width/2, qStats[4], col=gray(0.75))#
+		segments(j, qStats[1], j, qStats[2], lty=2, lend=1)#
+		segments(j, qStats[4], j, qStats[5], lty=2, lend=1)#
+		segments(j - width/3, qStats[1], j + width/3, qStats[1], lend=1)#
+		segments(j - width/3, qStats[5], j + width/3, qStats[5], lend=1)#
+		segments(j - width/3, qStats[3], j + width/3, qStats[3], lwd=2, lend=1)#
+	}#
+	abline(h=0, lty=3)#
+	mtext('n regimes', side = 1, cex=0.7, line = 2)#
+	mtext('mean absolute error', side = 2, cex=0.7, line = 2.5)#
+	title(main = rateMetricLabels[i], line = -0.5)#
+	if (i == 3) {#
+		title(main = 'evolving rates', line = 1.5, cex.main=1.5, xpd=NA)#
+	}#
+}#
+dev.off()
+dat <- read.csv('~/Dropbox/tipRatesProject/rateErrorMetrics.csv', stringsAsFactors=FALSE)#
+treeDat <- read.csv('~/Dropbox/tipRatesProject/treeSummary.csv', stringsAsFactors=FALSE)#
+# ---------------------------------------------------------#
+# ---------------------------------------------------------#
+## Proportional error of lambda and lambda - mu against eps#
+# first for single regime trees#
+# keep only single regime trees#
+dat_lambda <- dat[which(dat$setname == 'lambdaConstantVariance'),]#
+dat_netdiv <- dat[which(dat$setname == 'netDivConstantVariance'),]#
+#
+# get true relative extinction rate#
+epsVec_lambda <- treeDat[which(treeDat$treeName %in% dat_lambda$treeName),]#
+epsVec_lambda <- setNames(epsVec_lambda$mu0 / epsVec_lambda$lambda0, epsVec_lambda$treeName)#
+epsVec_lambda <- epsVec_lambda[dat_lambda$treeName]#
+#
+epsVec_netdiv <- treeDat[which(treeDat$treeName %in% dat_netdiv$treeName),]#
+epsVec_netdiv <- setNames(epsVec_netdiv$mu0 / epsVec_netdiv$lambda0, epsVec_netdiv$treeName)#
+epsVec_netdiv <- epsVec_netdiv[dat_netdiv$treeName]#
+tipMetrics <- c('lambdaTB', 'lambdaND', 'lambdaDR', 'lambdaBAMM')#
+tipMetricsNetDiv <- c('lambdaTB', 'lambdaND', 'lambdaDR', 'netDivBAMM')#
+errorMetricNames <- c(PE1='Prop. Error 1', PE2='Prop. Error 2', PE3='Prop. Error 3', PE4='Prop. 4', r2='OLS R2', slope='OLS slope', absoluteError='mean absolute error')#
+#
+tipMetricLabel <- c(expression(bold(paste(lambda['TB']))), expression(bold(paste(lambda['ND']))), expression(bold(paste(lambda['DR']))),expression(bold(paste(lambda['BAMM']))))#
+#
+# mean absolute error#
+errorMetric <- 'absoluteError'#
+#
+defaultYrange <- c(0, 5)#
+TBrange <- c(0, 70)
+pdf('~/Dropbox/tipRatesProject/preliminaryplots/errorAcrossEpsilon_lambdaAndNetDiv_absoluteError.pdf', width=10, height=5)#
+	par(mfrow=c(2,4), mar = c(4,4,1,1))#
+	for (i in 1:4) {#
+		tipMetric <- tipMetrics[i]#
+		errorLabel <- errorMetricNames[errorMetric]#
+		errorCol <- Reduce(intersect, list(grep('tipLambda', colnames(dat)), grep(tipMetric, colnames(dat)), grep(errorMetric, colnames(dat))))#
+		plot.new()#
+		yrange <- defaultYrange#
+		if (tipMetric == 'lambdaTB') {#
+			#yrange <- c(0, quantile(dat_lambda[, errorCol], 0.95, na.rm=TRUE))#
+			yrange <- TBrange#
+		}#
+		plot.window(xlim = c(0,1), ylim = yrange)#
+		axis(1, at=c(-0.1, axTicks(1)))#
+		axis(2, at=c(-5, axTicks(2)))#
+		points(epsVec_lambda, dat_lambda[, errorCol], cex=0.3)#
+		mtext('epsilon', side = 1, cex=0.7, line = 2.5)#
+		mtext(errorLabel, side = 2, cex=0.7, line = 2.5)#
+		title(main = tipMetricLabel[i], line = -1, cex.main=1.5)#
+		if (errorMetric %in% c('PE1','PE2', 'absoluteError')) {#
+			abline(h=0, lty=3)#
+		} else if (errorMetric %in% c('PE3','PE4')) {	#
+			abline(h=1, lty=3)#
+		}#
+	}#
+#
+	# second row: net div#
+	for (i in 1:4) {#
+		tipMetric <- tipMetricsNetDiv[i]#
+		errorLabel <- errorMetricNames[errorMetric]#
+		errorCol <- Reduce(intersect, list(grep('tipNetDiv', colnames(dat)), grep(tipMetric, colnames(dat)), grep(errorMetric, colnames(dat))))#
+		plot.new()#
+		yrange <- defaultYrange#
+		if (tipMetric == 'lambdaTB') {#
+			# yrange <- c(0, quantile(dat_netdiv[, errorCol], 0.95, na.rm=TRUE))#
+			yrange <- TBrange#
+		}#
+		plot.window(xlim = c(0,1), ylim = yrange)#
+		axis(1, at=c(-0.1, axTicks(1)))#
+		axis(2, at=c(-5, axTicks(2)))#
+		points(epsVec_netdiv, dat_netdiv[, errorCol], cex=0.3)#
+		mtext('epsilon', side = 1, cex=0.7, line = 2.5)#
+		mtext(errorLabel, side = 2, cex=0.7, line = 2.5)#
+		if (tipMetric == 'netDivBAMM') {#
+			title(main = expression(bold(paste(lambda - mu['BAMM']))), line = -1, cex.main=1.5)#
+		}#
+		if (errorMetric %in% c('PE1','PE2','absoluteError')) {#
+			abline(h=0, lty=3)#
+		} else if (errorMetric %in% c('PE3','PE4')) {	#
+			abline(h=1, lty=3)#
+		}#
+	}#
+#	mtext('lambda', side=2, outer=TRUE, adj=0.85, line = -1)#
+#	mtext('lambda - mu', side=2, outer=TRUE, adj=0.18, line = -1)#
+	dev.off()
+errorMetric <- 'PE1'#
+defaultYrange <- c(-1,5)#
+TBrange <- c(-1, 10)#
+constant <- 2#
+#
+pdf('~/Dropbox/tipRatesProject/preliminaryplots/errorAcrossEpsilon_lambdaAndNetDiv_logPE1.pdf', width=10, height=5)#
+#
+par(mfrow=c(2,4), mar = c(4,4,2,2))#
+#
+for (i in 1:4) {#
+	tipMetric <- tipMetrics[i]#
+	errorLabel <- errorMetricNames[errorMetric]#
+	errorCol <- Reduce(intersect, list(grep('tipLambda', colnames(dat)), grep(tipMetric, colnames(dat)), grep(errorMetric, colnames(dat))))#
+	plot.new()#
+	yrange <- defaultYrange#
+	if (tipMetric == 'lambdaTB') {#
+		yrange <- TBrange#
+	}#
+	plot.window(xlim = c(0,1), ylim = yrange)#
+	axis(1)#
+	axis(2)#
+	points(epsVec_lambda, log(dat_lambda[, errorCol] + constant), cex=0.3)#
+	mtext('epsilon', side = 1, cex=0.5, line = 2)#
+	mtext(errorLabel, side = 2, cex=0.5, line = 2)#
+	title(main = tipMetricLabel[i], line = -1, cex.main=1.5)#
+	if (errorMetric %in% c('PE1','PE2', 'absoluteError')) {#
+		abline(h=0, lty=3)#
+	} else if (errorMetric %in% c('PE3','PE4')) {	#
+		abline(h=1, lty=3)#
+	}#
+}#
+#
+# second row: net div#
+for (i in 1:4) {#
+	tipMetric <- tipMetricsNetDiv[i]#
+	errorLabel <- errorMetricNames[errorMetric]#
+	errorCol <- Reduce(intersect, list(grep('tipNetDiv', colnames(dat)), grep(tipMetric, colnames(dat)), grep(errorMetric, colnames(dat))))#
+	plot.new()#
+	yrange <- defaultYrange#
+	if (tipMetric == 'lambdaTB') {#
+		yrange <- TBrange#
+	}	#
+	plot.window(xlim = c(0,1), ylim = yrange)#
+	axis(1)#
+	axis(2)#
+	points(epsVec_netdiv, log(dat_netdiv[, errorCol] + constant), cex=0.3)#
+	mtext('epsilon', side = 1, cex=0.5, line = 2)#
+	mtext(errorLabel, side = 2, cex=0.5, line = 2)#
+	if (tipMetric == 'netDivBAMM') {#
+		title(main = expression(bold(paste(lambda - mu['BAMM']))), line = -1, cex.main=1.5)#
+	}#
+	if (errorMetric %in% c('PE1','PE2','absoluteError')) {#
+		abline(h=0, lty=3)#
+	} else if (errorMetric %in% c('PE3','PE4')) {	#
+		abline(h=1, lty=3)#
+	}	#
+}#
+#
+dev.off()
+# explore relationship between speciation and net diversification rates#
+qq <- treeDat[which(treeDat$setname %in% c('lambdaConstantVariance', 'netDivConstantVariance')),]#
+#
+# drop super outlier#
+qq <- qq[which(qq$lambda0 < 1000),]#
+#
+eps <- qq$mu0 / qq$lambda0#
+netdiv <- qq$lambda0 - qq$mu0#
+diff <- qq$lambda0 - netdiv#
+#
+plot(eps, diff)#
+#
+plot(qq$lambda0, netdiv)#
+cor.test(qq$lambda0, netdiv, method='spearman')#
+#
+highEps <- which(eps >= 0.75)#
+plot(qq$lambda0[highEps], netdiv[highEps])#
+cor.test(qq$lambda0[highEps], netdiv[highEps], method='spearman')
+set1params <- read.csv('~/Dropbox/tipRatesProject/simulations/constantVariance/set1params.csv')
+set2params <- read.csv('~/Dropbox/tipRatesProject/simulations/constantVariance/set2params.csv')
+pdf('~/Dropbox/tipRatesProject/preliminaryplots/epsilonSimulationPlots.pdf', width=7, height=7)#
+m <- matrix(c(1,1,2,3,4,4,5,6), nrow=4, ncol=2, byrow=TRUE)#
+layout(m, heights=c(0.1, 0.4, 0.1, 0.4))#
+#
+par(mar=c(4,4,0,1))#
+#
+plot.new()#
+text(0.5, 0.2, 'simulations for evaluating lambda', pos=1, cex=1.5, font=2, xpd=NA)#
+plot.new()#
+plot.window(xlim = c(0,1), ylim = c(0, 0.3))#
+axis(1, at = c(-0.5, axTicks(1)))#
+axis(2, at = c(-0.5, axTicks(2)))#
+points(set1params$eps, set1params$lambda, cex=0.5)#
+mtext('relative extinction rate', side=1, line=2.5)#
+mtext('speciation rate', side=2, line=2.5)#
+#
+plot.new()#
+plot.window(xlim = c(0,1), ylim = c(0, 0.3))#
+axis(1, at = c(-0.5, axTicks(1)))#
+axis(2, at = c(-0.5, axTicks(2)))#
+points(set1params$eps, set1params$netdiv, cex=0.5)#
+mtext('relative extinction rate', side=1, line=2.5)#
+mtext('net div. rate', side=2, line=2.5)#
+#
+plot.new()#
+text(0.5, 0.2, 'simulations for evaluating net div. rate', pos=1, cex=1.5, font=2, xpd=NA)#
+plot.new()#
+plot.window(xlim = c(0,1), ylim = c(0, 10))#
+axis(1, at = c(-0.5, axTicks(1)))#
+axis(2, at = c(-0.5, axTicks(2)))#
+points(set2params$eps, set2params$lambda, cex=0.5)#
+mtext('relative extinction rate', side=1, line=2.5)#
+mtext('speciation rate', side=2, line=2.5)#
+#
+plot.new()#
+plot.window(xlim = c(0,1), ylim = c(0, 0.3))#
+axis(1, at = c(-0.5, axTicks(1)))#
+axis(2, at = c(-0.5, axTicks(2)))#
+points(set2params$eps, set2params$netdiv, cex=0.5)#
+mtext('relative extinction rate', side=1, line=2.5)#
+mtext('net div. rate', side=2, line=2.5)#
+#
+dev.off()
+layout(m, heights=c(0.1, 0.4, 0.1, 0.4))#
+#
+par(mar=c(4,4,0,1))#
+#
+plot.new()#
+text(0.5, 0.2, 'simulations for evaluating lambda', pos=1, cex=1.5, font=2, xpd=NA)#
+plot.new()#
+plot.window(xlim = c(0,1), ylim = c(0, 0.3))#
+axis(1, at = c(-0.5, axTicks(1)))#
+axis(2, at = c(-0.5, axTicks(2)))#
+points(set1params$eps, set1params$lambda, cex=0.5)#
+mtext('relative extinction rate', side=1, line=2.5)#
+mtext('speciation rate', side=2, line=2.5)#
+#
+plot.new()#
+plot.window(xlim = c(0,1), ylim = c(0, 0.3))#
+axis(1, at = c(-0.5, axTicks(1)))#
+axis(2, at = c(-0.5, axTicks(2)))#
+points(set1params$eps, set1params$netdiv, cex=0.5)#
+mtext('relative extinction rate', side=1, line=2.5)#
+mtext('net div. rate', side=2, line=2.5)#
+#
+plot.new()#
+text(0.5, 0.2, 'simulations for evaluating net div. rate', pos=1, cex=1.5, font=2, xpd=NA)#
+plot.new()#
+plot.window(xlim = c(0,1), ylim = c(0, 10))#
+axis(1, at = c(-0.5, axTicks(1)))#
+axis(2, at = c(-0.5, axTicks(2)))#
+points(set2params$eps, set2params$lambda, cex=0.5)#
+mtext('relative extinction rate', side=1, line=2.5)#
+mtext('speciation rate', side=2, line=2.5)#
+#
+plot.new()#
+plot.window(xlim = c(0,1), ylim = c(0, 0.3))#
+axis(1, at = c(-0.5, axTicks(1)))#
+axis(2, at = c(-0.5, axTicks(2)))#
+points(set2params$eps, set2params$netdiv, cex=0.5)#
+mtext('relative extinction rate', side=1, line=2.5)#
+mtext('net div. rate', side=2, line=2.5)
+pdf('~/Dropbox/tipRatesProject/preliminaryplots/epsilonSimulationPlots.pdf', width=7, height=7)#
+m <- matrix(c(1,1,2,3,4,4,5,6), nrow=4, ncol=2, byrow=TRUE)#
+layout(m, heights=c(0.1, 0.4, 0.1, 0.4))#
+#
+par(mar=c(4,4,0,1))#
+#
+plot.new()#
+text(0.5, 0.2, 'simulations for evaluating speciation rate', pos=1, cex=1.5, font=2, xpd=NA)#
+plot.new()#
+plot.window(xlim = c(0,1), ylim = c(0, 0.3))#
+axis(1, at = c(-0.5, axTicks(1)))#
+axis(2, at = c(-0.5, axTicks(2)))#
+points(set1params$eps, set1params$lambda, cex=0.5)#
+mtext('relative extinction rate', side=1, line=2.5)#
+mtext('speciation rate', side=2, line=2.5)#
+#
+plot.new()#
+plot.window(xlim = c(0,1), ylim = c(0, 0.3))#
+axis(1, at = c(-0.5, axTicks(1)))#
+axis(2, at = c(-0.5, axTicks(2)))#
+points(set1params$eps, set1params$netdiv, cex=0.5)#
+mtext('relative extinction rate', side=1, line=2.5)#
+mtext('net div. rate', side=2, line=2.5)#
+#
+plot.new()#
+text(0.5, 0.2, 'simulations for evaluating net div. rate', pos=1, cex=1.5, font=2, xpd=NA)#
+plot.new()#
+plot.window(xlim = c(0,1), ylim = c(0, 10))#
+axis(1, at = c(-0.5, axTicks(1)))#
+axis(2, at = c(-0.5, axTicks(2)))#
+points(set2params$eps, set2params$lambda, cex=0.5)#
+mtext('relative extinction rate', side=1, line=2.5)#
+mtext('speciation rate', side=2, line=2.5)#
+#
+plot.new()#
+plot.window(xlim = c(0,1), ylim = c(0, 0.3))#
+axis(1, at = c(-0.5, axTicks(1)))#
+axis(2, at = c(-0.5, axTicks(2)))#
+points(set2params$eps, set2params$netdiv, cex=0.5)#
+mtext('relative extinction rate', side=1, line=2.5)#
+mtext('net div. rate', side=2, line=2.5)#
+#
+dev.off()
+# analyze proportional error in rates as a function of relative extinction#
+# compare speciation rate and net diversification rate#
+dat <- read.csv('~/Dropbox/tipRatesProject/rateErrorMetrics.csv', stringsAsFactors=FALSE)#
+treeDat <- read.csv('~/Dropbox/tipRatesProject/treeSummary.csv', stringsAsFactors=FALSE)#
+# ---------------------------------------------------------#
+# ---------------------------------------------------------#
+## Proportional error of lambda and lambda - mu against eps#
+# first for single regime trees#
+# keep only single regime trees#
+dat_lambda <- dat[which(dat$setname == 'lambdaConstantVariance'),]#
+dat_netdiv <- dat[which(dat$setname == 'netDivConstantVariance'),]#
+#
+# get true relative extinction rate#
+epsVec_lambda <- treeDat[which(treeDat$treeName %in% dat_lambda$treeName),]#
+epsVec_lambda <- setNames(epsVec_lambda$mu0 / epsVec_lambda$lambda0, epsVec_lambda$treeName)#
+epsVec_lambda <- epsVec_lambda[dat_lambda$treeName]#
+#
+epsVec_netdiv <- treeDat[which(treeDat$treeName %in% dat_netdiv$treeName),]#
+epsVec_netdiv <- setNames(epsVec_netdiv$mu0 / epsVec_netdiv$lambda0, epsVec_netdiv$treeName)#
+epsVec_netdiv <- epsVec_netdiv[dat_netdiv$treeName]#
+tipMetrics <- c('lambdaTB', 'lambdaND', 'lambdaDR', 'lambdaBAMM')#
+tipMetricsNetDiv <- c('lambdaTB', 'lambdaND', 'lambdaDR', 'netDivBAMM')#
+errorMetricNames <- c(PE1='Prop. Error 1', PE2='Prop. Error 2', PE3='Prop. Error 3', PE4='Prop. 4', r2='OLS R2', slope='OLS slope', absoluteError='mean absolute error')#
+#
+tipMetricLabel <- c(expression(bold(paste(lambda['TB']))), expression(bold(paste(lambda['ND']))), expression(bold(paste(lambda['DR']))),expression(bold(paste(lambda['BAMM']))))#
+#
+# mean absolute error#
+errorMetric <- 'absoluteError'#
+#
+defaultYrange <- c(0, 5)#
+TBrange <- c(0, 70)
+errorLabel
+tipMetricLabel
+errorLabel
+errorMetricNames
+errorLabel <- expression(bold(paste("mean absolute error in ", lambda)))
+par(mfrow=c(2,4), mar = c(4,4,1,1))#
+	for (i in 1:4) {#
+		tipMetric <- tipMetrics[i]#
+		errorLabel <- expression(bold(paste("mean absolute error in ", lambda)))#
+		errorCol <- Reduce(intersect, list(grep('tipLambda', colnames(dat)), grep(tipMetric, colnames(dat)), grep(errorMetric, colnames(dat))))#
+		plot.new()#
+		yrange <- defaultYrange#
+		if (tipMetric == 'lambdaTB') {#
+			#yrange <- c(0, quantile(dat_lambda[, errorCol], 0.95, na.rm=TRUE))#
+			yrange <- TBrange#
+		}#
+		plot.window(xlim = c(0,1), ylim = yrange)#
+		axis(1, at=c(-0.1, axTicks(1)))#
+		axis(2, at=c(-5, axTicks(2)))#
+		points(epsVec_lambda, dat_lambda[, errorCol], cex=0.3)#
+		mtext('epsilon', side = 1, cex=0.7, line = 2.5)#
+		mtext(errorLabel, side = 2, cex=0.7, line = 2.5)#
+		title(main = tipMetricLabel[i], line = -1, cex.main=1.5)#
+		if (errorMetric %in% c('PE1','PE2', 'absoluteError')) {#
+			abline(h=0, lty=3)#
+		} else if (errorMetric %in% c('PE3','PE4')) {	#
+			abline(h=1, lty=3)#
+		}#
+	}
+# second row: net div#
+	for (i in 1:4) {#
+		tipMetric <- tipMetricsNetDiv[i]#
+		errorLabel <- expression(bold(paste("mean absolute error in ", lambda, ' - ', mu)))#
+		errorCol <- Reduce(intersect, list(grep('tipNetDiv', colnames(dat)), grep(tipMetric, colnames(dat)), grep(errorMetric, colnames(dat))))#
+		plot.new()#
+		yrange <- defaultYrange#
+		if (tipMetric == 'lambdaTB') {#
+			# yrange <- c(0, quantile(dat_netdiv[, errorCol], 0.95, na.rm=TRUE))#
+			yrange <- TBrange#
+		}#
+		plot.window(xlim = c(0,1), ylim = yrange)#
+		axis(1, at=c(-0.1, axTicks(1)))#
+		axis(2, at=c(-5, axTicks(2)))#
+		points(epsVec_netdiv, dat_netdiv[, errorCol], cex=0.3)#
+		mtext('epsilon', side = 1, cex=0.7, line = 2.5)#
+		mtext(errorLabel, side = 2, cex=0.7, line = 2.5)#
+		if (tipMetric == 'netDivBAMM') {#
+			title(main = expression(bold(paste(lambda - mu['BAMM']))), line = -1, cex.main=1.5)#
+		}#
+		if (errorMetric %in% c('PE1','PE2','absoluteError')) {#
+			abline(h=0, lty=3)#
+		} else if (errorMetric %in% c('PE3','PE4')) {	#
+			abline(h=1, lty=3)#
+		}#
+	}
+pdf('~/Dropbox/tipRatesProject/preliminaryplots/errorAcrossEpsilon_lambdaAndNetDiv_absoluteError.pdf', width=10, height=5)#
+	par(mfrow=c(2,4), mar = c(4,4,1,1))#
+	for (i in 1:4) {#
+		tipMetric <- tipMetrics[i]#
+		errorLabel <- expression(bold(paste("mean absolute error in ", lambda)))#
+		errorCol <- Reduce(intersect, list(grep('tipLambda', colnames(dat)), grep(tipMetric, colnames(dat)), grep(errorMetric, colnames(dat))))#
+		plot.new()#
+		yrange <- defaultYrange#
+		if (tipMetric == 'lambdaTB') {#
+			#yrange <- c(0, quantile(dat_lambda[, errorCol], 0.95, na.rm=TRUE))#
+			yrange <- TBrange#
+		}#
+		plot.window(xlim = c(0,1), ylim = yrange)#
+		axis(1, at=c(-0.1, axTicks(1)))#
+		axis(2, at=c(-5, axTicks(2)))#
+		points(epsVec_lambda, dat_lambda[, errorCol], cex=0.3)#
+		mtext('epsilon', side = 1, cex=0.7, line = 2.5)#
+		mtext(errorLabel, side = 2, cex=0.7, line = 2.5)#
+		title(main = tipMetricLabel[i], line = -1, cex.main=1.5)#
+		if (errorMetric %in% c('PE1','PE2', 'absoluteError')) {#
+			abline(h=0, lty=3)#
+		} else if (errorMetric %in% c('PE3','PE4')) {	#
+			abline(h=1, lty=3)#
+		}#
+	}#
+#
+	# second row: net div#
+	for (i in 1:4) {#
+		tipMetric <- tipMetricsNetDiv[i]#
+		errorLabel <- expression(bold(paste("mean absolute error in ", lambda, ' - ', mu)))#
+		errorCol <- Reduce(intersect, list(grep('tipNetDiv', colnames(dat)), grep(tipMetric, colnames(dat)), grep(errorMetric, colnames(dat))))#
+		plot.new()#
+		yrange <- defaultYrange#
+		if (tipMetric == 'lambdaTB') {#
+			# yrange <- c(0, quantile(dat_netdiv[, errorCol], 0.95, na.rm=TRUE))#
+			yrange <- TBrange#
+		}#
+		plot.window(xlim = c(0,1), ylim = yrange)#
+		axis(1, at=c(-0.1, axTicks(1)))#
+		axis(2, at=c(-5, axTicks(2)))#
+		points(epsVec_netdiv, dat_netdiv[, errorCol], cex=0.3)#
+		mtext('epsilon', side = 1, cex=0.7, line = 2.5)#
+		mtext(errorLabel, side = 2, cex=0.7, line = 2.5)#
+		if (tipMetric == 'netDivBAMM') {#
+			title(main = expression(bold(paste(lambda - mu['BAMM']))), line = -1, cex.main=1.5)#
+		}#
+		if (errorMetric %in% c('PE1','PE2','absoluteError')) {#
+			abline(h=0, lty=3)#
+		} else if (errorMetric %in% c('PE3','PE4')) {	#
+			abline(h=1, lty=3)#
+		}#
+	}#
+#	mtext('lambda', side=2, outer=TRUE, adj=0.85, line = -1)#
+#	mtext('lambda - mu', side=2, outer=TRUE, adj=0.18, line = -1)#
+	dev.off()
+errorMetric <- 'PE1'#
+defaultYrange <- c(-1,5)#
+TBrange <- c(-1, 10)#
+constant <- 2#
+#
+pdf('~/Dropbox/tipRatesProject/preliminaryplots/errorAcrossEpsilon_lambdaAndNetDiv_logPE1.pdf', width=10, height=5)#
+#
+par(mfrow=c(2,4), mar = c(4,4,2,2))#
+#
+for (i in 1:4) {#
+	tipMetric <- tipMetrics[i]#
+	errorLabel <- errorLabel <- expression(bold(paste("log prop. error in ", lambda)))#
+	errorCol <- Reduce(intersect, list(grep('tipLambda', colnames(dat)), grep(tipMetric, colnames(dat)), grep(errorMetric, colnames(dat))))#
+	plot.new()#
+	yrange <- defaultYrange#
+	if (tipMetric == 'lambdaTB') {#
+		yrange <- TBrange#
+	}#
+	plot.window(xlim = c(0,1), ylim = yrange)#
+	axis(1)#
+	axis(2)#
+	points(epsVec_lambda, log(dat_lambda[, errorCol] + constant), cex=0.3)#
+	mtext('epsilon', side = 1, cex=0.5, line = 2)#
+	mtext(errorLabel, side = 2, cex=0.5, line = 2)#
+	title(main = tipMetricLabel[i], line = -1, cex.main=1.5)#
+	if (errorMetric %in% c('PE1','PE2', 'absoluteError')) {#
+		abline(h=0, lty=3)#
+	} else if (errorMetric %in% c('PE3','PE4')) {	#
+		abline(h=1, lty=3)#
+	}#
+}#
+#
+# second row: net div#
+for (i in 1:4) {#
+	tipMetric <- tipMetricsNetDiv[i]#
+	errorLabel <- expression(bold(paste("log prop. error in ", lambda, ' - ', mu)))#
+	errorCol <- Reduce(intersect, list(grep('tipNetDiv', colnames(dat)), grep(tipMetric, colnames(dat)), grep(errorMetric, colnames(dat))))#
+	plot.new()#
+	yrange <- defaultYrange#
+	if (tipMetric == 'lambdaTB') {#
+		yrange <- TBrange#
+	}	#
+	plot.window(xlim = c(0,1), ylim = yrange)#
+	axis(1)#
+	axis(2)#
+	points(epsVec_netdiv, log(dat_netdiv[, errorCol] + constant), cex=0.3)#
+	mtext('epsilon', side = 1, cex=0.5, line = 2)#
+	mtext(errorLabel, side = 2, cex=0.5, line = 2)#
+	if (tipMetric == 'netDivBAMM') {#
+		title(main = expression(bold(paste(lambda - mu['BAMM']))), line = -1, cex.main=1.5)#
+	}#
+	if (errorMetric %in% c('PE1','PE2','absoluteError')) {#
+		abline(h=0, lty=3)#
+	} else if (errorMetric %in% c('PE3','PE4')) {	#
+		abline(h=1, lty=3)#
+	}	#
+}#
+#
+dev.off()
+errorMetric <- 'PE1'#
+defaultYrange <- c(-1,5)#
+TBrange <- c(-1, 10)#
+constant <- 2#
+#
+pdf('~/Dropbox/tipRatesProject/preliminaryplots/errorAcrossEpsilon_lambdaAndNetDiv_logPE1.pdf', width=10, height=5)#
+#
+par(mfrow=c(2,4), mar = c(4,4,2,2))#
+#
+for (i in 1:4) {#
+	tipMetric <- tipMetrics[i]#
+	errorLabel <- errorLabel <- expression(bold(paste("log prop. error in ", lambda)))#
+	errorCol <- Reduce(intersect, list(grep('tipLambda', colnames(dat)), grep(tipMetric, colnames(dat)), grep(errorMetric, colnames(dat))))#
+	plot.new()#
+	yrange <- defaultYrange#
+	if (tipMetric == 'lambdaTB') {#
+		yrange <- TBrange#
+	}#
+	plot.window(xlim = c(0,1), ylim = yrange)#
+	axis(1)#
+	axis(2)#
+	points(epsVec_lambda, log(dat_lambda[, errorCol] + constant), cex=0.3)#
+	mtext('epsilon', side = 1, cex=0.7, line = 2.5)#
+	mtext(errorLabel, side = 2, cex=0.7, line = 2.5)#
+	title(main = tipMetricLabel[i], line = -1, cex.main=1.5)#
+	if (errorMetric %in% c('PE1','PE2', 'absoluteError')) {#
+		abline(h=0, lty=3)#
+	} else if (errorMetric %in% c('PE3','PE4')) {	#
+		abline(h=1, lty=3)#
+	}#
+}#
+#
+# second row: net div#
+for (i in 1:4) {#
+	tipMetric <- tipMetricsNetDiv[i]#
+	errorLabel <- expression(bold(paste("log prop. error in ", lambda, ' - ', mu)))#
+	errorCol <- Reduce(intersect, list(grep('tipNetDiv', colnames(dat)), grep(tipMetric, colnames(dat)), grep(errorMetric, colnames(dat))))#
+	plot.new()#
+	yrange <- defaultYrange#
+	if (tipMetric == 'lambdaTB') {#
+		yrange <- TBrange#
+	}	#
+	plot.window(xlim = c(0,1), ylim = yrange)#
+	axis(1)#
+	axis(2)#
+	points(epsVec_netdiv, log(dat_netdiv[, errorCol] + constant), cex=0.3)#
+	mtext('epsilon', side = 1, cex=0.5, line = 2)#
+	mtext(errorLabel, side = 2, cex=0.7, line = 2.5)#
+	if (tipMetric == 'netDivBAMM') {#
+		title(main = expression(bold(paste(lambda - mu['BAMM']))), line = -1, cex.main=1.5)#
+	}#
+	if (errorMetric %in% c('PE1','PE2','absoluteError')) {#
+		abline(h=0, lty=3)#
+	} else if (errorMetric %in% c('PE3','PE4')) {	#
+		abline(h=1, lty=3)#
+	}	#
+}#
+#
+dev.off()
+# mean absolute error#
+errorMetric <- 'absoluteError'#
+#
+defaultYrange <- c(0, 5)#
+TBrange <- c(0, 70)#
+#
+	pdf('~/Dropbox/tipRatesProject/preliminaryplots/errorAcrossEpsilon_lambdaAndNetDiv_absoluteError.pdf', width=10, height=5)#
+	par(mfrow=c(2,4), mar = c(4,4,1,1))#
+	for (i in 1:4) {#
+		tipMetric <- tipMetrics[i]#
+		errorLabel <- expression(paste("mean absolute error in ", lambda))#
+		errorCol <- Reduce(intersect, list(grep('tipLambda', colnames(dat)), grep(tipMetric, colnames(dat)), grep(errorMetric, colnames(dat))))#
+		plot.new()#
+		yrange <- defaultYrange#
+		if (tipMetric == 'lambdaTB') {#
+			#yrange <- c(0, quantile(dat_lambda[, errorCol], 0.95, na.rm=TRUE))#
+			yrange <- TBrange#
+		}#
+		plot.window(xlim = c(0,1), ylim = yrange)#
+		axis(1, at=c(-0.1, axTicks(1)))#
+		axis(2, at=c(-5, axTicks(2)))#
+		points(epsVec_lambda, dat_lambda[, errorCol], cex=0.3)#
+		mtext('epsilon', side = 1, cex=0.7, line = 2.5)#
+		mtext(errorLabel, side = 2, cex=0.7, line = 2.5)#
+		title(main = tipMetricLabel[i], line = -1, cex.main=1.5)#
+		if (errorMetric %in% c('PE1','PE2', 'absoluteError')) {#
+			abline(h=0, lty=3)#
+		} else if (errorMetric %in% c('PE3','PE4')) {	#
+			abline(h=1, lty=3)#
+		}#
+	}#
+#
+	# second row: net div#
+	for (i in 1:4) {#
+		tipMetric <- tipMetricsNetDiv[i]#
+		errorLabel <- expression(paste("mean absolute error in ", lambda, ' - ', mu))#
+		errorCol <- Reduce(intersect, list(grep('tipNetDiv', colnames(dat)), grep(tipMetric, colnames(dat)), grep(errorMetric, colnames(dat))))#
+		plot.new()#
+		yrange <- defaultYrange#
+		if (tipMetric == 'lambdaTB') {#
+			# yrange <- c(0, quantile(dat_netdiv[, errorCol], 0.95, na.rm=TRUE))#
+			yrange <- TBrange#
+		}#
+		plot.window(xlim = c(0,1), ylim = yrange)#
+		axis(1, at=c(-0.1, axTicks(1)))#
+		axis(2, at=c(-5, axTicks(2)))#
+		points(epsVec_netdiv, dat_netdiv[, errorCol], cex=0.3)#
+		mtext('epsilon', side = 1, cex=0.7, line = 2.5)#
+		mtext(errorLabel, side = 2, cex=0.7, line = 2.5)#
+		if (tipMetric == 'netDivBAMM') {#
+			title(main = expression(bold(paste(lambda - mu['BAMM']))), line = -1, cex.main=1.5)#
+		}#
+		if (errorMetric %in% c('PE1','PE2','absoluteError')) {#
+			abline(h=0, lty=3)#
+		} else if (errorMetric %in% c('PE3','PE4')) {	#
+			abline(h=1, lty=3)#
+		}#
+	}#
+#	mtext('lambda', side=2, outer=TRUE, adj=0.85, line = -1)#
+#	mtext('lambda - mu', side=2, outer=TRUE, adj=0.18, line = -1)#
+	dev.off()#
+######
+# PE1 on log scale#
+#
+errorMetric <- 'PE1'#
+defaultYrange <- c(-1,5)#
+TBrange <- c(-1, 10)#
+constant <- 2#
+#
+pdf('~/Dropbox/tipRatesProject/preliminaryplots/errorAcrossEpsilon_lambdaAndNetDiv_logPE1.pdf', width=10, height=5)#
+#
+par(mfrow=c(2,4), mar = c(4,4,2,2))#
+#
+for (i in 1:4) {#
+	tipMetric <- tipMetrics[i]#
+	errorLabel <- errorLabel <- expression(paste("log prop. error in ", lambda))#
+	errorCol <- Reduce(intersect, list(grep('tipLambda', colnames(dat)), grep(tipMetric, colnames(dat)), grep(errorMetric, colnames(dat))))#
+	plot.new()#
+	yrange <- defaultYrange#
+	if (tipMetric == 'lambdaTB') {#
+		yrange <- TBrange#
+	}#
+	plot.window(xlim = c(0,1), ylim = yrange)#
+	axis(1)#
+	axis(2)#
+	points(epsVec_lambda, log(dat_lambda[, errorCol] + constant), cex=0.3)#
+	mtext('epsilon', side = 1, cex=0.7, line = 2.5)#
+	mtext(errorLabel, side = 2, cex=0.7, line = 2.5)#
+	title(main = tipMetricLabel[i], line = -1, cex.main=1.5)#
+	if (errorMetric %in% c('PE1','PE2', 'absoluteError')) {#
+		abline(h=0, lty=3)#
+	} else if (errorMetric %in% c('PE3','PE4')) {	#
+		abline(h=1, lty=3)#
+	}#
+}#
+#
+# second row: net div#
+for (i in 1:4) {#
+	tipMetric <- tipMetricsNetDiv[i]#
+	errorLabel <- expression(paste("log prop. error in ", lambda, ' - ', mu))#
+	errorCol <- Reduce(intersect, list(grep('tipNetDiv', colnames(dat)), grep(tipMetric, colnames(dat)), grep(errorMetric, colnames(dat))))#
+	plot.new()#
+	yrange <- defaultYrange#
+	if (tipMetric == 'lambdaTB') {#
+		yrange <- TBrange#
+	}	#
+	plot.window(xlim = c(0,1), ylim = yrange)#
+	axis(1)#
+	axis(2)#
+	points(epsVec_netdiv, log(dat_netdiv[, errorCol] + constant), cex=0.3)#
+	mtext('epsilon', side = 1, cex=0.5, line = 2)#
+	mtext(errorLabel, side = 2, cex=0.7, line = 2.5)#
+	if (tipMetric == 'netDivBAMM') {#
+		title(main = expression(bold(paste(lambda - mu['BAMM']))), line = -1, cex.main=1.5)#
+	}#
+	if (errorMetric %in% c('PE1','PE2','absoluteError')) {#
+		abline(h=0, lty=3)#
+	} else if (errorMetric %in% c('PE3','PE4')) {	#
+		abline(h=1, lty=3)#
+	}	#
+}#
+#
+dev.off()
+errorMetric <- 'PE1'#
+defaultYrange <- c(-1,5)#
+TBrange <- c(-1, 10)#
+constant <- 2#
+#
+pdf('~/Dropbox/tipRatesProject/preliminaryplots/errorAcrossEpsilon_lambdaAndNetDiv_logPE1.pdf', width=10, height=5)#
+#
+par(mfrow=c(2,4), mar = c(4,4,2,2))#
+#
+for (i in 1:4) {#
+	tipMetric <- tipMetrics[i]#
+	errorLabel <- errorLabel <- expression(paste("log prop. error in ", lambda))#
+	errorCol <- Reduce(intersect, list(grep('tipLambda', colnames(dat)), grep(tipMetric, colnames(dat)), grep(errorMetric, colnames(dat))))#
+	plot.new()#
+	yrange <- defaultYrange#
+	if (tipMetric == 'lambdaTB') {#
+		yrange <- TBrange#
+	}#
+	plot.window(xlim = c(0,1), ylim = yrange)#
+	axis(1, at=c(-0.1, axTicks(1)))#
+	axis(2, at=c(-5, axTicks(2)))#
+	points(epsVec_lambda, log(dat_lambda[, errorCol] + constant), cex=0.3)#
+	mtext('epsilon', side = 1, cex=0.7, line = 2.5)#
+	mtext(errorLabel, side = 2, cex=0.7, line = 2.5)#
+	title(main = tipMetricLabel[i], line = -1, cex.main=1.5)#
+	if (errorMetric %in% c('PE1','PE2', 'absoluteError')) {#
+		abline(h=0, lty=3)#
+	} else if (errorMetric %in% c('PE3','PE4')) {	#
+		abline(h=1, lty=3)#
+	}#
+}#
+#
+# second row: net div#
+for (i in 1:4) {#
+	tipMetric <- tipMetricsNetDiv[i]#
+	errorLabel <- expression(paste("log prop. error in ", lambda, ' - ', mu))#
+	errorCol <- Reduce(intersect, list(grep('tipNetDiv', colnames(dat)), grep(tipMetric, colnames(dat)), grep(errorMetric, colnames(dat))))#
+	plot.new()#
+	yrange <- defaultYrange#
+	if (tipMetric == 'lambdaTB') {#
+		yrange <- TBrange#
+	}	#
+	plot.window(xlim = c(0,1), ylim = yrange)#
+	axis(1, at=c(-0.1, axTicks(1)))#
+	axis(2, at=c(-5, axTicks(2)))#
+	points(epsVec_netdiv, log(dat_netdiv[, errorCol] + constant), cex=0.3)#
+	mtext('epsilon', side = 1, cex=0.5, line = 2)#
+	mtext(errorLabel, side = 2, cex=0.7, line = 2.5)#
+	if (tipMetric == 'netDivBAMM') {#
+		title(main = expression(bold(paste(lambda - mu['BAMM']))), line = -1, cex.main=1.5)#
+	}#
+	if (errorMetric %in% c('PE1','PE2','absoluteError')) {#
+		abline(h=0, lty=3)#
+	} else if (errorMetric %in% c('PE3','PE4')) {	#
+		abline(h=1, lty=3)#
+	}	#
+}#
+#
+dev.off()
+require(LSD)#
+#
+regimeSummary <- read.csv('~/Dropbox/tipRatesProject/regimeSummary.csv', stringsAsFactors=FALSE)#
+#
+regimeSummary[, 'CRBDnetdiv'] <- regimeSummary$CRBDlambda - regimeSummary$CRBDmu
+regimeSummary2 <- regimeSummary[which(regimeSummary$setname %in% c('MeyerWiens2017','fossilBAMM','MooreEtAl2016','RaboskyEtAl2017')),]#
+#
+maxRegimeCount <- 50#
+#
+regimeSize <- sort(unique(regimeSummary2$nTips))#
+#
+regimeSize <- 1:maxRegimeCount#
+#
+rateMetrics <- c('CRBDlambda','lambdaTB','lambdaND','lambdaDR','lambdaBAMM')#
+rateMetricsNetDiv <- c('CRBDnetdiv','lambdaTB','lambdaND','lambdaDR','netDivBAMM')#
+regimeSizeTable <- as.data.frame(matrix(nrow = length(regimeSize), ncol = 21))#
+colnames(regimeSizeTable) <- c('regimeSize', paste0(rateMetrics, 'lambda_cor'), paste0(rateMetrics, 'lambda_slope'), paste0(rateMetricsNetDiv, 'netdiv_cor'), paste0(rateMetricsNetDiv, 'netdiv_slope'))#
+regimeSizeTable$regimeSize <- regimeSize#
+#
+for (i in 1:length(regimeSize)) {#
+	xx <- regimeSummary2[which(regimeSummary2$nTips >= regimeSize[i]),]#
+	# speciation rate#
+	if (nrow(xx) > 1) {#
+		for (j in 1:length(rateMetrics)) {#
+			regimeSizeTable[i, paste0(rateMetrics[j], 'lambda_cor')] <- cor(xx$tipLambda, xx[, rateMetrics[j]])#
+			regimeSizeTable[i, paste0(rateMetrics[j], 'lambda_slope')] <- summary(lm(xx[, rateMetrics[j]] ~ xx$tipLambda))$coef[2,1]#
+		}#
+	}#
+	# net diversification#
+	if (nrow(xx) > 1) {#
+		for (j in 1:length(rateMetrics)) {#
+			regimeSizeTable[i,paste0(rateMetricsNetDiv[j], 'netdiv_cor')] <- cor(xx$tipNetDiv, xx[, rateMetricsNetDiv[j]])#
+			regimeSizeTable[i,paste0(rateMetricsNetDiv[j], 'netdiv_slope')] <- summary(lm(xx[, rateMetricsNetDiv[j]] ~ xx$tipNetDiv))$coef[2,1]#
+		}#
+	}#
+}
+regimeSizeTable <- as.data.frame(matrix(nrow = length(regimeSize), ncol = 21))#
+colnames(regimeSizeTable) <- c('regimeSize', paste0(rateMetrics, 'lambda_cor'), paste0(rateMetrics, 'lambda_slope'), paste0(rateMetricsNetDiv, 'netdiv_cor'), paste0(rateMetricsNetDiv, 'netdiv_slope'))#
+regimeSizeTable$regimeSize <- regimeSize#
+#
+for (i in 1:length(regimeSize)) {#
+	xx <- regimeSummary2[which(regimeSummary2$nTips >= regimeSize[i]),]#
+	# speciation rate#
+	if (nrow(xx) > 1) {#
+		for (j in 1:length(rateMetrics)) {#
+			regimeSizeTable[i, paste0(rateMetrics[j], 'lambda_cor')] <- cor(xx$tipLambda, xx[, rateMetrics[j]], method='spearman')#
+			regimeSizeTable[i, paste0(rateMetrics[j], 'lambda_slope')] <- summary(lm(xx[, rateMetrics[j]] ~ xx$tipLambda))$coef[2,1]#
+		}#
+	}#
+	# net diversification#
+	if (nrow(xx) > 1) {#
+		for (j in 1:length(rateMetrics)) {#
+			regimeSizeTable[i,paste0(rateMetricsNetDiv[j], 'netdiv_cor')] <- cor(xx$tipNetDiv, xx[, rateMetricsNetDiv[j]], method='spearman')#
+			regimeSizeTable[i,paste0(rateMetricsNetDiv[j], 'netdiv_slope')] <- summary(lm(xx[, rateMetricsNetDiv[j]] ~ xx$tipNetDiv))$coef[2,1]#
+		}#
+	}#
+}
+# Speciation rate, Pearson correlation#
+tipMetrics <- c('CRBDlambda','lambdaTB','lambdaND','lambdaDR','lambdaBAMM')#
+#
+metricColors <- c('black','dark green','dark orange','red','blue')
+par(mfrow=c(2,2), mar = c(4,5,2,1))#
+#
+# speciation rate, correlation#
+plot.new()#
+plot.window(xlim = range(regimeSize), ylim = c(0,1))#
+axis(1, at = c(-1, axTicks(1)))#
+axis(2, at = c(-1, axTicks(2)))#
+mtext('minimum regime size', side = 1, line = 2.2, cex=1)#
+mtext('Pearson correlation', side = 2, line = 2.2, cex=1)#
+title(main = 'speciation rate')#
+for (i in 1:length(rateMetrics)) {#
+	lines(regimeSize, regimeSizeTable[, paste0(rateMetrics[i], 'lambda_cor')], col= metricColors[i], lwd=2)#
+}#
+abline(h=1, lty=3)#
+#
+#legend(40, 0.8, legend = c(expression(paste(lambda['CRBD'])),expression(paste(lambda['TB'])), expression(paste(lambda['ND'])), expression(paste(lambda['DR'])),expression(paste(lambda['BAMM']))), col = metricColors, lwd=2, bty='n', xpd=NA)#
+#
+legend(40, 0.8, legend = c('CRBD','TB','ND','DR','BAMM'), col = metricColors, lwd=2, bty='n', xpd=NA)#
+#
+# net div rate, correlation#
+plot.new()#
+plot.window(xlim = range(regimeSize), ylim = c(0,1))#
+axis(1, at = c(-1, axTicks(1)))#
+axis(2, at = c(-1, axTicks(2)))#
+mtext('minimum regime size', side = 1, line = 2.2, cex=1)#
+mtext('Pearson correlation', side = 2, line = 2.2, cex=1)#
+title(main = 'net div. rate')#
+for (i in 1:length(rateMetrics)) {#
+	lines(regimeSize, regimeSizeTable[, paste0(rateMetricsNetDiv[i], 'netdiv_cor')], col= metricColors[i], lwd=2)#
+}#
+abline(h=1, lty=3)#
+# speciation rate, slope#
+plot.new()#
+plot.window(xlim = range(regimeSize), ylim = c(0,1.75))#
+axis(1, at = c(-1, axTicks(1)))#
+axis(2, at = c(-1, axTicks(2)))#
+mtext('minimum regime size', side = 1, line = 2.2, cex=1)#
+mtext('OLS slope', side = 2, line = 2.2, cex=1)#
+for (i in 1:length(rateMetrics)) {#
+	lines(regimeSize, regimeSizeTable[, paste0(rateMetrics[i], 'lambda_slope')], col= metricColors[i], lwd=2)#
+}#
+abline(h=1, lty=3)#
+# net div rate, slope#
+plot.new()#
+plot.window(xlim = range(regimeSize), ylim = c(0,1.75))#
+axis(1, at = c(-1, axTicks(1)))#
+axis(2, at = c(-1, axTicks(2)))#
+mtext('minimum regime size', side = 1, line = 2.2, cex=1)#
+mtext('OLS slope', side = 2, line = 2.2, cex=1)#
+#
+for (i in 1:length(rateMetrics)) {#
+	lines(regimeSize, regimeSizeTable[, paste0(rateMetricsNetDiv[i], 'netdiv_slope')], col= metricColors[i], lwd=2)#
+}#
+abline(h=1, lty=3)
+maxRegimeCount <- 50#
+#
+regimeSize <- sort(unique(regimeSummary2$nTips))#
+#
+regimeSize <- 1:maxRegimeCount#
+#
+rateMetrics <- c('CRBDlambda','lambdaTB','lambdaND','lambdaDR','lambdaBAMM')#
+rateMetricsNetDiv <- c('CRBDnetdiv','lambdaTB','lambdaND','lambdaDR','netDivBAMM')#
+regimeSizeTable <- as.data.frame(matrix(nrow = length(regimeSize), ncol = 21))#
+colnames(regimeSizeTable) <- c('regimeSize', paste0(rateMetrics, 'lambda_cor'), paste0(rateMetrics, 'lambda_slope'), paste0(rateMetricsNetDiv, 'netdiv_cor'), paste0(rateMetricsNetDiv, 'netdiv_slope'))#
+regimeSizeTable$regimeSize <- regimeSize#
+#
+for (i in 1:length(regimeSize)) {#
+	xx <- regimeSummary2[which(regimeSummary2$nTips >= regimeSize[i]),]#
+	# speciation rate#
+	if (nrow(xx) > 1) {#
+		for (j in 1:length(rateMetrics)) {#
+			regimeSizeTable[i, paste0(rateMetrics[j], 'lambda_cor')] <- cor(xx$tipLambda, xx[, rateMetrics[j]])#
+			regimeSizeTable[i, paste0(rateMetrics[j], 'lambda_slope')] <- summary(lm(xx[, rateMetrics[j]] ~ xx$tipLambda))$coef[2,1]#
+		}#
+	}#
+	# net diversification#
+	if (nrow(xx) > 1) {#
+		for (j in 1:length(rateMetrics)) {#
+			regimeSizeTable[i,paste0(rateMetricsNetDiv[j], 'netdiv_cor')] <- cor(xx$tipNetDiv, xx[, rateMetricsNetDiv[j]])#
+			regimeSizeTable[i,paste0(rateMetricsNetDiv[j], 'netdiv_slope')] <- summary(lm(xx[, rateMetricsNetDiv[j]] ~ xx$tipNetDiv))$coef[2,1]#
+		}#
+	}#
+}
+par(mfrow=c(2,2), mar = c(4,5,1,1))#
+#
+# speciation rate, correlation#
+plot.new()#
+plot.window(xlim = range(regimeSize), ylim = c(0,1))#
+axis(1, at = c(-1, axTicks(1)))#
+axis(2, at = c(-1, axTicks(2)))#
+mtext('minimum regime size', side = 1, line = 2.2, cex=1)#
+mtext('Pearson correlation', side = 2, line = 2.2, cex=1)#
+title(main = 'speciation rate')#
+for (i in 1:length(rateMetrics)) {#
+	lines(regimeSize, regimeSizeTable[, paste0(rateMetrics[i], 'lambda_cor')], col= metricColors[i], lwd=2)#
+}#
+abline(h=1, lty=3)#
+#
+#legend(40, 0.8, legend = c(expression(paste(lambda['CRBD'])),expression(paste(lambda['TB'])), expression(paste(lambda['ND'])), expression(paste(lambda['DR'])),expression(paste(lambda['BAMM']))), col = metricColors, lwd=2, bty='n', xpd=NA)#
+#
+legend(40, 0.8, legend = c('CRBD','TB','ND','DR','BAMM'), col = metricColors, lwd=2, bty='n', xpd=NA)#
+#
+# net div rate, correlation#
+plot.new()#
+plot.window(xlim = range(regimeSize), ylim = c(0,1))#
+axis(1, at = c(-1, axTicks(1)))#
+axis(2, at = c(-1, axTicks(2)))#
+mtext('minimum regime size', side = 1, line = 2.2, cex=1)#
+mtext('Pearson correlation', side = 2, line = 2.2, cex=1)#
+title(main = 'net div. rate')#
+for (i in 1:length(rateMetrics)) {#
+	lines(regimeSize, regimeSizeTable[, paste0(rateMetricsNetDiv[i], 'netdiv_cor')], col= metricColors[i], lwd=2)#
+}#
+abline(h=1, lty=3)#
+# speciation rate, slope#
+plot.new()#
+plot.window(xlim = range(regimeSize), ylim = c(0,1.75))#
+axis(1, at = c(-1, axTicks(1)))#
+axis(2, at = c(-1, axTicks(2)))#
+mtext('minimum regime size', side = 1, line = 2.2, cex=1)#
+mtext('OLS slope', side = 2, line = 2.2, cex=1)#
+for (i in 1:length(rateMetrics)) {#
+	lines(regimeSize, regimeSizeTable[, paste0(rateMetrics[i], 'lambda_slope')], col= metricColors[i], lwd=2)#
+}#
+abline(h=1, lty=3)#
+# net div rate, slope#
+plot.new()#
+plot.window(xlim = range(regimeSize), ylim = c(0,1.75))#
+axis(1, at = c(-1, axTicks(1)))#
+axis(2, at = c(-1, axTicks(2)))#
+mtext('minimum regime size', side = 1, line = 2.2, cex=1)#
+mtext('OLS slope', side = 2, line = 2.2, cex=1)#
+#
+for (i in 1:length(rateMetrics)) {#
+	lines(regimeSize, regimeSizeTable[, paste0(rateMetricsNetDiv[i], 'netdiv_slope')], col= metricColors[i], lwd=2)#
+}#
+abline(h=1, lty=3)
+matrix(c(1:6), nrow=3, ncol=2, byrow=TRUE)
+matrix(1:6, nrow=3, ncol=2, byrow=TRUE)
+layout(matrix(1:6, nrow=3, ncol=2, byrow=TRUE), heights=c(0.1, 0.45, 0.45))
+par(mar = c(4,5,1,1))
+plot.new()
+layout(matrix(1:6, nrow=3, ncol=2, byrow=TRUE), heights=c(0.1, 0.45, 0.45))
+par(mar=c(4,4,0,1))
+plot.new()
+text(0.5, 0.5, 'speciation rate')
+text(0.5, 0.5, 'net diversification rate')
+plot.new()
+text(0.5, 0.5, 'net diversification rate')
+# speciation rate, correlation#
+plot.new()#
+plot.window(xlim = range(regimeSize), ylim = c(0,1))#
+axis(1, at = c(-1, axTicks(1)))#
+axis(2, at = c(-1, axTicks(2)))#
+mtext('minimum regime size', side = 1, line = 2.2, cex=1)#
+mtext('Pearson correlation', side = 2, line = 2.2, cex=1)#
+for (i in 1:length(rateMetrics)) {#
+	lines(regimeSize, regimeSizeTable[, paste0(rateMetrics[i], 'lambda_cor')], col= metricColors[i], lwd=2)#
+}#
+abline(h=1, lty=3)
+legend(40, 0.8, legend = c('CRBD','TB','ND','DR','BAMM'), col = metricColors, lwd=2, bty='n', xpd=NA)
+# net div rate, correlation#
+plot.new()#
+plot.window(xlim = range(regimeSize), ylim = c(0,1))#
+axis(1, at = c(-1, axTicks(1)))#
+axis(2, at = c(-1, axTicks(2)))#
+mtext('minimum regime size', side = 1, line = 2.2, cex=1)#
+mtext('Pearson correlation', side = 2, line = 2.2, cex=1)#
+for (i in 1:length(rateMetrics)) {#
+	lines(regimeSize, regimeSizeTable[, paste0(rateMetricsNetDiv[i], 'netdiv_cor')], col= metricColors[i], lwd=2)#
+}#
+abline(h=1, lty=3)#
+# speciation rate, slope#
+plot.new()#
+plot.window(xlim = range(regimeSize), ylim = c(0,1.75))#
+axis(1, at = c(-1, axTicks(1)))#
+axis(2, at = c(-1, axTicks(2)))#
+mtext('minimum regime size', side = 1, line = 2.2, cex=1)#
+mtext('OLS slope', side = 2, line = 2.2, cex=1)#
+for (i in 1:length(rateMetrics)) {#
+	lines(regimeSize, regimeSizeTable[, paste0(rateMetrics[i], 'lambda_slope')], col= metricColors[i], lwd=2)#
+}#
+abline(h=1, lty=3)#
+# net div rate, slope#
+plot.new()#
+plot.window(xlim = range(regimeSize), ylim = c(0,1.75))#
+axis(1, at = c(-1, axTicks(1)))#
+axis(2, at = c(-1, axTicks(2)))#
+mtext('minimum regime size', side = 1, line = 2.2, cex=1)#
+mtext('OLS slope', side = 2, line = 2.2, cex=1)#
+#
+for (i in 1:length(rateMetrics)) {#
+	lines(regimeSize, regimeSizeTable[, paste0(rateMetricsNetDiv[i], 'netdiv_slope')], col= metricColors[i], lwd=2)#
+}#
+abline(h=1, lty=3)
+layout(matrix(1:6, nrow=3, ncol=2, byrow=TRUE), heights=c(0.1, 0.45, 0.45))#
+par(mar=c(4,4,0,1))#
+#
+plot.new()#
+text(0.5, 0.5, 'speciation rate')#
+#
+plot.new()#
+text(0.5, 0.5, 'net diversification rate')#
+#
+# speciation rate, correlation#
+plot.new()#
+plot.window(xlim = range(regimeSize), ylim = c(0,1))#
+axis(1, at = c(-1, axTicks(1)))#
+axis(2, at = c(-1, axTicks(2)))#
+mtext('minimum regime size', side = 1, line = 2.5, cex=0.7)#
+mtext('Pearson correlation', side = 2, line = 2.5, cex=0.7)#
+for (i in 1:length(rateMetrics)) {#
+	lines(regimeSize, regimeSizeTable[, paste0(rateMetrics[i], 'lambda_cor')], col= metricColors[i], lwd=2)#
+}#
+abline(h=1, lty=3)#
+#
+#legend(40, 0.8, legend = c(expression(paste(lambda['CRBD'])),expression(paste(lambda['TB'])), expression(paste(lambda['ND'])), expression(paste(lambda['DR'])),expression(paste(lambda['BAMM']))), col = metricColors, lwd=2, bty='n', xpd=NA)#
+#
+legend(40, 0.8, legend = c('CRBD','TB','ND','DR','BAMM'), col = metricColors, lwd=2, bty='n', xpd=NA)#
+#
+# net div rate, correlation#
+plot.new()#
+plot.window(xlim = range(regimeSize), ylim = c(0,1))#
+axis(1, at = c(-1, axTicks(1)))#
+axis(2, at = c(-1, axTicks(2)))#
+mtext('minimum regime size', side = 1, line = 2.5, cex=0.7)#
+mtext('Pearson correlation', side = 2, line = 2.5, cex=0.7)#
+for (i in 1:length(rateMetrics)) {#
+	lines(regimeSize, regimeSizeTable[, paste0(rateMetricsNetDiv[i], 'netdiv_cor')], col= metricColors[i], lwd=2)#
+}#
+abline(h=1, lty=3)#
+# speciation rate, slope#
+plot.new()#
+plot.window(xlim = range(regimeSize), ylim = c(0,1.75))#
+axis(1, at = c(-1, axTicks(1)))#
+axis(2, at = c(-1, axTicks(2)))#
+mtext('minimum regime size', side = 1, line = 2.5, cex=0.7)#
+mtext('OLS slope', side = 2, line = 2.5, cex=0.7)#
+for (i in 1:length(rateMetrics)) {#
+	lines(regimeSize, regimeSizeTable[, paste0(rateMetrics[i], 'lambda_slope')], col= metricColors[i], lwd=2)#
+}#
+abline(h=1, lty=3)#
+# net div rate, slope#
+plot.new()#
+plot.window(xlim = range(regimeSize), ylim = c(0,1.75))#
+axis(1, at = c(-1, axTicks(1)))#
+axis(2, at = c(-1, axTicks(2)))#
+mtext('minimum regime size', side = 1, line = 2.5, cex=0.7)#
+mtext('OLS slope', side = 2, line = 2.5, cex=0.7)#
+#
+for (i in 1:length(rateMetrics)) {#
+	lines(regimeSize, regimeSizeTable[, paste0(rateMetricsNetDiv[i], 'netdiv_slope')], col= metricColors[i], lwd=2)#
+}#
+abline(h=1, lty=3)
+layout(matrix(1:6, nrow=3, ncol=2, byrow=TRUE), heights=c(0.05, 0.475, 0.475))#
+par(mar=c(4,4,0,1))#
+#
+plot.new()#
+text(0.5, 0.1, 'speciation rate', font=2)#
+#
+plot.new()#
+text(0.5, 0.1, 'net diversification rate', font=2)#
+#
+# speciation rate, correlation#
+plot.new()#
+plot.window(xlim = range(regimeSize), ylim = c(0,1))#
+axis(1, at = c(-1, axTicks(1)))#
+axis(2, at = c(-1, axTicks(2)))#
+mtext('minimum regime size', side = 1, line = 2.5, cex=0.7)#
+mtext('Pearson correlation', side = 2, line = 2.5, cex=0.7)#
+for (i in 1:length(rateMetrics)) {#
+	lines(regimeSize, regimeSizeTable[, paste0(rateMetrics[i], 'lambda_cor')], col= metricColors[i], lwd=2)#
+}#
+abline(h=1, lty=3)#
+#
+#legend(40, 0.8, legend = c(expression(paste(lambda['CRBD'])),expression(paste(lambda['TB'])), expression(paste(lambda['ND'])), expression(paste(lambda['DR'])),expression(paste(lambda['BAMM']))), col = metricColors, lwd=2, bty='n', xpd=NA)#
+#
+legend(40, 0.8, legend = c('CRBD','TB','ND','DR','BAMM'), col = metricColors, lwd=2, bty='n', xpd=NA)#
+#
+# net div rate, correlation#
+plot.new()#
+plot.window(xlim = range(regimeSize), ylim = c(0,1))#
+axis(1, at = c(-1, axTicks(1)))#
+axis(2, at = c(-1, axTicks(2)))#
+mtext('minimum regime size', side = 1, line = 2.5, cex=0.7)#
+mtext('Pearson correlation', side = 2, line = 2.5, cex=0.7)#
+for (i in 1:length(rateMetrics)) {#
+	lines(regimeSize, regimeSizeTable[, paste0(rateMetricsNetDiv[i], 'netdiv_cor')], col= metricColors[i], lwd=2)#
+}#
+abline(h=1, lty=3)#
+# speciation rate, slope#
+plot.new()#
+plot.window(xlim = range(regimeSize), ylim = c(0,1.75))#
+axis(1, at = c(-1, axTicks(1)))#
+axis(2, at = c(-1, axTicks(2)))#
+mtext('minimum regime size', side = 1, line = 2.5, cex=0.7)#
+mtext('OLS slope', side = 2, line = 2.5, cex=0.7)#
+for (i in 1:length(rateMetrics)) {#
+	lines(regimeSize, regimeSizeTable[, paste0(rateMetrics[i], 'lambda_slope')], col= metricColors[i], lwd=2)#
+}#
+abline(h=1, lty=3)#
+# net div rate, slope#
+plot.new()#
+plot.window(xlim = range(regimeSize), ylim = c(0,1.75))#
+axis(1, at = c(-1, axTicks(1)))#
+axis(2, at = c(-1, axTicks(2)))#
+mtext('minimum regime size', side = 1, line = 2.5, cex=0.7)#
+mtext('OLS slope', side = 2, line = 2.5, cex=0.7)#
+#
+for (i in 1:length(rateMetrics)) {#
+	lines(regimeSize, regimeSizeTable[, paste0(rateMetricsNetDiv[i], 'netdiv_slope')], col= metricColors[i], lwd=2)#
+}#
+abline(h=1, lty=3)
+layout(matrix(1:6, nrow=3, ncol=2, byrow=TRUE), heights=c(0.05, 0.475, 0.475))
+par(mar=c(4,4,0,1))
+layout(matrix(1:6, nrow=3, ncol=2, byrow=TRUE), heights=c(0.05, 0.475, 0.475))
+plot.new()
+layout(matrix(1:6, nrow=3, ncol=2, byrow=TRUE), heights=c(0.05, 0.475, 0.475))
+plot.new()
+layout(matrix(1:6, nrow=3, ncol=2, byrow=TRUE), heights=c(0.1, 0.45, 0.45))
+plot.new()
+layout(matrix(1:6, nrow=3, ncol=2, byrow=TRUE), heights=c(0.1, 0.45, 0.45))
+par(mar=c(4,4,0,1))
+plot.new()
+text(0.5, 0.1, 'speciation rate', font=2)
+text(0.5, 0, 'speciation rate', font=2)
+text(0.5, 0.1, 'speciation rate', font=2, xpd=NA)
+layout(matrix(1:6, nrow=3, ncol=2, byrow=TRUE), heights=c(0.1, 0.45, 0.45))#
+par(mar=c(4,4,0,1))#
+#
+plot.new()#
+text(0.5, 0.1, 'speciation rate', font=2, xpd=NA)#
+#
+plot.new()#
+text(0.5, 0.1, 'net diversification rate', font=2, xpd=NA)#
+#
+# speciation rate, correlation#
+plot.new()#
+plot.window(xlim = range(regimeSize), ylim = c(0,1))#
+axis(1, at = c(-1, axTicks(1)))#
+axis(2, at = c(-1, axTicks(2)))#
+mtext('minimum regime size', side = 1, line = 2.5, cex=0.7)#
+mtext('Pearson correlation', side = 2, line = 2.5, cex=0.7)#
+for (i in 1:length(rateMetrics)) {#
+	lines(regimeSize, regimeSizeTable[, paste0(rateMetrics[i], 'lambda_cor')], col= metricColors[i], lwd=2)#
+}#
+abline(h=1, lty=3)#
+#
+#legend(40, 0.8, legend = c(expression(paste(lambda['CRBD'])),expression(paste(lambda['TB'])), expression(paste(lambda['ND'])), expression(paste(lambda['DR'])),expression(paste(lambda['BAMM']))), col = metricColors, lwd=2, bty='n', xpd=NA)#
+#
+legend(40, 0.8, legend = c('CRBD','TB','ND','DR','BAMM'), col = metricColors, lwd=2, bty='n', xpd=NA)#
+#
+# net div rate, correlation#
+plot.new()#
+plot.window(xlim = range(regimeSize), ylim = c(0,1))#
+axis(1, at = c(-1, axTicks(1)))#
+axis(2, at = c(-1, axTicks(2)))#
+mtext('minimum regime size', side = 1, line = 2.5, cex=0.7)#
+mtext('Pearson correlation', side = 2, line = 2.5, cex=0.7)#
+for (i in 1:length(rateMetrics)) {#
+	lines(regimeSize, regimeSizeTable[, paste0(rateMetricsNetDiv[i], 'netdiv_cor')], col= metricColors[i], lwd=2)#
+}#
+abline(h=1, lty=3)#
+# speciation rate, slope#
+plot.new()#
+plot.window(xlim = range(regimeSize), ylim = c(0,1.75))#
+axis(1, at = c(-1, axTicks(1)))#
+axis(2, at = c(-1, axTicks(2)))#
+mtext('minimum regime size', side = 1, line = 2.5, cex=0.7)#
+mtext('OLS slope', side = 2, line = 2.5, cex=0.7)#
+for (i in 1:length(rateMetrics)) {#
+	lines(regimeSize, regimeSizeTable[, paste0(rateMetrics[i], 'lambda_slope')], col= metricColors[i], lwd=2)#
+}#
+abline(h=1, lty=3)#
+# net div rate, slope#
+plot.new()#
+plot.window(xlim = range(regimeSize), ylim = c(0,1.75))#
+axis(1, at = c(-1, axTicks(1)))#
+axis(2, at = c(-1, axTicks(2)))#
+mtext('minimum regime size', side = 1, line = 2.5, cex=0.7)#
+mtext('OLS slope', side = 2, line = 2.5, cex=0.7)#
+#
+for (i in 1:length(rateMetrics)) {#
+	lines(regimeSize, regimeSizeTable[, paste0(rateMetricsNetDiv[i], 'netdiv_slope')], col= metricColors[i], lwd=2)#
+}#
+abline(h=1, lty=3)
+layout(matrix(1:6, nrow=3, ncol=2, byrow=TRUE), heights=c(0.1, 0.45, 0.45))#
+par(mar=c(4,4,0,1))#
+#
+plot.new()#
+text(0.5, 0.1, 'speciation rate', font=2, xpd=NA)#
+#
+plot.new()#
+text(0.5, 0.1, 'net diversification rate', font=2, xpd=NA)#
+#
+# speciation rate, correlation#
+plot.new()#
+plot.window(xlim = range(regimeSize), ylim = c(0,1))#
+axis(1, at = c(-1, axTicks(1)))#
+axis(2, at = c(-1, axTicks(2)))#
+mtext('minimum regime size', side = 1, line = 2.5, cex=0.7)#
+mtext('Pearson correlation', side = 2, line = 2.5, cex=0.7)#
+for (i in 1:length(rateMetrics)) {#
+	lines(regimeSize, regimeSizeTable[, paste0(rateMetrics[i], 'lambda_cor')], col= metricColors[i], lwd=2)#
+}#
+abline(h=1, lty=3)#
+#
+#legend(40, 0.8, legend = c(expression(paste(lambda['CRBD'])),expression(paste(lambda['TB'])), expression(paste(lambda['ND'])), expression(paste(lambda['DR'])),expression(paste(lambda['BAMM']))), col = metricColors, lwd=2, bty='n', xpd=NA)#
+#
+legend(40, 0.8, legend = c('CRBD','TB','ND','DR','BAMM'), col = metricColors, lwd=2, bty='n', xpd=NA)#
+#
+# net div rate, correlation#
+plot.new()#
+plot.window(xlim = range(regimeSize), ylim = c(0,1))#
+axis(1, at = c(-1, axTicks(1)))#
+axis(2, at = c(-1, axTicks(2)))#
+mtext('minimum regime size', side = 1, line = 2.5, cex=0.7)#
+mtext('Pearson correlation', side = 2, line = 2.5, cex=0.7)#
+for (i in 1:length(rateMetrics)) {#
+	lines(regimeSize, regimeSizeTable[, paste0(rateMetricsNetDiv[i], 'netdiv_cor')], col= metricColors[i], lwd=2)#
+}#
+abline(h=1, lty=3)#
+# speciation rate, slope#
+plot.new()#
+plot.window(xlim = range(regimeSize), ylim = c(0,1.5))#
+axis(1, at = c(-1, axTicks(1)))#
+axis(2, at = c(-1, axTicks(2)))#
+mtext('minimum regime size', side = 1, line = 2.5, cex=0.7)#
+mtext('OLS slope', side = 2, line = 2.5, cex=0.7)#
+for (i in 1:length(rateMetrics)) {#
+	lines(regimeSize, regimeSizeTable[, paste0(rateMetrics[i], 'lambda_slope')], col= metricColors[i], lwd=2)#
+}#
+abline(h=1, lty=3)#
+# net div rate, slope#
+plot.new()#
+plot.window(xlim = range(regimeSize), ylim = c(0,1.5))#
+axis(1, at = c(-1, axTicks(1)))#
+axis(2, at = c(-1, axTicks(2)))#
+mtext('minimum regime size', side = 1, line = 2.5, cex=0.7)#
+mtext('OLS slope', side = 2, line = 2.5, cex=0.7)#
+#
+for (i in 1:length(rateMetrics)) {#
+	lines(regimeSize, regimeSizeTable[, paste0(rateMetricsNetDiv[i], 'netdiv_slope')], col= metricColors[i], lwd=2)#
+}#
+abline(h=1, lty=3)
+pdf('~/Dropbox/tipRatesProject/preliminaryplots/meanTipRatesByRegimeSize_compact.pdf', width=8, height=8)#
+#
+layout(matrix(1:6, nrow=3, ncol=2, byrow=TRUE), heights=c(0.1, 0.45, 0.45))#
+par(mar=c(4,4,0,1))#
+#
+plot.new()#
+text(0.5, 0.1, 'speciation rate', font=2, xpd=NA)#
+#
+plot.new()#
+text(0.5, 0.1, 'net diversification rate', font=2, xpd=NA)#
+#
+# speciation rate, correlation#
+plot.new()#
+plot.window(xlim = range(regimeSize), ylim = c(0,1))#
+axis(1, at = c(-1, axTicks(1)))#
+axis(2, at = c(-1, axTicks(2)))#
+mtext('minimum regime size', side = 1, line = 2.5, cex=0.7)#
+mtext('Pearson correlation', side = 2, line = 2.5, cex=0.7)#
+for (i in 1:length(rateMetrics)) {#
+	lines(regimeSize, regimeSizeTable[, paste0(rateMetrics[i], 'lambda_cor')], col= metricColors[i], lwd=2)#
+}#
+abline(h=1, lty=3)#
+#
+#legend(40, 0.8, legend = c(expression(paste(lambda['CRBD'])),expression(paste(lambda['TB'])), expression(paste(lambda['ND'])), expression(paste(lambda['DR'])),expression(paste(lambda['BAMM']))), col = metricColors, lwd=2, bty='n', xpd=NA)#
+#
+legend(40, 0.8, legend = c('CRBD','TB','ND','DR','BAMM'), col = metricColors, lwd=2, bty='n', xpd=NA)#
+#
+# net div rate, correlation#
+plot.new()#
+plot.window(xlim = range(regimeSize), ylim = c(0,1))#
+axis(1, at = c(-1, axTicks(1)))#
+axis(2, at = c(-1, axTicks(2)))#
+mtext('minimum regime size', side = 1, line = 2.5, cex=0.7)#
+mtext('Pearson correlation', side = 2, line = 2.5, cex=0.7)#
+for (i in 1:length(rateMetrics)) {#
+	lines(regimeSize, regimeSizeTable[, paste0(rateMetricsNetDiv[i], 'netdiv_cor')], col= metricColors[i], lwd=2)#
+}#
+abline(h=1, lty=3)#
+# speciation rate, slope#
+plot.new()#
+plot.window(xlim = range(regimeSize), ylim = c(0,1.5))#
+axis(1, at = c(-1, axTicks(1)))#
+axis(2, at = c(-1, axTicks(2)))#
+mtext('minimum regime size', side = 1, line = 2.5, cex=0.7)#
+mtext('OLS slope', side = 2, line = 2.5, cex=0.7)#
+for (i in 1:length(rateMetrics)) {#
+	lines(regimeSize, regimeSizeTable[, paste0(rateMetrics[i], 'lambda_slope')], col= metricColors[i], lwd=2)#
+}#
+abline(h=1, lty=3)#
+# net div rate, slope#
+plot.new()#
+plot.window(xlim = range(regimeSize), ylim = c(0,1.5))#
+axis(1, at = c(-1, axTicks(1)))#
+axis(2, at = c(-1, axTicks(2)))#
+mtext('minimum regime size', side = 1, line = 2.5, cex=0.7)#
+mtext('OLS slope', side = 2, line = 2.5, cex=0.7)#
+#
+for (i in 1:length(rateMetrics)) {#
+	lines(regimeSize, regimeSizeTable[, paste0(rateMetricsNetDiv[i], 'netdiv_slope')], col= metricColors[i], lwd=2)#
+}#
+abline(h=1, lty=3)#
+#
+dev.off()
+pdf('~/Dropbox/tipRatesProject/preliminaryplots/meanTipRatesByRegimeSize_compact.pdf', width=8, height=8)#
+#
+layout(matrix(1:6, nrow=3, ncol=2, byrow=TRUE), heights=c(0.1, 0.45, 0.45))#
+par(mar=c(4,4,0,1))#
+#
+plot.new()#
+text(0.5, 0, 'speciation rate', font=2, xpd=NA, cex=2)#
+#
+plot.new()#
+text(0.5, 0, 'net diversification rate', font=2, xpd=NA, cex=2)#
+#
+# speciation rate, correlation#
+plot.new()#
+plot.window(xlim = range(regimeSize), ylim = c(0,1))#
+axis(1, at = c(-1, axTicks(1)))#
+axis(2, at = c(-1, axTicks(2)))#
+mtext('minimum regime size', side = 1, line = 2.5, cex=0.7)#
+mtext('Pearson correlation', side = 2, line = 2.5, cex=0.7)#
+for (i in 1:length(rateMetrics)) {#
+	lines(regimeSize, regimeSizeTable[, paste0(rateMetrics[i], 'lambda_cor')], col= metricColors[i], lwd=2)#
+}#
+abline(h=1, lty=3)#
+#
+#legend(40, 0.8, legend = c(expression(paste(lambda['CRBD'])),expression(paste(lambda['TB'])), expression(paste(lambda['ND'])), expression(paste(lambda['DR'])),expression(paste(lambda['BAMM']))), col = metricColors, lwd=2, bty='n', xpd=NA)#
+#
+legend(40, 0.8, legend = c('CRBD','TB','ND','DR','BAMM'), col = metricColors, lwd=2, bty='n', xpd=NA)#
+#
+# net div rate, correlation#
+plot.new()#
+plot.window(xlim = range(regimeSize), ylim = c(0,1))#
+axis(1, at = c(-1, axTicks(1)))#
+axis(2, at = c(-1, axTicks(2)))#
+mtext('minimum regime size', side = 1, line = 2.5, cex=0.7)#
+mtext('Pearson correlation', side = 2, line = 2.5, cex=0.7)#
+for (i in 1:length(rateMetrics)) {#
+	lines(regimeSize, regimeSizeTable[, paste0(rateMetricsNetDiv[i], 'netdiv_cor')], col= metricColors[i], lwd=2)#
+}#
+abline(h=1, lty=3)#
+# speciation rate, slope#
+plot.new()#
+plot.window(xlim = range(regimeSize), ylim = c(0,1.5))#
+axis(1, at = c(-1, axTicks(1)))#
+axis(2, at = c(-1, axTicks(2)))#
+mtext('minimum regime size', side = 1, line = 2.5, cex=0.7)#
+mtext('OLS slope', side = 2, line = 2.5, cex=0.7)#
+for (i in 1:length(rateMetrics)) {#
+	lines(regimeSize, regimeSizeTable[, paste0(rateMetrics[i], 'lambda_slope')], col= metricColors[i], lwd=2)#
+}#
+abline(h=1, lty=3)#
+# net div rate, slope#
+plot.new()#
+plot.window(xlim = range(regimeSize), ylim = c(0,1.5))#
+axis(1, at = c(-1, axTicks(1)))#
+axis(2, at = c(-1, axTicks(2)))#
+mtext('minimum regime size', side = 1, line = 2.5, cex=0.7)#
+mtext('OLS slope', side = 2, line = 2.5, cex=0.7)#
+#
+for (i in 1:length(rateMetrics)) {#
+	lines(regimeSize, regimeSizeTable[, paste0(rateMetricsNetDiv[i], 'netdiv_slope')], col= metricColors[i], lwd=2)#
+}#
+abline(h=1, lty=3)#
+#
+dev.off()
+pdf('~/Dropbox/tipRatesProject/preliminaryplots/meanTipRatesByRegimeSize_compact.pdf', width=8, height=8)#
+#
+layout(matrix(1:6, nrow=3, ncol=2, byrow=TRUE), heights=c(0.1, 0.45, 0.45))#
+par(mar=c(4,4,0,1))#
+#
+plot.new()#
+text(0.5, -0.5, 'speciation rate', font=2, xpd=NA, cex=1.5)#
+#
+plot.new()#
+text(0.5, -0.5, 'net diversification rate', font=2, xpd=NA, cex=1.5)#
+#
+# speciation rate, correlation#
+plot.new()#
+plot.window(xlim = range(regimeSize), ylim = c(0,1))#
+axis(1, at = c(-1, axTicks(1)))#
+axis(2, at = c(-1, axTicks(2)))#
+mtext('minimum regime size', side = 1, line = 2.5, cex=0.7)#
+mtext('Pearson correlation', side = 2, line = 2.5, cex=0.7)#
+for (i in 1:length(rateMetrics)) {#
+	lines(regimeSize, regimeSizeTable[, paste0(rateMetrics[i], 'lambda_cor')], col= metricColors[i], lwd=2)#
+}#
+abline(h=1, lty=3)#
+#
+#legend(40, 0.8, legend = c(expression(paste(lambda['CRBD'])),expression(paste(lambda['TB'])), expression(paste(lambda['ND'])), expression(paste(lambda['DR'])),expression(paste(lambda['BAMM']))), col = metricColors, lwd=2, bty='n', xpd=NA)#
+#
+legend(40, 0.8, legend = c('CRBD','TB','ND','DR','BAMM'), col = metricColors, lwd=2, bty='n', xpd=NA)#
+#
+# net div rate, correlation#
+plot.new()#
+plot.window(xlim = range(regimeSize), ylim = c(0,1))#
+axis(1, at = c(-1, axTicks(1)))#
+axis(2, at = c(-1, axTicks(2)))#
+mtext('minimum regime size', side = 1, line = 2.5, cex=0.7)#
+mtext('Pearson correlation', side = 2, line = 2.5, cex=0.7)#
+for (i in 1:length(rateMetrics)) {#
+	lines(regimeSize, regimeSizeTable[, paste0(rateMetricsNetDiv[i], 'netdiv_cor')], col= metricColors[i], lwd=2)#
+}#
+abline(h=1, lty=3)#
+# speciation rate, slope#
+plot.new()#
+plot.window(xlim = range(regimeSize), ylim = c(0,1.5))#
+axis(1, at = c(-1, axTicks(1)))#
+axis(2, at = c(-1, axTicks(2)))#
+mtext('minimum regime size', side = 1, line = 2.5, cex=0.7)#
+mtext('OLS slope', side = 2, line = 2.5, cex=0.7)#
+for (i in 1:length(rateMetrics)) {#
+	lines(regimeSize, regimeSizeTable[, paste0(rateMetrics[i], 'lambda_slope')], col= metricColors[i], lwd=2)#
+}#
+abline(h=1, lty=3)#
+# net div rate, slope#
+plot.new()#
+plot.window(xlim = range(regimeSize), ylim = c(0,1.5))#
+axis(1, at = c(-1, axTicks(1)))#
+axis(2, at = c(-1, axTicks(2)))#
+mtext('minimum regime size', side = 1, line = 2.5, cex=0.7)#
+mtext('OLS slope', side = 2, line = 2.5, cex=0.7)#
+#
+for (i in 1:length(rateMetrics)) {#
+	lines(regimeSize, regimeSizeTable[, paste0(rateMetricsNetDiv[i], 'netdiv_slope')], col= metricColors[i], lwd=2)#
+}#
+abline(h=1, lty=3)#
+#
+dev.off()
+pdf('~/Dropbox/tipRatesProject/preliminaryplots/meanTipRatesByRegimeSize_compact.pdf', width=8, height=8)#
+#
+layout(matrix(1:6, nrow=3, ncol=2, byrow=TRUE), heights=c(0.05, 0.475, 0.475))#
+par(mar=c(4,4,0,1))#
+#
+plot.new()#
+text(0.5, -0.5, 'speciation rate', font=2, xpd=NA, cex=1.5)#
+#
+plot.new()#
+text(0.5, -0.5, 'net diversification rate', font=2, xpd=NA, cex=1.5)#
+#
+# speciation rate, correlation#
+plot.new()#
+plot.window(xlim = range(regimeSize), ylim = c(0,1))#
+axis(1, at = c(-1, axTicks(1)))#
+axis(2, at = c(-1, axTicks(2)))#
+mtext('minimum regime size', side = 1, line = 2.5, cex=0.7)#
+mtext('Pearson correlation', side = 2, line = 2.5, cex=0.7)#
+for (i in 1:length(rateMetrics)) {#
+	lines(regimeSize, regimeSizeTable[, paste0(rateMetrics[i], 'lambda_cor')], col= metricColors[i], lwd=2)#
+}#
+abline(h=1, lty=3)#
+#
+#legend(40, 0.8, legend = c(expression(paste(lambda['CRBD'])),expression(paste(lambda['TB'])), expression(paste(lambda['ND'])), expression(paste(lambda['DR'])),expression(paste(lambda['BAMM']))), col = metricColors, lwd=2, bty='n', xpd=NA)#
+#
+legend(40, 0.8, legend = c('CRBD','TB','ND','DR','BAMM'), col = metricColors, lwd=2, bty='n', xpd=NA)#
+#
+# net div rate, correlation#
+plot.new()#
+plot.window(xlim = range(regimeSize), ylim = c(0,1))#
+axis(1, at = c(-1, axTicks(1)))#
+axis(2, at = c(-1, axTicks(2)))#
+mtext('minimum regime size', side = 1, line = 2.5, cex=0.7)#
+mtext('Pearson correlation', side = 2, line = 2.5, cex=0.7)#
+for (i in 1:length(rateMetrics)) {#
+	lines(regimeSize, regimeSizeTable[, paste0(rateMetricsNetDiv[i], 'netdiv_cor')], col= metricColors[i], lwd=2)#
+}#
+abline(h=1, lty=3)#
+# speciation rate, slope#
+plot.new()#
+plot.window(xlim = range(regimeSize), ylim = c(0,1.5))#
+axis(1, at = c(-1, axTicks(1)))#
+axis(2, at = c(-1, axTicks(2)))#
+mtext('minimum regime size', side = 1, line = 2.5, cex=0.7)#
+mtext('OLS slope', side = 2, line = 2.5, cex=0.7)#
+for (i in 1:length(rateMetrics)) {#
+	lines(regimeSize, regimeSizeTable[, paste0(rateMetrics[i], 'lambda_slope')], col= metricColors[i], lwd=2)#
+}#
+abline(h=1, lty=3)#
+# net div rate, slope#
+plot.new()#
+plot.window(xlim = range(regimeSize), ylim = c(0,1.5))#
+axis(1, at = c(-1, axTicks(1)))#
+axis(2, at = c(-1, axTicks(2)))#
+mtext('minimum regime size', side = 1, line = 2.5, cex=0.7)#
+mtext('OLS slope', side = 2, line = 2.5, cex=0.7)#
+#
+for (i in 1:length(rateMetrics)) {#
+	lines(regimeSize, regimeSizeTable[, paste0(rateMetricsNetDiv[i], 'netdiv_slope')], col= metricColors[i], lwd=2)#
+}#
+abline(h=1, lty=3)#
+#
+dev.off()
+pdf('~/Dropbox/tipRatesProject/preliminaryplots/meanTipRatesByRegimeSize_compact.pdf', width=8, height=8)#
+#
+layout(matrix(1:6, nrow=3, ncol=2, byrow=TRUE), heights=c(0.1, 0.45, 0.45))#
+par(mar=c(4,4,0,1))#
+#
+plot.new()#
+text(0.5, -1, 'speciation rate', font=2, xpd=NA, cex=1.5)#
+#
+plot.new()#
+text(0.5, -1, 'net diversification rate', font=2, xpd=NA, cex=1.5)#
+#
+# speciation rate, correlation#
+plot.new()#
+plot.window(xlim = range(regimeSize), ylim = c(0,1))#
+axis(1, at = c(-1, axTicks(1)))#
+axis(2, at = c(-1, axTicks(2)))#
+mtext('minimum regime size', side = 1, line = 2.5, cex=0.7)#
+mtext('Pearson correlation', side = 2, line = 2.5, cex=0.7)#
+for (i in 1:length(rateMetrics)) {#
+	lines(regimeSize, regimeSizeTable[, paste0(rateMetrics[i], 'lambda_cor')], col= metricColors[i], lwd=2)#
+}#
+abline(h=1, lty=3)#
+#
+#legend(40, 0.8, legend = c(expression(paste(lambda['CRBD'])),expression(paste(lambda['TB'])), expression(paste(lambda['ND'])), expression(paste(lambda['DR'])),expression(paste(lambda['BAMM']))), col = metricColors, lwd=2, bty='n', xpd=NA)#
+#
+legend(40, 0.8, legend = c('CRBD','TB','ND','DR','BAMM'), col = metricColors, lwd=2, bty='n', xpd=NA)#
+#
+# net div rate, correlation#
+plot.new()#
+plot.window(xlim = range(regimeSize), ylim = c(0,1))#
+axis(1, at = c(-1, axTicks(1)))#
+axis(2, at = c(-1, axTicks(2)))#
+mtext('minimum regime size', side = 1, line = 2.5, cex=0.7)#
+mtext('Pearson correlation', side = 2, line = 2.5, cex=0.7)#
+for (i in 1:length(rateMetrics)) {#
+	lines(regimeSize, regimeSizeTable[, paste0(rateMetricsNetDiv[i], 'netdiv_cor')], col= metricColors[i], lwd=2)#
+}#
+abline(h=1, lty=3)#
+# speciation rate, slope#
+plot.new()#
+plot.window(xlim = range(regimeSize), ylim = c(0,1.5))#
+axis(1, at = c(-1, axTicks(1)))#
+axis(2, at = c(-1, axTicks(2)))#
+mtext('minimum regime size', side = 1, line = 2.5, cex=0.7)#
+mtext('OLS slope', side = 2, line = 2.5, cex=0.7)#
+for (i in 1:length(rateMetrics)) {#
+	lines(regimeSize, regimeSizeTable[, paste0(rateMetrics[i], 'lambda_slope')], col= metricColors[i], lwd=2)#
+}#
+abline(h=1, lty=3)#
+# net div rate, slope#
+plot.new()#
+plot.window(xlim = range(regimeSize), ylim = c(0,1.5))#
+axis(1, at = c(-1, axTicks(1)))#
+axis(2, at = c(-1, axTicks(2)))#
+mtext('minimum regime size', side = 1, line = 2.5, cex=0.7)#
+mtext('OLS slope', side = 2, line = 2.5, cex=0.7)#
+#
+for (i in 1:length(rateMetrics)) {#
+	lines(regimeSize, regimeSizeTable[, paste0(rateMetricsNetDiv[i], 'netdiv_slope')], col= metricColors[i], lwd=2)#
+}#
+abline(h=1, lty=3)#
+#
+dev.off()
+pdf('~/Dropbox/tipRatesProject/preliminaryplots/meanTipRatesByRegimeSize_compact.pdf', width=8, height=8)#
+#
+layout(matrix(1:6, nrow=3, ncol=2, byrow=TRUE), heights=c(0.1, 0.45, 0.45))#
+par(mar=c(4,4,0,1))#
+#
+plot.new()#
+text(0.5, -1, 'speciation rate', font=2, xpd=NA, cex=1.5)#
+#
+plot.new()#
+text(0.5, -1, 'net diversification rate', font=2, xpd=NA, cex=1.5)#
+#
+# speciation rate, correlation#
+plot.new()#
+plot.window(xlim = range(regimeSize), ylim = c(0,1))#
+axis(1, at = c(-1, axTicks(1)))#
+axis(2, at = c(-1, axTicks(2)))#
+mtext('minimum regime size', side = 1, line = 2.5, cex=0.7)#
+mtext('Pearson correlation', side = 2, line = 2.5, cex=0.7)#
+for (i in 1:length(rateMetrics)) {#
+	lines(regimeSize, regimeSizeTable[, paste0(rateMetrics[i], 'lambda_cor')], col= metricColors[i], lwd=2)#
+}#
+abline(h=1, lty=3)#
+#
+#legend(40, 0.8, legend = c(expression(paste(lambda['CRBD'])),expression(paste(lambda['TB'])), expression(paste(lambda['ND'])), expression(paste(lambda['DR'])),expression(paste(lambda['BAMM']))), col = metricColors, lwd=2, bty='n', xpd=NA)#
+#
+legend(40, 0.3, legend = c('CRBD','TB','ND','DR','BAMM'), col = metricColors, lwd=2, bty='n', xpd=NA)#
+#
+# net div rate, correlation#
+plot.new()#
+plot.window(xlim = range(regimeSize), ylim = c(0,1))#
+axis(1, at = c(-1, axTicks(1)))#
+axis(2, at = c(-1, axTicks(2)))#
+mtext('minimum regime size', side = 1, line = 2.5, cex=0.7)#
+mtext('Pearson correlation', side = 2, line = 2.5, cex=0.7)#
+for (i in 1:length(rateMetrics)) {#
+	lines(regimeSize, regimeSizeTable[, paste0(rateMetricsNetDiv[i], 'netdiv_cor')], col= metricColors[i], lwd=2)#
+}#
+abline(h=1, lty=3)#
+# speciation rate, slope#
+plot.new()#
+plot.window(xlim = range(regimeSize), ylim = c(0,1.5))#
+axis(1, at = c(-1, axTicks(1)))#
+axis(2, at = c(-1, axTicks(2)))#
+mtext('minimum regime size', side = 1, line = 2.5, cex=0.7)#
+mtext('OLS slope', side = 2, line = 2.5, cex=0.7)#
+for (i in 1:length(rateMetrics)) {#
+	lines(regimeSize, regimeSizeTable[, paste0(rateMetrics[i], 'lambda_slope')], col= metricColors[i], lwd=2)#
+}#
+abline(h=1, lty=3)#
+# net div rate, slope#
+plot.new()#
+plot.window(xlim = range(regimeSize), ylim = c(0,1.5))#
+axis(1, at = c(-1, axTicks(1)))#
+axis(2, at = c(-1, axTicks(2)))#
+mtext('minimum regime size', side = 1, line = 2.5, cex=0.7)#
+mtext('OLS slope', side = 2, line = 2.5, cex=0.7)#
+#
+for (i in 1:length(rateMetrics)) {#
+	lines(regimeSize, regimeSizeTable[, paste0(rateMetricsNetDiv[i], 'netdiv_slope')], col= metricColors[i], lwd=2)#
+}#
+abline(h=1, lty=3)#
+#
+dev.off()
+pdf('~/Dropbox/tipRatesProject/preliminaryplots/meanTipRatesByRegimeSize_compact.pdf', width=8, height=8)#
+#
+layout(matrix(1:6, nrow=3, ncol=2, byrow=TRUE), heights=c(0.1, 0.45, 0.45))#
+par(mar=c(4,4,0,1))#
+#
+plot.new()#
+text(0.5, -1, 'speciation rate', font=2, xpd=NA, cex=1.5)#
+#
+plot.new()#
+text(0.5, -1, 'net diversification rate', font=2, xpd=NA, cex=1.5)#
+#
+# speciation rate, correlation#
+plot.new()#
+plot.window(xlim = range(regimeSize), ylim = c(0,1))#
+axis(1, at = c(-1, axTicks(1)))#
+axis(2, at = c(-1, axTicks(2)))#
+mtext('minimum regime size', side = 1, line = 2.5, cex=0.7)#
+mtext('Pearson correlation', side = 2, line = 2.5, cex=0.7)#
+for (i in 1:length(rateMetrics)) {#
+	lines(regimeSize, regimeSizeTable[, paste0(rateMetrics[i], 'lambda_cor')], col= metricColors[i], lwd=2)#
+}#
+abline(h=1, lty=3)#
+#
+#legend(40, 0.8, legend = c(expression(paste(lambda['CRBD'])),expression(paste(lambda['TB'])), expression(paste(lambda['ND'])), expression(paste(lambda['DR'])),expression(paste(lambda['BAMM']))), col = metricColors, lwd=2, bty='n', xpd=NA)#
+#
+legend(40, 0.5, legend = c('CRBD','TB','ND','DR','BAMM'), col = metricColors, lwd=2, bty='n', xpd=NA)#
+#
+# net div rate, correlation#
+plot.new()#
+plot.window(xlim = range(regimeSize), ylim = c(0,1))#
+axis(1, at = c(-1, axTicks(1)))#
+axis(2, at = c(-1, axTicks(2)))#
+mtext('minimum regime size', side = 1, line = 2.5, cex=0.7)#
+mtext('Pearson correlation', side = 2, line = 2.5, cex=0.7)#
+for (i in 1:length(rateMetrics)) {#
+	lines(regimeSize, regimeSizeTable[, paste0(rateMetricsNetDiv[i], 'netdiv_cor')], col= metricColors[i], lwd=2)#
+}#
+abline(h=1, lty=3)#
+# speciation rate, slope#
+plot.new()#
+plot.window(xlim = range(regimeSize), ylim = c(0,1.5))#
+axis(1, at = c(-1, axTicks(1)))#
+axis(2, at = c(-1, axTicks(2)))#
+mtext('minimum regime size', side = 1, line = 2.5, cex=0.7)#
+mtext('OLS slope', side = 2, line = 2.5, cex=0.7)#
+for (i in 1:length(rateMetrics)) {#
+	lines(regimeSize, regimeSizeTable[, paste0(rateMetrics[i], 'lambda_slope')], col= metricColors[i], lwd=2)#
+}#
+abline(h=1, lty=3)#
+# net div rate, slope#
+plot.new()#
+plot.window(xlim = range(regimeSize), ylim = c(0,1.5))#
+axis(1, at = c(-1, axTicks(1)))#
+axis(2, at = c(-1, axTicks(2)))#
+mtext('minimum regime size', side = 1, line = 2.5, cex=0.7)#
+mtext('OLS slope', side = 2, line = 2.5, cex=0.7)#
+#
+for (i in 1:length(rateMetrics)) {#
+	lines(regimeSize, regimeSizeTable[, paste0(rateMetricsNetDiv[i], 'netdiv_slope')], col= metricColors[i], lwd=2)#
+}#
+abline(h=1, lty=3)#
+#
+dev.off()
+pdf('~/Dropbox/tipRatesProject/preliminaryplots/meanTipRatesByRegimeSize_compact.pdf', width=8, height=8)#
+#
+layout(matrix(1:6, nrow=3, ncol=2, byrow=TRUE), heights=c(0.1, 0.45, 0.45))#
+par(mar=c(4,4,0,1))#
+#
+plot.new()#
+text(0.5, -1, 'speciation rate', font=2, xpd=NA, cex=1.5)#
+#
+plot.new()#
+text(0.5, -1, 'net diversification rate', font=2, xpd=NA, cex=1.5)#
+#
+# speciation rate, correlation#
+plot.new()#
+plot.window(xlim = range(regimeSize), ylim = c(0,1))#
+axis(1, at = c(-1, axTicks(1)))#
+axis(2, at = c(-1, axTicks(2)))#
+mtext('minimum regime size', side = 1, line = 2.5, cex=1)#
+mtext('Pearson correlation', side = 2, line = 2.5, cex=1)#
+for (i in 1:length(rateMetrics)) {#
+	lines(regimeSize, regimeSizeTable[, paste0(rateMetrics[i], 'lambda_cor')], col= metricColors[i], lwd=2)#
+}#
+abline(h=1, lty=3)#
+#
+#legend(40, 0.8, legend = c(expression(paste(lambda['CRBD'])),expression(paste(lambda['TB'])), expression(paste(lambda['ND'])), expression(paste(lambda['DR'])),expression(paste(lambda['BAMM']))), col = metricColors, lwd=2, bty='n', xpd=NA)#
+#
+legend(40, 0.5, legend = c('CRBD','TB','ND','DR','BAMM'), col = metricColors, lwd=2, bty='n', xpd=NA)#
+#
+# net div rate, correlation#
+plot.new()#
+plot.window(xlim = range(regimeSize), ylim = c(0,1))#
+axis(1, at = c(-1, axTicks(1)))#
+axis(2, at = c(-1, axTicks(2)))#
+mtext('minimum regime size', side = 1, line = 2.5, cex=1)#
+mtext('Pearson correlation', side = 2, line = 2.5, cex=1)#
+for (i in 1:length(rateMetrics)) {#
+	lines(regimeSize, regimeSizeTable[, paste0(rateMetricsNetDiv[i], 'netdiv_cor')], col= metricColors[i], lwd=2)#
+}#
+abline(h=1, lty=3)#
+# speciation rate, slope#
+plot.new()#
+plot.window(xlim = range(regimeSize), ylim = c(0,1.5))#
+axis(1, at = c(-1, axTicks(1)))#
+axis(2, at = c(-1, axTicks(2)))#
+mtext('minimum regime size', side = 1, line = 2.5, cex=1)#
+mtext('OLS slope', side = 2, line = 2.5, cex=1)#
+for (i in 1:length(rateMetrics)) {#
+	lines(regimeSize, regimeSizeTable[, paste0(rateMetrics[i], 'lambda_slope')], col= metricColors[i], lwd=2)#
+}#
+abline(h=1, lty=3)#
+# net div rate, slope#
+plot.new()#
+plot.window(xlim = range(regimeSize), ylim = c(0,1.5))#
+axis(1, at = c(-1, axTicks(1)))#
+axis(2, at = c(-1, axTicks(2)))#
+mtext('minimum regime size', side = 1, line = 2.5, cex=1)#
+mtext('OLS slope', side = 2, line = 2.5, cex=1)#
+#
+for (i in 1:length(rateMetrics)) {#
+	lines(regimeSize, regimeSizeTable[, paste0(rateMetricsNetDiv[i], 'netdiv_slope')], col= metricColors[i], lwd=2)#
+}#
+abline(h=1, lty=3)#
+#
+dev.off()
+require(BAMMtools)#
+require(phytools)#
+#
+source('~/Dropbox/tipRatesProject/tipRateFunctions.R')#
+source('~/Dropbox/tipRatesProject/sourceFxns.R')
+alltrees <- read.tree('~/Dropbox/tipRatesProject/simulations/evolvingRates/evolvingRates_trees.tre')
+alltipRates <- readRDS('~/Dropbox/tipRatesProject/allRatesList.rds')
+length(alltrees)
+head(alltrees)
+trueTips <- alltipRates[[paste0('evolvingRates_', i)]]$tipLambda
+i<-1
+trueTips <- alltipRates[[paste0('evolvingRates_', i)]]$tipLambda
+names(trueTips) <- alltipRates[[paste0('evolvingRates_', i)]]$tipName
+trueTips
+bamm <- alltipRates[[paste0('evolvingRates_', i)]]$lambdaBAMM
+bamm
+trueTips <- alltipRates[[paste0('evolvingRates_', i)]]$tipLambda#
+	names(trueTips) <- alltipRates[[paste0('evolvingRates_', i)]]$tipName#
+	bamm <- alltipRates[[paste0('evolvingRates_', i)]]$lambdaBAMM#
+	names(bamm) <- names(trueTips)#
+#
+	dr <- alltipRates[[paste0('evolvingRates_', i)]]$lambdaDR#
+	names(dr) <- names(trueTips)
+tr <- alltress[[i]]
+tr <- alltrees[[i]]
+tr
+grain <- 1000#
+	maxBT <- max(branching.times(tr))#
+	timeSegs <- seq(0, maxBT, length.out = grain)
+resList <- vector('list', length(timeSegs))#
+	resList[[1]] <- dr#
+	pb <- txtProgressBar(2, length(timeSegs), style=3)#
+	for (i in 2:length(timeSegs)) {#
+		setTxtProgressBar(pb, i)#
+		# for time increment, find which branches are intersected#
+		edges <- edgesFromTime(tr, time = timeSegs[[i]])#
+		# get descendant tips from each branch#
+		edgeTips <- lapply(edges, function(x) tips(tr, tr$edge[x, 2]))#
+		# get mean DR for those tips#
+		meanDR <- lapply(edgeTips, function(x) median(dr[x]))#
+		# assign mean DR values to appropriate taxa#
+		newDR <- dr#
+		for (j in 1:length(edgeTips)) {#
+			newDR[edgeTips[[j]]] <- meanDR[[j]]#
+		}#
+		resList[[i]] <- newDR#
+	}#
+	close(pb)
+allres <- vector('list', 1200)
+tmpres <- vector('list', 5)
+names(tmpres) <- c('lambdaTRUE', 'lambdaBAMM', 'lambdaDR', 'DRlist', 'timeSegs')
+tmpres$lambdaTRUE <- trueTips
+tmpres$lambdaBAMM <- bamm
+tmpres$lambdaDR <- dr
+tmpres$DRlist <- resList
+tmpres <- vector('list', 5)#
+	names(tmpres) <- c('phylo', 'lambdaTRUE', 'lambdaBAMM', 'lambdaDR', 'DRlist', 'timeSegs')#
+	tmpres$phylo <- tr#
+	tmpres$lambdaTRUE <- trueTips#
+	tmpres$lambdaBAMM <- bamm#
+	tmpres$lambdaDR <- dr#
+	tmpres$DRlist <- resList#
+	tmpres$timeSegs <- timeSegs
+tmpres <- vector('list', 6)#
+	names(tmpres) <- c('phylo', 'lambdaTRUE', 'lambdaBAMM', 'lambdaDR', 'DRlist', 'timeSegs')#
+	tmpres$phylo <- tr#
+	tmpres$lambdaTRUE <- trueTips#
+	tmpres$lambdaBAMM <- bamm#
+	tmpres$lambdaDR <- dr#
+	tmpres$DRlist <- resList#
+	tmpres$timeSegs <- timeSegs
+allres <- vector('list', 1200)#
+for (i in 1:length(alltrees)) {#
+#
+	cat(i, '\n')#
+	tr <- alltrees[[i]]#
+	trueTips <- alltipRates[[paste0('evolvingRates_', i)]]$tipLambda#
+	names(trueTips) <- alltipRates[[paste0('evolvingRates_', i)]]$tipName#
+	bamm <- alltipRates[[paste0('evolvingRates_', i)]]$lambdaBAMM#
+	names(bamm) <- names(trueTips)#
+#
+	dr <- alltipRates[[paste0('evolvingRates_', i)]]$lambdaDR#
+	names(dr) <- names(trueTips)#
+#
+	grain <- 1000#
+	maxBT <- max(branching.times(tr))#
+	timeSegs <- seq(0, maxBT, length.out = grain)#
+	resList <- vector('list', length(timeSegs))#
+	resList[[1]] <- dr#
+	pb <- txtProgressBar(2, length(timeSegs), style=3)#
+	for (i in 2:length(timeSegs)) {#
+		setTxtProgressBar(pb, i)#
+		# for time increment, find which branches are intersected#
+		edges <- edgesFromTime(tr, time = timeSegs[[i]])#
+		# get descendant tips from each branch#
+		edgeTips <- lapply(edges, function(x) tips(tr, tr$edge[x, 2]))#
+		# get median DR for those tips#
+		meanDR <- lapply(edgeTips, function(x) median(dr[x]))#
+		# assign median DR values to appropriate taxa#
+		newDR <- dr#
+		for (j in 1:length(edgeTips)) {#
+			newDR[edgeTips[[j]]] <- meanDR[[j]]#
+		}#
+		resList[[i]] <- newDR#
+	}#
+	close(pb)#
+	# look at correlation between DR rates and true rates#
+	corVec <- sapply(resList, function(x) cor(trueTips, x, method='spearman'))#
+	aicVec <- sapply(resList, function(x) AIC(lm(log(trueTips) ~ log(x))))#
+	tmpres <- vector('list', 6)#
+	names(tmpres) <- c('phylo', 'lambdaTRUE', 'lambdaBAMM', 'lambdaDR', 'DRlist', 'timeSegs')#
+	tmpres$phylo <- tr#
+	tmpres$lambdaTRUE <- trueTips#
+	tmpres$lambdaBAMM <- bamm#
+	tmpres$lambdaDR <- dr#
+	tmpres$DRlist <- resList#
+	tmpres$timeSegs <- timeSegs#
+#
+	allres[[i]] <- tmpres#
+}
+saveRDS(allres, '~/Dropbox/tipRatesProject/allres_experiment.rds')
+length(allres)
+i<-1
+cor(allres[[i]]$lambdraTRUE, allres[[i]]$lambdaBAMM
+cor(allres[[i]]$lambdraTRUE, allres[[i]]$lambdaBAMM, method='spearman')
+cor(allres[[i]]$lambdaTRUE, allres[[i]]$lambdaBAMM, method='spearman')
+allres[[i]]$lambdaTRUE
+names(allres[[i]])
+allres[[i]]
+i
+allres
+allres[[1]]
+class(allres)
+length(allres)
+class(allres[[1]])
+class(allres[[2]])
+class(allres[[3]])
+allres[[1]]
+allres[[100]]
+allres[[1000]]
+collapseAtTime <- function(tr, time, dr) {#
+#
+	# for time increment, find which branches are intersected#
+	edges <- edgesFromTime(tr, time = time)#
+	# get descendant tips from each branch#
+	edgeTips <- lapply(edges, function(x) tips(tr, tr$edge[x, 2]))#
+	# get median DR for those tips#
+	medianDR <- lapply(edgeTips, function(x) median(dr[x]))#
+	# assign median DR values to appropriate taxa#
+	newDR <- dr#
+	for (k in 1:length(edgeTips)) {#
+		newDR[edgeTips[[k]]] <- medianDR[[k]]#
+	}#
+	return(newDR)	#
+}
+tr
+collapseAtTime(tr, 24, dr)
+collapseAtTime(tr, 0, dr)
+identical(dr, collapseAtTime(tr, 0, dr))
+require(pbapply)
+i<-1
+cat(i, '\n')#
+	tr <- alltrees[[i]]#
+	trueTips <- alltipRates[[paste0('evolvingRates_', i)]]$tipLambda#
+	names(trueTips) <- alltipRates[[paste0('evolvingRates_', i)]]$tipName#
+	bamm <- alltipRates[[paste0('evolvingRates_', i)]]$lambdaBAMM#
+	names(bamm) <- names(trueTips)#
+#
+	dr <- alltipRates[[paste0('evolvingRates_', i)]]$lambdaDR#
+	names(dr) <- names(trueTips)#
+#
+	grain <- 1000#
+	maxBT <- max(branching.times(tr))#
+	timeSegs <- seq(0, maxBT, length.out = grain)
+resList <- pblapply(timeSegs, function(x) collapseAtTime(tr, x, dr), cl=3)
+resList <- pblapply(timeSegs, function(x) collapseAtTime(tr, x, dr))
+resList <- pblapply(timeSegs, function(x) collapseAtTime(tr, x, dr), cl=4)
+head(resList)
+allres <- vector('list', 1200)#
+for (i in 1:length(alltrees)) {#
+#
+	cat(i, '\n')#
+	tr <- alltrees[[i]]#
+	trueTips <- alltipRates[[paste0('evolvingRates_', i)]]$tipLambda#
+	names(trueTips) <- alltipRates[[paste0('evolvingRates_', i)]]$tipName#
+	bamm <- alltipRates[[paste0('evolvingRates_', i)]]$lambdaBAMM#
+	names(bamm) <- names(trueTips)#
+#
+	dr <- alltipRates[[paste0('evolvingRates_', i)]]$lambdaDR#
+	names(dr) <- names(trueTips)#
+#
+	grain <- 1000#
+	maxBT <- max(branching.times(tr))#
+	timeSegs <- seq(0, maxBT, length.out = grain)#
+	resList <- pblapply(timeSegs, function(x) collapseAtTime(tr, x, dr))#
+#
+	# # look at correlation between DR rates and true rates#
+	# corVec <- sapply(resList, function(x) cor(trueTips, x, method='spearman'))#
+	# aicVec <- sapply(resList, function(x) AIC(lm(log(trueTips) ~ log(x))))#
+	tmpres <- vector('list', 6)#
+	names(tmpres) <- c('phylo', 'lambdaTRUE', 'lambdaBAMM', 'lambdaDR', 'DRlist', 'timeSegs')#
+	tmpres$phylo <- tr#
+	tmpres$lambdaTRUE <- trueTips#
+	tmpres$lambdaBAMM <- bamm#
+	tmpres$lambdaDR <- dr#
+	tmpres$DRlist <- resList#
+	tmpres$timeSegs <- timeSegs#
+#
+	allres[[i]] <- tmpres#
+}
+i
+i<-1
+allres[[i]]$lambdaTRUE
+allres[[i]]$lambdaBAMM
+cor(allres[[i]]$lambdaTRUE, allres[[i]]$lambdaBAMM, method='spearman')
+colnames(xx) <- c('corBAMM','corDRreg','corDRcollapse')
+xx <- matrix(nrow=1200, ncol=3)#
+colnames(xx) <- c('corBAMM','corDRreg','corDRcollapse')
+cor(allres[[i]]$lambdaTRUE, allres[[i]]$dr, method='spearman')
+allres[[i]]
+names(allres)
+names(allres[[1]])
+cor(allres[[i]]$lambdaTRUE, allres[[i]]$lambdaDR, method='spearman')
+corVec <- sapply(allres[[i]]$resList, function(x) cor(allres[[i]]$lambdaTRUE, x, method='spearman'))
+corVec
+head(allres[[i]]$resList)
+corVec <- sapply(allres[[i]]$DRlist, function(x) cor(allres[[i]]$lambdaTRUE, x, method='spearman'))
+corVec
+cor(allres[[i]]$lambdaTRUE, allres[[i]]$DRlist[[which.max(corVec)]], method='spearman')
+allres[[i]]$timeSegs[which.max(corVec)]
+which.max(corVec)
+timeSegs[513]
+allres <- vector('list', 1200)#
+for (i in 1:length(alltrees)) {#
+#
+	cat(i, '\n')#
+	tr <- alltrees[[i]]#
+	trueTips <- alltipRates[[paste0('evolvingRates_', i)]]$tipLambda#
+	names(trueTips) <- alltipRates[[paste0('evolvingRates_', i)]]$tipName#
+	bamm <- alltipRates[[paste0('evolvingRates_', i)]]$lambdaBAMM#
+	names(bamm) <- names(trueTips)#
+#
+	dr <- alltipRates[[paste0('evolvingRates_', i)]]$lambdaDR#
+	names(dr) <- names(trueTips)#
+#
+	grain <- 100#
+	maxBT <- max(branching.times(tr))#
+	timeSegs <- seq(0, maxBT, length.out = grain)#
+	resList <- pblapply(timeSegs, function(x) collapseAtTime(tr, x, dr))#
+#
+	# # look at correlation between DR rates and true rates#
+	# corVec <- sapply(resList, function(x) cor(trueTips, x, method='spearman'))#
+	# aicVec <- sapply(resList, function(x) AIC(lm(log(trueTips) ~ log(x))))#
+	tmpres <- vector('list', 6)#
+	names(tmpres) <- c('phylo', 'lambdaTRUE', 'lambdaBAMM', 'lambdaDR', 'DRlist', 'timeSegs')#
+	tmpres$phylo <- tr#
+	tmpres$lambdaTRUE <- trueTips#
+	tmpres$lambdaBAMM <- bamm#
+	tmpres$lambdaDR <- dr#
+	tmpres$DRlist <- resList#
+	tmpres$timeSegs <- timeSegs#
+#
+	allres[[i]] <- tmpres#
+}
+require(BAMMtools)#
+require(phytools)#
+require(pbapply)#
+#
+source('~/Dropbox/tipRatesProject/tipRateFunctions.R')#
+source('~/Dropbox/tipRatesProject/sourceFxns.R')
+## Do this for all evolving rate trees#
+alltrees <- read.tree('~/Dropbox/tipRatesProject/simulations/evolvingRates/evolvingRates_trees.tre')#
+alltipRates <- readRDS('~/Dropbox/tipRatesProject/allRatesList.rds')#
+#
+collapseAtTime <- function(tr, time, dr) {#
+#
+	# for time increment, find which branches are intersected#
+	edges <- edgesFromTime(tr, time = time)#
+	# get descendant tips from each branch#
+	edgeTips <- lapply(edges, function(x) tips(tr, tr$edge[x, 2]))#
+	# get median DR for those tips#
+	medianDR <- lapply(edgeTips, function(x) median(dr[x]))#
+	# assign median DR values to appropriate taxa#
+	newDR <- dr#
+	for (k in 1:length(edgeTips)) {#
+		newDR[edgeTips[[k]]] <- medianDR[[k]]#
+	}#
+	return(newDR)	#
+}
+allres <- vector('list', 1200)#
+for (i in 1:length(alltrees)) {#
+#
+	cat(i, '\n')#
+	tr <- alltrees[[i]]#
+	trueTips <- alltipRates[[paste0('evolvingRates_', i)]]$tipLambda#
+	names(trueTips) <- alltipRates[[paste0('evolvingRates_', i)]]$tipName#
+	bamm <- alltipRates[[paste0('evolvingRates_', i)]]$lambdaBAMM#
+	names(bamm) <- names(trueTips)#
+#
+	dr <- alltipRates[[paste0('evolvingRates_', i)]]$lambdaDR#
+	names(dr) <- names(trueTips)#
+#
+	grain <- 100#
+	maxBT <- max(branching.times(tr))#
+	timeSegs <- seq(0, maxBT, length.out = grain)#
+	resList <- pblapply(timeSegs, function(x) collapseAtTime(tr, x, dr))#
+#
+	# # look at correlation between DR rates and true rates#
+	# corVec <- sapply(resList, function(x) cor(trueTips, x, method='spearman'))#
+	# aicVec <- sapply(resList, function(x) AIC(lm(log(trueTips) ~ log(x))))#
+	tmpres <- vector('list', 6)#
+	names(tmpres) <- c('phylo', 'lambdaTRUE', 'lambdaBAMM', 'lambdaDR', 'DRlist', 'timeSegs')#
+	tmpres$phylo <- tr#
+	tmpres$lambdaTRUE <- trueTips#
+	tmpres$lambdaBAMM <- bamm#
+	tmpres$lambdaDR <- dr#
+	tmpres$DRlist <- resList#
+	tmpres$timeSegs <- timeSegs#
+#
+	allres[[i]] <- tmpres#
+}
+saveRDS(allres, '~/Dropbox/tipRatesProject/allres_experiment.rds')
+allres[[1]]
+xx <- matrix(nrow=1200, ncol=4)#
+colnames(xx) <- c('corBAMM','corDRreg','corDRcollapse', 'bestTime')
+for (i in 1:length(allres)) {#
+	xx[i, 1] <- cor(allres[[i]]$lambdaTRUE, allres[[i]]$lambdaBAMM, method='spearman')#
+	xx[i, 2] <- cor(allres[[i]]$lambdaTRUE, allres[[i]]$lambdaDR, method='spearman')#
+	corVec <- sapply(allres[[i]]$DRlist, function(x) cor(allres[[i]]$lambdaTRUE, x, method='spearman'))#
+	xx[i, 3] <- cor(allres[[i]]$lambdaTRUE, allres[[i]]$DRlist[[which.max(corVec)]], method='spearman')#
+	xx[i, 4] <- allres[[i]]$timeSegs[which.max(corVec)]#
+}
+head(xx)
+tail(xx)
+meanxx[,1]
+colMeans(xx)
+plot(density(xx[,1]))
+lines(density[xx[,2]])
+lines(density(xx[,2]))
+plot(density(xx[,1]), ylim=c(0,5))
+lines(density(xx[,2]))
+plot(density(xx[,1]), ylim=c(0,2))
+lines(density(xx[,2]))
+lines(density(xx[,3]))
+plot(density(xx[,1]), ylim=c(0,3))
+lines(density(xx[,2]))
+lines(density(xx[,3]))
+plot(density(xx[,1]), ylim=c(0,2.5))#
+lines(density(xx[,2]))#
+lines(density(xx[,3]))
+xx[, 'relTime'] <- xx[,4] / sapply(allres, function(x) max(branching.times(x$phylo)))
+sapply(allres, function(x) max(branching.times(x$phylo))
+)
+sapply(allres, function(x) max(branching.times(x$phylo))
+)
+xx[,4] / sapply(allres, function(x) max(branching.times(x$phylo)))
+xx <- matrix(nrow=1200, ncol=5)#
+colnames(xx) <- c('corBAMM','corDRreg','corDRcollapse', 'bestTime', 'relTime')#
+#
+for (i in 1:length(allres)) {#
+	xx[i, 1] <- cor(allres[[i]]$lambdaTRUE, allres[[i]]$lambdaBAMM, method='spearman')#
+	xx[i, 2] <- cor(allres[[i]]$lambdaTRUE, allres[[i]]$lambdaDR, method='spearman')#
+	corVec <- sapply(allres[[i]]$DRlist, function(x) cor(allres[[i]]$lambdaTRUE, x, method='spearman'))#
+	xx[i, 3] <- cor(allres[[i]]$lambdaTRUE, allres[[i]]$DRlist[[which.max(corVec)]], method='spearman')#
+	xx[i, 4] <- allres[[i]]$timeSegs[which.max(corVec)]#
+	xx[, 5] <- allres[[i]]$timeSegs[which.max(corVec)] / max(branching.times(allres[[i]]$phylo))#
+}
+plot(density(xx[,5]))
+corVec <- sapply(allres[[250]]$DRlist, function(x) cor(allres[[i]]$lambdaTRUE, x, method='spearman'))
+corVec <- sapply(allres[[250]]$DRlist, function(x) cor(allres[[250]]$lambdaTRUE, x, method='spearman'))
+plot(allres[[250]]$timeSegs, corVec, type='l')
+abline(v=allres[[250]]$timeSegs[which.max(corVec)], lty=3)
+plot(density(xx[,1]), ylim=c(0,2.5)) # bamm
+lines(density(xx[,2])) # regular DR
+lines(density(xx[,3])) # collapsed DR
+plot(allres[[250]]$timeSegs, corVec, type='l')#
+abline(v=allres[[250]]$timeSegs[which.max(corVec)], lty=3)
+plot(density(xx[,1]), ylim=c(0,2.5)) # bamm
+hist(xx[,1]) # bamm
+plot(density(xx[,1]), ylim=c(0,2.5)) # bamm
+lines(density(xx[,2])) # regular DR
+lines(density(xx[,3])) # collapsed DR
+plot(density(xx[,5]))
+hist(xx[,5])
+hist(xx[,5], breaks=50)
+head(xx[,5])
+plot(density(xx[,1]), ylim=c(0,2.5)) # bamm#
+lines(density(xx[,2])) # regular DR#
+lines(density(xx[,3])) # collapsed DR
+setnames <- c('highTurnoverBD', 'LambdaEqualsMu', 'evolvingRates', 'MeyerWiens2017', 'netDivConstantVariance', 'lambdaConstantVariance')
+summaryTable <- as.data.frame(matrix(nrow = 0, ncol = 5))#
+colnames(summaryTable) <- c('treeName', 'loglik_effectiveSize', 'nShifts_effectiveSize', 'loglik_geweke', 'nShifts_geweke')
+i<-1
+folders <- list.files(path, pattern = setnames[i])
+require(coda)#
+source('~/Dropbox/tipRatesProject/sourceFxns.R')#
+#
+path <- '~/Dropbox/tipRatesProject/trees/'#
+#
+# set names that were run with BAMM#
+setnames <- c('highTurnoverBD', 'LambdaEqualsMu', 'evolvingRates', 'MeyerWiens2017', 'netDivConstantVariance', 'lambdaConstantVariance')#
+#
+summaryTable <- as.data.frame(matrix(nrow = 0, ncol = 5))#
+colnames(summaryTable) <- c('treeName', 'loglik_effectiveSize', 'nShifts_effectiveSize', 'loglik_geweke', 'nShifts_geweke')
+folders <- list.files(path, pattern = setnames[i])#
+	folders <- folders[order(as.numeric(gsub(paste0(setnames[i], '_'), '', folders)))]#
+	setTable <- as.data.frame(matrix(nrow = length(folders), ncol = 5))#
+	colnames(setTable) <- colnames(summaryTable)#
+	setTable$treeName <- folders
+j<-1
+setwd(paste0(path, folders[j]))
+checkBAMMconvergence()
+checkBAMMconvergence
+i<-5
+folders <- list.files(path, pattern = setnames[i])
+folders <- folders[order(as.numeric(gsub(paste0(setnames[i], '_'), '', folders)))]
+head(folders)
+setTable <- as.data.frame(matrix(nrow = length(folders), ncol = 5))
+colnames(setTable) <- colnames(summaryTable)
+setTable$treeName <- folders
+for (j in 1:length(folders)) {#
+		setwd(paste0(path, folders[j]))#
+		setTable[j, 2:5] <- checkBAMMconvergence()#
+	}
+head(setTable)
+tail(setTable)
+anyNA(setTable[,2])
+table(setTable[,2] < 200)
+table(setTable[,3] < 200)
+table(setTable[,4] < -2 | setTable[,4] > 2)
+which(setTable[,2] < 200)
+setTable[,12]
+setTable[12,]
+j<-12
+setwd(paste0(path, folders[j]))
+checkBAMMconvergence()
+checkBAMMconvergence(burnin=0.3)
+checkBAMMconvergence(burnin=0.25)
+checkBAMMconvergence(burnin=0.2)
+checkBAMMconvergence(burnin=0.1)
+checkBAMMconvergence(burnin=0.3)
+setTable <- as.data.frame(matrix(nrow = length(folders), ncol = 5))#
+	colnames(setTable) <- colnames(summaryTable)#
+	setTable$treeName <- folders#
+	for (j in 1:length(folders)) {#
+		setwd(paste0(path, folders[j]))#
+		setTable[j, 2:5] <- checkBAMMconvergence(burnin=0.3)#
+	}
+table(setTable[,2] < 200)
+table(summaryTable[,3] < 200)
+table(setTable[,3] < 200)
+table(setTable[,4] < -2 | setTable[,4] > 2)
+summaryTable <- as.data.frame(matrix(nrow = 0, ncol = 5))#
+colnames(summaryTable) <- c('treeName', 'loglik_effectiveSize', 'nShifts_effectiveSize', 'loglik_geweke', 'nShifts_geweke')#
+#
+for (i in 1:length(setnames)) {#
+	folders <- list.files(path, pattern = setnames[i])#
+	folders <- folders[order(as.numeric(gsub(paste0(setnames[i], '_'), '', folders)))]#
+	setTable <- as.data.frame(matrix(nrow = length(folders), ncol = 5))#
+	colnames(setTable) <- colnames(summaryTable)#
+	setTable$treeName <- folders#
+	for (j in 1:length(folders)) {#
+		setwd(paste0(path, folders[j]))#
+		setTable[j, 2:5] <- checkBAMMconvergence(burnin=0.3)#
+	}#
+	summaryTable <- rbind.data.frame(summaryTable, setTable)#
+}#
+#
+table(summaryTable[,2] < 200)#
+table(summaryTable[,3] < 200)#
+table(summaryTable[,4] < -2 | summaryTable[,4] > 2)#
+#
+head(summaryTable)#
+#
+write.csv(summaryTable, '~/Dropbox/tipRatesProject/bammConvergenceStats.csv', row.names=FALSE)
+require(coda)#
+source('~/Dropbox/tipRatesProject/sourceFxns.R')#
+#
+path <- '~/Dropbox/tipRatesProject/trees/'#
+#
+# set names that were run with BAMM#
+setnames <- c('highTurnoverBD', 'LambdaEqualsMu', 'evolvingRates', 'MeyerWiens2017', 'netDivConstantVariance', 'lambdaConstantVariance')#
+#
+summaryTable <- as.data.frame(matrix(nrow = 0, ncol = 5))#
+colnames(summaryTable) <- c('treeName', 'loglik_effectiveSize', 'nShifts_effectiveSize', 'loglik_geweke', 'nShifts_geweke')#
+#
+for (i in 1:length(setnames)) {#
+	cat(i, '\n')#
+	folders <- list.files(path, pattern = setnames[i])#
+	folders <- folders[order(as.numeric(gsub(paste0(setnames[i], '_'), '', folders)))]#
+	setTable <- as.data.frame(matrix(nrow = length(folders), ncol = 5))#
+	colnames(setTable) <- colnames(summaryTable)#
+	setTable$treeName <- folders#
+	for (j in 1:length(folders)) {#
+		setwd(paste0(path, folders[j]))#
+		setTable[j, 2:5] <- checkBAMMconvergence(burnin=0.3)#
+	}#
+	summaryTable <- rbind.data.frame(summaryTable, setTable)#
+}#
+#
+table(summaryTable[,2] < 200)#
+table(summaryTable[,3] < 200)#
+table(summaryTable[,4] < -2 | summaryTable[,4] > 2)#
+#
+head(summaryTable)#
+#
+write.csv(summaryTable, '~/Dropbox/tipRatesProject/bammConvergenceStats.csv', row.names=FALSE)
+table(summaryTable[,2] < 200) / nrow(summaryTable)
+table(summaryTable[,3] < 200) / nrow(summaryTable)
+table(summaryTable[,4] < -2 | summaryTable[,4] > 2) / nrow(summaryTable)

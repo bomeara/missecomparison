@@ -1,0 +1,930 @@
+tmp
+plot(tmp)
+names(tmp)
+plot(sort(tmp$lambda))
+rates <- tmp$lambda#
+names(rates) <- tmp$edge[,2]   # name them after corresponding node#
+tmp <- drop.extinct(tmp) #
+rates <- rates[as.character(tmp$tip.label)]
+tmp
+plot(tmp)
+rates
+fitCRBD <- function(phy, nopt=5, lmin=0.001, lmax=5.0, MAXBAD = 200){#
+	if (length(phy$tip.label) < 3){#
+		pars <- c(0.0001,0)#
+		names(pars) <- c("lambda", "mu")#
+		return(pars)#
+	}#
+	fx <- make.bd(phy)#
+	for (i in 1:nopt){#
+		lam <- runif(1, 0, 0.5)	#
+	 	mu <- lam * runif(1, 0, 1)#
+		badcount <- 0#
+		resx <- try(optim(c(lam, mu) ,fx, method='L-BFGS-B', control=list(maxit=1000, fnscale=-1), lower=lmin, upper=lmax), silent=T)#
+		while (class(resx) == 'try-error'){#
+			lam <- runif(1, 0, 0.5)	#
+	 		mu <- lam * runif(1, 0, 1)#
+			resx <- try(optim(c(lam, mu) , fx, method='L-BFGS-B', control=list(maxit=1000, fnscale=-1), lower=lmin, upper=lmax), silent=T);#
+			badcount <- badcount + 1;#
+			if (badcount > MAXBAD){#
+				stop("Too many fails in fitDiversitree\n")#
+			}#
+		}#
+		if (i == 1){#
+			best <- resx#
+		}else{#
+			if (best$value < resx$value){#
+				best <- resx#
+			}#
+		}#
+	}#
+	fres <- list(pars=best$par, loglik=best$value)#
+	fres$AIC <- -2*fres$loglik + 2*length(argnames(fx))#
+	fres$counts <- best$counts#
+	#fres$like_function <- fx#
+	fres$convergence <- best$convergence#
+	fres$message <- best$message#
+	pars <- fres$pars#
+	names(pars) <- c("lambda", "mu")#
+	return(pars)#
+}
+fitCRBD(tmp)
+library(diversitree)
+fitCRBD(tmp)
+require(ape)
+?ape
+?balance
+require(ape)
+length(treeList)
+treeList <- read.tree('~/Dropbox/tipRatesProject/simulations/evolvingRates/evolvingRates_trees.tre')#
+#
+destinationpath <- '~/Dropbox/tipRatesProject/trees/'
+setname <- 'evolvingRates'
+length(treeList)
+i<-1
+path <- paste0(destinationpath, paste0(setname, '_', i))
+path
+paste0(path, '/', paste0(setname, '_', i, '.tre')
+)
+require(BAMMtools)
+priors <- setBAMMpriors(treeList[[i]], outfile = NULL)
+priors
+priors <- round(priors, 4)
+options(scipen=999)
+paste0(path, '/', setname, '_', i, '.tre')
+1200/4
+workingDir <- '~/Desktop/bammruns/'
+shfile1 <- '~/Dropbox/tipRatesProject/executeFiles/execute_evolvingRates1.sh'#
+shfile2 <- '~/Dropbox/tipRatesProject/executeFiles/execute_evolvingRates2.sh'#
+shfile3 <- '~/Dropbox/tipRatesProject/executeFiles/execute_evolvingRates3.sh'#
+shfile4 <- '~/Dropbox/tipRatesProject/executeFiles/execute_evolvingRates4.sh'
+file.remove(shfile1)#
+file.remove(shfile2)#
+file.remove(shfile3)#
+file.remove(shfile4)#
+#
+write('', file = shfile1)#
+write('', file = shfile2)#
+write('', file = shfile3)#
+write('', file = shfile4)
+i<-1
+paste0('cd ', workingDir, setname, '_', i, ';')
+# create execution .sh files#
+workingDir <- '~/Desktop/bammruns/'#
+#
+shfile1 <- '~/Dropbox/tipRatesProject/executeFiles/execute_evolvingRates1.sh'#
+shfile2 <- '~/Dropbox/tipRatesProject/executeFiles/execute_evolvingRates2.sh'#
+shfile3 <- '~/Dropbox/tipRatesProject/executeFiles/execute_evolvingRates3.sh'#
+shfile4 <- '~/Dropbox/tipRatesProject/executeFiles/execute_evolvingRates4.sh'#
+#
+file.remove(shfile1)#
+file.remove(shfile2)#
+file.remove(shfile3)#
+file.remove(shfile4)#
+#
+write('', file = shfile1)#
+write('', file = shfile2)#
+write('', file = shfile3)#
+write('', file = shfile4)#
+#
+for (i in 1:300) {#
+	write(paste0('cd ', workingDir, setname, '_', i, ';'), file = shfile1, append = TRUE)#
+	write('bamm -c divcontrol.txt;\n', file = shfile1, append = TRUE)#
+}#
+#
+for (i in 301:600) {#
+	write(paste0('cd ', workingDir, setname, '_', i, ';'), file = shfile2, append = TRUE)#
+	write('bamm -c divcontrol.txt;\n', file = shfile2, append = TRUE)#
+}#
+#
+for (i in 601:900) {#
+	write(paste0('cd ', workingDir, setname, '_', i, ';'), file = shfile3, append = TRUE)#
+	write('bamm -c divcontrol.txt;\n', file = shfile3, append = TRUE)#
+}#
+#
+for (i in 901:1200) {#
+	write(paste0('cd ', workingDir, setname, '_', i, ';'), file = shfile4, append = TRUE)#
+	write('bamm -c divcontrol.txt;\n', file = shfile4, append = TRUE)#
+}#
+#
+# make executable#
+system("cd ~/Dropbox/tipRatesProject/executeFiles; chmod 777 execute_evolvingRates1.sh")#
+system("cd ~/Dropbox/tipRatesProject/executeFiles; chmod 777 execute_evolvingRates2.sh")#
+system("cd ~/Dropbox/tipRatesProject/executeFiles; chmod 777 execute_evolvingRates3.sh")#
+system("cd ~/Dropbox/tipRatesProject/executeFiles; chmod 777 execute_evolvingRates4.sh")
+require(ape)
+treeList <- read.tree('~/Dropbox/tipRatesProject/simulations/evolvingRates/evolvingRates_trees.tre')
+phy <- treeList[[1]]
+phy
+plot(phy)
+treeList <- read.tree('~/Dropbox/tipRatesProject/simulations/evolvingRates/evolvingRates_alltips.tre')
+treeList <- read.tree('~/Dropbox/tipRatesProject/simulations/evolvingRates/evolvingRates_trees_alltips.tre')
+treeList[[1]]
+names(treeList[[i]])
+names(treeList[[1]])
+require(TreeSim)#
+require(BAMMtools)#
+require(R.utils)#
+#
+destinationDir <- '~/Dropbox/tipRatesProject/trees/'
+destinationDir
+# for each tree, prepare control file for BAMM#
+options(scipen=999)#
+#
+setname <- 'highTurnoverBD'
+i<-1
+# for each tree, prepare control file for BAMM#
+options(scipen=999)#
+#
+setname <- 'highTurnoverBD'
+source
+setname <- 'highTurnoverBD'
+paste0('echo "tree ", i, "done >> highTurnoverBD_log.txt\n')
+paste0("echo 'tree ", i, "done' >> highTurnoverBD_log.txt\n')
+paste0("echo 'tree ", i, "done' >> highTurnoverBD_log.txt\n")
+i<-1
+paste0("echo 'tree ", i, "done' >> highTurnoverBD_log.txt\n")
+paste0('echo "tree ', i, 'done" >> highTurnoverBD_log.txt\n')
+paste0("echo 'tree ", i, "done' >> highTurnoverBD_log.txt\n")
+setname <- 'highTurnoverBD'#
+#
+workingDir <- '~/Desktop/bammruns/'#
+#
+shfile1 <- '~/Dropbox/tipRatesProject/executeFiles/execute_turnoverBD_1-25.sh'#
+shfile2 <- '~/Dropbox/tipRatesProject/executeFiles/execute_turnoverBD_26-50.sh'#
+shfile3 <- '~/Dropbox/tipRatesProject/executeFiles/execute_turnoverBD_51-75.sh'#
+shfile4 <- '~/Dropbox/tipRatesProject/executeFiles/execute_turnoverBD_76-100.sh'#
+#
+file.remove(shfile1)#
+file.remove(shfile2)#
+file.remove(shfile3)#
+file.remove(shfile4)#
+#
+write('', file = shfile1)#
+write('', file = shfile2)#
+write('', file = shfile3)#
+write('', file = shfile4)#
+#
+for (i in 1:25) {#
+	write(paste0('cd ', workingDir, setname, '_', i, ';'), file = shfile1, append = TRUE)#
+	write('bamm -c divcontrol.txt;\n', file = shfile1, append = TRUE)#
+	write(paste0("echo 'tree ", i, "done' >> highTurnoverBD_log.txt;\n"), file = shfile1, append = TRUE)#
+}#
+#
+for (i in 26:50) {#
+	write(paste0('cd ', workingDir, setname, '_', i, ';'), file = shfile2, append = TRUE)#
+	write('bamm -c divcontrol.txt;', file = shfile2, append = TRUE)#
+	write(paste0("echo 'tree ", i, "done' >> highTurnoverBD_log.txt;\n"), file = shfile1, append = TRUE)#
+}#
+#
+for (i in 51:75) {#
+	write(paste0('cd ', workingDir, setname, '_', i, ';'), file = shfile3, append = TRUE)#
+	write('bamm -c divcontrol.txt;', file = shfile3, append = TRUE)#
+	write(paste0("echo 'tree ", i, "done' >> highTurnoverBD_log.txt;\n"), file = shfile1, append = TRUE)#
+}#
+#
+for (i in 76:100) {#
+	write(paste0('cd ', workingDir, setname, '_', i, ';'), file = shfile4, append = TRUE)#
+	write('bamm -c divcontrol.txt;', file = shfile4, append = TRUE)#
+	write(paste0("echo 'tree ", i, "done' >> highTurnoverBD_log.txt;\n"), file = shfile1, append = TRUE)#
+}
+shfile1 <- '~/Dropbox/tipRatesProject/executeFiles/execute_turnoverBD_1-25.sh'#
+shfile2 <- '~/Dropbox/tipRatesProject/executeFiles/execute_turnoverBD_26-50.sh'#
+shfile3 <- '~/Dropbox/tipRatesProject/executeFiles/execute_turnoverBD_51-75.sh'#
+shfile4 <- '~/Dropbox/tipRatesProject/executeFiles/execute_turnoverBD_76-100.sh'#
+#
+file.remove(shfile1)#
+file.remove(shfile2)#
+file.remove(shfile3)#
+file.remove(shfile4)#
+#
+write('', file = shfile1)#
+write('', file = shfile2)#
+write('', file = shfile3)#
+write('', file = shfile4)#
+#
+for (i in 1:25) {#
+	write(paste0('cd ', workingDir, setname, '_', i, ';'), file = shfile1, append = TRUE)#
+	write('bamm -c divcontrol.txt;\n', file = shfile1, append = TRUE)#
+	write(paste0("echo 'tree ", i, " done' >> highTurnoverBD_log.txt;\n"), file = shfile1, append = TRUE)#
+}#
+#
+for (i in 26:50) {#
+	write(paste0('cd ', workingDir, setname, '_', i, ';'), file = shfile2, append = TRUE)#
+	write('bamm -c divcontrol.txt;', file = shfile2, append = TRUE)#
+	write(paste0("echo 'tree ", i, " done' >> highTurnoverBD_log.txt;\n"), file = shfile2, append = TRUE)#
+}#
+#
+for (i in 51:75) {#
+	write(paste0('cd ', workingDir, setname, '_', i, ';'), file = shfile3, append = TRUE)#
+	write('bamm -c divcontrol.txt;', file = shfile3, append = TRUE)#
+	write(paste0("echo 'tree ", i, " done' >> highTurnoverBD_log.txt;\n"), file = shfile3, append = TRUE)#
+}#
+#
+for (i in 76:100) {#
+	write(paste0('cd ', workingDir, setname, '_', i, ';'), file = shfile4, append = TRUE)#
+	write('bamm -c divcontrol.txt;', file = shfile4, append = TRUE)#
+	write(paste0("echo 'tree ", i, " done' >> highTurnoverBD_log.txt;\n"), file = shfile4, append = TRUE)#
+}
+shfile1 <- '~/Dropbox/tipRatesProject/executeFiles/execute_turnoverBD_1-25.sh'#
+shfile2 <- '~/Dropbox/tipRatesProject/executeFiles/execute_turnoverBD_26-50.sh'#
+shfile3 <- '~/Dropbox/tipRatesProject/executeFiles/execute_turnoverBD_51-75.sh'#
+shfile4 <- '~/Dropbox/tipRatesProject/executeFiles/execute_turnoverBD_76-100.sh'#
+#
+file.remove(shfile1)#
+file.remove(shfile2)#
+file.remove(shfile3)#
+file.remove(shfile4)#
+#
+write('', file = shfile1)#
+write('', file = shfile2)#
+write('', file = shfile3)#
+write('', file = shfile4)#
+#
+for (i in 1:25) {#
+	write(paste0('cd ', workingDir, setname, '_', i, ';'), file = shfile1, append = TRUE)#
+	write('bamm -c divcontrol.txt;', file = shfile1, append = TRUE)#
+	write(paste0("echo 'tree ", i, " done' >> highTurnoverBD_log.txt;\n"), file = shfile1, append = TRUE)#
+}#
+#
+for (i in 26:50) {#
+	write(paste0('cd ', workingDir, setname, '_', i, ';'), file = shfile2, append = TRUE)#
+	write('bamm -c divcontrol.txt;', file = shfile2, append = TRUE)#
+	write(paste0("echo 'tree ", i, " done' >> highTurnoverBD_log.txt;\n"), file = shfile2, append = TRUE)#
+}#
+#
+for (i in 51:75) {#
+	write(paste0('cd ', workingDir, setname, '_', i, ';'), file = shfile3, append = TRUE)#
+	write('bamm -c divcontrol.txt;', file = shfile3, append = TRUE)#
+	write(paste0("echo 'tree ", i, " done' >> highTurnoverBD_log.txt;\n"), file = shfile3, append = TRUE)#
+}#
+#
+for (i in 76:100) {#
+	write(paste0('cd ', workingDir, setname, '_', i, ';'), file = shfile4, append = TRUE)#
+	write('bamm -c divcontrol.txt;', file = shfile4, append = TRUE)#
+	write(paste0("echo 'tree ", i, " done' >> highTurnoverBD_log.txt;\n"), file = shfile4, append = TRUE)#
+}
+# make executable#
+system("cd ~/Dropbox/tipRatesProject/executeFiles; chmod 777 execute_turnoverBD_1-25.sh")#
+system("cd ~/Dropbox/tipRatesProject/executeFiles; chmod 777 execute_turnoverBD_26-50.sh")#
+system("cd ~/Dropbox/tipRatesProject/executeFiles; chmod 777 execute_turnoverBD_51-75.sh")#
+system("cd ~/Dropbox/tipRatesProject/executeFiles; chmod 777 execute_turnoverBD_76-100.sh")
+#######
+#
+setname <- 'LambdaEqualsMu'#
+#
+shfile1 <- '~/Dropbox/tipRatesProject/executeFiles/execute_lambdaEqualsMu_1-25.sh'#
+shfile2 <- '~/Dropbox/tipRatesProject/executeFiles/execute_lambdaEqualsMu_26-50.sh'#
+shfile3 <- '~/Dropbox/tipRatesProject/executeFiles/execute_lambdaEqualsMu_51-75.sh'#
+shfile4 <- '~/Dropbox/tipRatesProject/executeFiles/execute_lambdaEqualsMu_76-100.sh'#
+#
+file.remove(shfile1)#
+file.remove(shfile2)#
+file.remove(shfile3)#
+file.remove(shfile4)#
+#
+write('', file = shfile1)#
+write('', file = shfile2)#
+write('', file = shfile3)#
+write('', file = shfile4)#
+#
+for (i in 1:25) {#
+	write(paste0('cd ', workingDir, setname, '_', i, ';'), file = shfile1, append = TRUE)#
+	write('bamm -c divcontrol.txt;', file = shfile1, append = TRUE)#
+	write(paste0("echo 'tree ", i, " done' >> LambdaEqualsMu_log.txt;\n"), file = shfile1, append = TRUE)#
+}#
+#
+for (i in 26:50) {#
+	write(paste0('cd ', workingDir, setname, '_', i, ';'), file = shfile2, append = TRUE)#
+	write('bamm -c divcontrol.txt;', file = shfile2, append = TRUE)#
+	write(paste0("echo 'tree ", i, " done' >> LambdaEqualsMu_log.txt;\n"), file = shfile2, append = TRUE)#
+}#
+#
+for (i in 51:75) {#
+	write(paste0('cd ', workingDir, setname, '_', i, ';'), file = shfile3, append = TRUE)#
+	write('bamm -c divcontrol.txt;', file = shfile3, append = TRUE)#
+	write(paste0("echo 'tree ", i, " done' >> LambdaEqualsMu_log.txt;\n"), file = shfile3, append = TRUE)#
+}#
+#
+for (i in 76:100) {#
+	write(paste0('cd ', workingDir, setname, '_', i, ';'), file = shfile4, append = TRUE)#
+	write('bamm -c divcontrol.txt;', file = shfile4, append = TRUE)#
+	write(paste0("echo 'tree ", i, " done' >> LambdaEqualsMu_log.txt;\n"), file = shfile4, append = TRUE)#
+}#
+#
+# make executable#
+system("cd ~/Dropbox/tipRatesProject/executeFiles; chmod 777 execute_lambdaEqualsMu_1-25.sh")#
+system("cd ~/Dropbox/tipRatesProject/executeFiles; chmod 777 execute_lambdaEqualsMu_26-50.sh")#
+system("cd ~/Dropbox/tipRatesProject/executeFiles; chmod 777 execute_lambdaEqualsMu_51-75.sh")#
+system("cd ~/Dropbox/tipRatesProject/executeFiles; chmod 777 execute_lambdaEqualsMu_76-100.sh")
+setname <- 'evolvingRates'
+# create execution .sh files#
+workingDir <- '~/Desktop/bammruns/'#
+#
+shfile1 <- '~/Dropbox/tipRatesProject/executeFiles/execute_evolvingRates1.sh'#
+shfile2 <- '~/Dropbox/tipRatesProject/executeFiles/execute_evolvingRates2.sh'#
+shfile3 <- '~/Dropbox/tipRatesProject/executeFiles/execute_evolvingRates3.sh'#
+shfile4 <- '~/Dropbox/tipRatesProject/executeFiles/execute_evolvingRates4.sh'#
+#
+file.remove(shfile1)#
+file.remove(shfile2)#
+file.remove(shfile3)#
+file.remove(shfile4)#
+#
+write('', file = shfile1)#
+write('', file = shfile2)#
+write('', file = shfile3)#
+write('', file = shfile4)#
+#
+for (i in 1:300) {#
+	write(paste0('cd ', workingDir, setname, '_', i, ';'), file = shfile1, append = TRUE)#
+	write('bamm -c divcontrol.txt;', file = shfile1, append = TRUE)#
+	write(paste0("echo 'tree ", i, " done' >> evolvingRates_log.txt;\n"), file = shfile1, append = TRUE)#
+}#
+#
+for (i in 301:600) {#
+	write(paste0('cd ', workingDir, setname, '_', i, ';'), file = shfile2, append = TRUE)#
+	write('bamm -c divcontrol.txt;', file = shfile2, append = TRUE)#
+	write(paste0("echo 'tree ", i, " done' >> evolvingRates_log.txt;\n"), file = shfile2, append = TRUE)#
+}#
+#
+for (i in 601:900) {#
+	write(paste0('cd ', workingDir, setname, '_', i, ';'), file = shfile3, append = TRUE)#
+	write('bamm -c divcontrol.txt;', file = shfile3, append = TRUE)#
+	write(paste0("echo 'tree ", i, " done' >> evolvingRates_log.txt;\n"), file = shfile3, append = TRUE)#
+}#
+#
+for (i in 901:1200) {#
+	write(paste0('cd ', workingDir, setname, '_', i, ';'), file = shfile4, append = TRUE)#
+	write('bamm -c divcontrol.txt;', file = shfile4, append = TRUE)#
+	write(paste0("echo 'tree ", i, " done' >> evolvingRates_log.txt;\n"), file = shfile4, append = TRUE)#
+}#
+#
+# make executable#
+system("cd ~/Dropbox/tipRatesProject/executeFiles; chmod 777 execute_evolvingRates1.sh")#
+system("cd ~/Dropbox/tipRatesProject/executeFiles; chmod 777 execute_evolvingRates2.sh")#
+system("cd ~/Dropbox/tipRatesProject/executeFiles; chmod 777 execute_evolvingRates3.sh")#
+system("cd ~/Dropbox/tipRatesProject/executeFiles; chmod 777 execute_evolvingRates4.sh")
+basepath <- '~/Dropbox/tipRatesProject/trees/'#
+#
+# tree summary file#
+treeDat <- read.csv('~/Dropbox/tipRatesProject/treeSummary.csv', stringsAsFactors=FALSE)#
+#
+require(ape)#
+require(geiger)#
+#
+source('~/Dropbox/tipRatesProject/sourceFxns.R')#
+#
+trueTipDat <- vector('list', length = length(unique(treeDat$treeName)))#
+names(trueTipDat) <- unique(treeDat$treeName)
+head(treeDat)
+table(treeDat$description)
+basepath <- '~/Documents/UmichDocs/MEA_response_BAMM/'#
+destinationpath <- '~/Dropbox/tipRatesProject/'#
+#
+require(ape)#
+#
+writeFiles <- FALSE#
+#
+masterFile <- '~/Dropbox/tipRatesProject/treeSummary.csv'#
+#
+masterTable <- read.csv(masterFile, stringsAsFactors=FALSE)#
+#
+summaryTable <- as.data.frame(matrix(nrow = 0, ncol = ncol(masterTable)))#
+colnames(summaryTable) <- colnames(masterTable)
+# table of simulation values#
+truedat <- read.csv(paste0(destinationpath, 'simulationRefs/RaboskyMitchellChang2017/Figure_9-12/regimesSummary.csv'), stringsAsFactors=FALSE)#
+truedat <- truedat[which(truedat$prior == 1.0),]#
+#
+# label#
+setname <- 'MooreEtAl2016'#
+#
+tmpTable <- as.data.frame(matrix(nrow = nrow(truedat), ncol = ncol(summaryTable)))#
+colnames(tmpTable) <- colnames(summaryTable)#
+tmpTable$source <- 'Moore et al. 2016'#
+tmpTable$description <- 'multi-regime, rate-constant birth-death'#
+tmpTable$processType <- 'birth-death'#
+tmpTable$treeName <- paste0(setname, '_', truedat$tree)#
+tmpTable$regimeMRCA <- truedat$node#
+tmpTable$regimeTime <- truedat$time#
+tmpTable$regime_nTips <- truedat$N_taxa#
+tmpTable$lambda0 <- truedat$true_lambda#
+tmpTable$mu0 <- truedat$true_mu#
+for (i in 1:100) {#
+	tr <- read.tree(paste0(basepath, 'mea_trees_recompute/simulation_study/variable_rates/tree_', i, '/sim_', i, '.tre'))#
+	tmpTable[which(tmpTable$treeName == paste0(setname, '_', i)), 'nTips_all'] <- length(tr$tip.label)#
+	# locate and move tree as well as BAMM files#
+	if (writeFiles) {#
+		path <- paste0(destinationpath, 'trees/', setname, '_', i)#
+		if (!file.exists(path)) {#
+			dir.create(path)#
+		}#
+		write.tree(tr, paste0(path, '/', setname, '_', i, '.tre'))#
+		# move BAMM results files#
+		files <- list.files(paste0(basepath, 'mea_trees_recompute/simulation_study/variable_rates/tree_', i, '/gamma_1/run_1'), pattern = 'autoprior_sans_bad_extinction', full.names=TRUE)#
+		sapply(files, function(x) file.copy(from = x, to = paste0(path, '/', basename(x))))	#
+	}#
+}#
+#
+summaryTable <- rbind.data.frame(summaryTable, tmpTable, stringsAsFactors=FALSE)
+#------------------------------------------------#
+## Rabosky, Mitchell and Chang 2017 400x rate-variable trees#
+## - BAMM analyses performed in Rabosky et al. 2017#
+#
+# We will assign these analyses 1:200 lambda_0.01 and 201:400 lambda_0.001#
+#
+## lambda_0.01#
+#
+# table of simulation values#
+truedat <- read.csv(paste0(basepath, 'lambda_0-01/input/v2.5_regimesSummary.csv'), stringsAsFactors=FALSE)#
+truedat <- truedat[which(truedat$prior == 'p1'),]#
+#
+# label#
+setname <- 'RaboskyEtAl2017'#
+#
+tmpTable <- as.data.frame(matrix(nrow = nrow(truedat), ncol = ncol(summaryTable)))#
+colnames(tmpTable) <- colnames(summaryTable)#
+tmpTable$source <- 'Rabosky et al. 2017'#
+tmpTable$description <- 'multi-regime, rate-constant birth-death'#
+tmpTable$processType <- 'birth-death'#
+tmpTable$treeName <- paste0(setname, '_', truedat$analysis_number)#
+tmpTable$regimeMRCA <- truedat$node#
+tmpTable$regimeTime <- truedat$time#
+tmpTable$regime_nTips <- truedat$N_taxa#
+tmpTable$lambda0 <- truedat$true_lambda#
+tmpTable$mu0 <- truedat$true_mu#
+for (i in 1:200) {#
+	tr <- read.tree(paste0(basepath, 'lambda_0-01/output/sim-', i, '/exPhy.tre'))#
+	tmpTable[which(tmpTable$treeName == paste0(setname, '_', i)), 'nTips_all'] <- length(tr$tip.label)#
+	# locate and move tree as well as BAMM files#
+	if (writeFiles) {#
+		path <- paste0(destinationpath, 'trees/', setname, '_', i)#
+		if (!file.exists(path)) {#
+			dir.create(path)#
+		}#
+		write.tree(tr, paste0(path, '/', setname, '_', i, '.tre'))#
+		# move BAMM results files#
+		files <- list.files(paste0(basepath, 'lambda_0-01/output/sim-', i), pattern = 'v2.5_k01', full.names=TRUE)#
+		sapply(files, function(x) file.copy(from = x, to = paste0(path, '/', basename(x))))	#
+	}#
+}#
+#
+summaryTable <- rbind.data.frame(summaryTable, tmpTable, stringsAsFactors=FALSE)
+## lambda_0.001#
+#
+# table of simulation values#
+truedat <- read.csv(paste0(basepath, 'lambda_0-001/input/v2.5_regimesSummary.csv'), stringsAsFactors=FALSE)#
+truedat <- truedat[which(truedat$prior == 'p1'),]#
+#
+# label#
+setname <- 'RaboskyEtAl2017'#
+#
+tmpTable <- as.data.frame(matrix(nrow = nrow(truedat), ncol = ncol(summaryTable)))#
+colnames(tmpTable) <- colnames(summaryTable)#
+tmpTable$source <- 'Rabosky et al. 2017'#
+tmpTable$description <- 'multi-regime, rate-constant birth-death'#
+tmpTable$processType <- 'birth-death'#
+tmpTable$treeName <- paste0(setname, '_', truedat$analysis_number + 200)#
+tmpTable$regimeMRCA <- truedat$node#
+tmpTable$regimeTime <- truedat$time#
+tmpTable$regime_nTips <- truedat$N_taxa#
+tmpTable$lambda0 <- truedat$true_lambda#
+tmpTable$mu0 <- truedat$true_mu#
+for (i in 1:200) {#
+	tr <- read.tree(paste0(basepath, 'lambda_0-001/output/sim-', i, '/exPhy.tre'))#
+	tmpTable[which(tmpTable$treeName == paste0(setname, '_', i + 200)), 'nTips_all'] <- length(tr$tip.label)#
+	# locate and move tree as well as BAMM files#
+	if (writeFiles) {#
+		path <- paste0(destinationpath, 'trees/', setname, '_', i + 200)#
+		if (!file.exists(path)) {#
+			dir.create(path)#
+		}#
+		write.tree(tr, paste0(path, '/', setname, '_', i + 200, '.tre'))#
+		# move BAMM results files#
+		files <- list.files(paste0(basepath, 'lambda_0-001/output/sim-', i), pattern = 'v2.5_k01', full.names=TRUE)#
+		sapply(files, function(x) file.copy(from = x, to = paste0(path, '/', basename(x))))	#
+	}#
+}#
+#
+summaryTable <- rbind.data.frame(summaryTable, tmpTable, stringsAsFactors=FALSE)#
+#
+masterTable <- rbind.data.frame(masterTable, summaryTable, stringsAsFactors=FALSE)#
+#
+write.csv(masterTable, masterFile, row.names = FALSE)
+head(masterTable)
+# also track:#
+#- tree name#
+#- tip name#
+#- regime tip belongs to#
+#
+basepath <- '~/Dropbox/tipRatesProject/trees/'#
+#
+# tree summary file#
+treeDat <- read.csv('~/Dropbox/tipRatesProject/treeSummary.csv', stringsAsFactors=FALSE)#
+#
+require(ape)#
+require(geiger)#
+#
+source('~/Dropbox/tipRatesProject/sourceFxns.R')#
+#
+trueTipDat <- vector('list', length = length(unique(treeDat$treeName)))#
+names(trueTipDat) <- unique(treeDat$treeName)
+head(treeDat)
+tail(treeDat)
+i<-8825
+modelDat <- treeDat[which(treeDat$treeName == names(trueTipDat)[i]),]
+modelDat
+trueTipDat <- vector('list', length = length(unique(treeDat$treeName)))#
+names(trueTipDat) <- unique(treeDat$treeName)
+names(trueTipDat)[i]
+length(unique(treeDat$treeName))
+names(trueTipDat)[3200]
+i<-3200
+modelDat <- treeDat[which(treeDat$treeName == names(trueTipDat)[i]),]
+modelDat
+evolvingRates_trees_alltips <- readRDS(paste0(basepath, 'simulations/evolvingRates/evolvingRates_trees_alltips.rds'))
+evolvingRates_trees_alltips <- readRDS('~/Dropbox/tipRatesProject/simulations/evolvingRates/evolvingRates_trees_alltips.rds')
+head(evolvingRates_trees_alltips)
+evolvingRates_trees_alltips[[1]]
+names(evolvingRates_trees_alltips[[1]])
+modelDat$process
+tr <- modelDat$treeName
+tr
+as.numeric(gsub('evolvingRates_', '', modelDat$treeName))
+tr <- evolvingRates_trees_alltips[[as.numeric(gsub('evolvingRates_', '', modelDat$treeName))]]
+tr
+tipTable <- as.data.frame(matrix(nrow = length(tr$tip.label), ncol = 9))
+colnames(tipTable) <- c('treeName','tipName','regimeID','tipLambda','tipMu','regimePathLambda','regimePathMu','root2tipLambda','root2tipMu')
+tipTable[, 'treeName'] <- names(trueTipDat)[i]#
+		tipTable[, 'tipName'] <- tr$tip.label
+source('~/Dropbox/tipRatesProject/sourceFxns.R')
+getTerminalLambda(tr)
+head(tr$tip.label)
+trPruned <- drop.extinct(tr)
+trPruned
+tr
+nrow(tipTable)
+tipTable <- as.data.frame(matrix(nrow = length(trPruned$tip.label), ncol = 9))#
+		colnames(tipTable) <- c('treeName','tipName','regimeID','tipLambda','tipMu','regimePathLambda','regimePathMu','root2tipLambda','root2tipMu')
+tipTable[, 'treeName'] <- names(trueTipDat)[i]
+tipTable[, 'tipName'] <- trPruned$tip.label
+head(trPruned$tip.label)
+head(getTerminalLambda(tr))
+tipTable$tipLambda <- getTerminalLambda(tr)
+modelDat
+modelDat$mu / modelDat$lambda
+modelDat
+modelDat$mu0 / modelDat$lambda0
+require(raster)#
+require(maptools)#
+require(gdata)#
+require(rgeos)#
+require(geosphere)#
+#
+data(wrld_simpl)#
+#
+# define file paths#
+oldIUCNFile <- '~/Dropbox/Manu_spp/Pascal/AMPHIBIANS/AMPHIBIANS.shp'#
+newIUCNdir <- '~/Dropbox/Manu_spp/SpeciesRangeData/shapefiles'#
+newIUCNdir2 <- '~/Dropbox/Manu_spp/SpeciesRangeData/shapefiles_batch_2'#
+masterFile <- '~/Dropbox/Manu_spp/Manu_spp.xlsx'#
+coordsFile <- '~/Dropbox/Manu_spp/Pascal/Localities.xlsx'#
+chelsaDir <- '~/Dropbox/Manu_spp/Pascal/chelsa'#
+#
+trim <- function(x) gsub("^\\s+|\\s+$", "", x)#
+#
+# read in manu master file to get list of relevant species#
+master <- read.xls(masterFile, stringsAsFactors=FALSE)#
+master$species_IUCN <- trim(master$species_IUCN)#
+master$species_manu <- trim(master$species_manu)#
+master$species_manu <- gsub(' ', '_', master$species_manu)#
+master$species_IUCN <- gsub(' ', '_', master$species_IUCN)#
+#
+# temporary adjustment#
+master[which(master$species_manu == 'Rhinella_marina'), 'species_IUCN'] <- 'Rhinella_marina'#
+master[which(master$species_manu == 'Rhaebo_guttatus'), 'species_IUCN'] <- 'Rhaebo_guttatus'#
+#
+# read in coordinates file#
+coords <- read.xls(coordsFile, stringsAsFactors=FALSE)#
+#
+#function to create polygon from 2 points#
+linkTwoPoints <- function(x, buff) {#
+	#buffer points#
+	pts <- spTransform(x, CRS("+init=epsg:3395"))#
+	circles <- gBuffer(pts, width=buff)#
+	res <- gConvexHull(circles)#
+	res <- spTransform(res, CRS(proj4string(x)))#
+	return(res)	#
+}#
+#
+buffDist <- 10000#
+#
+#  Lambert azimuthal equal area projection#
+EAproj <- "+proj=laea +lat_0=0 +lon_0=-95 +x_0=0 +y_0=0 +ellps=WGS84 +units=m +no_defs"#
+data(wrld_simpl)#
+wrldEA <- spTransform(wrld_simpl, CRS(EAproj))#
+#
+# ----------------------------------------#
+## PREPARE ENVIRONMENTAL DATA#
+#
+bioclim <- list.files(chelsaDir, pattern='.tif$', full.names=TRUE)#
+bioclim <- stack(bioclim)
+names(bioclim)
+bioclim <- bioclim[[paste0('bio_', 1:19)]]
+names(bioclim)
+# For each simulated phylogeny, calculate the following metrics based on true simulation parameters:#
+#- true lambda at tip#
+#- true mu at tip#
+#- true mean lambda of path from regime start to tip#
+#- true mean mu of path from regime start to tip#
+#- true mean lambda of path from root to tip#
+#- true mean mu of path from root to tip#
+# also track:#
+#- tree name#
+#- tip name#
+#- regime tip belongs to#
+#
+basepath <- '~/Dropbox/tipRatesProject/trees/'#
+#
+# tree summary file#
+treeDat <- read.csv('~/Dropbox/tipRatesProject/treeSummary.csv', stringsAsFactors=FALSE)#
+#
+require(ape)#
+require(geiger)#
+#
+source('~/Dropbox/tipRatesProject/sourceFxns.R')#
+#
+evolvingRates_trees_alltips <- readRDS('~/Dropbox/tipRatesProject/simulations/evolvingRates/evolvingRates_trees_alltips.rds')#
+trueTipDat <- vector('list', length = length(unique(treeDat$treeName)))#
+names(trueTipDat) <- unique(treeDat$treeName)#
+# for pure birth and birth death, these are constant rate, therefore tip rates will be same as initial regime rates.#
+#
+# exponential#
+# BAMMtools:::exponentialRate(time to integrate over, lambda0, lambda1)#
+#
+# diversity-dependent model:#
+# lambda0 * (1 - nTips / K)#
+#
+# evolving rates model#
+# trees have been saved that include rates for all branches#
+# If more than one event in tree, then calculate tip rates from oldest regime to most recent, such that more recent regimes replace tip rates appropriately. #
+# (nested regimes will replace root regime tip calculations)
+length(trueTipDat)
+i<-3000
+e
+modelDat <- treeDat[which(treeDat$treeName == names(trueTipDat)[i]),]
+modelDat
+tr <- evolvingRates_trees_alltips[[as.numeric(gsub('evolvingRates_', '', modelDat$treeName))]]
+tr
+trPruned <- drop.extinct(tr)
+trPruned
+tipTable <- as.data.frame(matrix(nrow = length(trPruned$tip.label), ncol = 9))
+colnames(tipTable) <- c('treeName','tipName','regimeID','tipLambda','tipMu','regimePathLambda','regimePathMu','root2tipLambda','root2tipMu')
+tipTable[, 'treeName'] <- names(trueTipDat)[i]
+tipTable[, 'tipName'] <- trPruned$tip.label
+tipTable$tipLambda <- getTerminalLambda(tr)
+modelDat$mu0 / modelDat$lambda0
+eps <- tipTable$tipLambda modelDat$mu0 / modelDat$lambda0
+eps <- modelDat$mu0 / modelDat$lambda0
+eps
+tipTable$tipLambda * eps
+tipTable$tipMu <- tipTable$tipLambda * eps
+eps <- modelDat$mu0 / modelDat$lambda0
+names(tr)
+head(tr$lambda)
+tr$mu <- tr$lambda * eps
+getTerminalLambda <- function(phy) {#
+	rates <- phy$mu#
+	names(rates) <- phy$edge[,2]   # name them after corresponding node#
+	phy <- drop.extinct(phy) #
+	return(rates[as.character(phy$tip.label)])	#
+}
+source('~/Dropbox/tipRatesProject/sourceFxns.R')
+# tip rates#
+		tipTable$tipLambda <- getTerminalLambda(tr)#
+		tipTable$tipMu <- getTerminalMu(tr)
+head(tipTable)
+root2tipEdges(tr, sp = tr$tip.label[1])
+root2tipEdges(tr, sp = tr$tip.label[2])
+head(tipTable)
+root2tipEdges(tr, sp = tipTable[j, 'tipName'])
+j<-2
+root2tipEdges(tr, sp = tipTable[j, 'tipName'])
+root2tipEdges(tr, sp = tipTable[j, 'tipName']) -> qq
+plot(trPruned)
+plot(tr, cex=0.3)
+edgelabels(edge=qq, cex=0.3)
+tipTable[j, 'tipName']
+edgeIndices <- root2tipEdges(tr, sp = tipTable[j, 'tipName'])
+tr$lambda[edgeIndices]
+tr$edge.length(edgeIndices)
+names(tr)
+tr$edge.length[edgeIndices]
+NU.branching.times <- BAMMtools:::NU.branching.times()
+NU.branching.times <- BAMMtools:::NU.branching.times
+source('~/Dropbox/tipRatesProject/sourceFxns.R')
+max(NU.branching.times(tr))
+tr$edge.length[edgeIndices] / max(NU.branching.times(tr))
+sum(tr$edge.length[edgeIndices] / max(NU.branching.times(tr)))
+edgeWeights <- tr$edge.length[edgeIndices] / max(NU.branching.times(tr))
+?weighted.mean
+weighted.mean(tr$lambda[edgeIndices], w = edgeWeights)
+modelDat
+tipTable[j, 'root2tipMu'] <- weighted.mean(tr$mu[edgeIndices], w = edgeWeights)
+for (j in 1:nrow(tipTable)) {#
+			edgeIndices <- root2tipEdges(tr, sp = tipTable[j, 'tipName'])#
+			edgeWeights <- tr$edge.length[edgeIndices] / max(NU.branching.times(tr))#
+			tipTable[j, 'root2tipLambda'] <- weighted.mean(tr$lambda[edgeIndices], w = edgeWeights)#
+			tipTable[j, 'root2tipMu'] <- weighted.mean(tr$mu[edgeIndices], w = edgeWeights)#
+	}
+head(tipTable)
+range(tipTable$root2tipLambda)
+range(tipTable$root2tipMu)
+# regime path is same as root2tip as there is a single regime#
+		tipTable[j, 'regimePathLambda'] <- tipTable[j, 'root2tipLambda']#
+		tipTable[j, 'regimePathMu'] <- tipTable[j, 'root2tipMu']
+head(tipTable)
+# regime path is same as root2tip as there is a single regime#
+		tipTable[, 'regimePathLambda'] <- tipTable[, 'root2tipLambda']#
+		tipTable[, 'regimePathMu'] <- tipTable[, 'root2tipMu']
+head(tipTable)
+# also track:#
+#- tree name#
+#- tip name#
+#- regime tip belongs to#
+#
+basepath <- '~/Dropbox/tipRatesProject/trees/'#
+#
+# tree summary file#
+treeDat <- read.csv('~/Dropbox/tipRatesProject/treeSummary.csv', stringsAsFactors=FALSE)#
+#
+require(ape)#
+require(geiger)#
+#
+source('~/Dropbox/tipRatesProject/sourceFxns.R')
+masterFile <- '~/Dropbox/tipRatesProject/treeSummary.csv'#
+#
+masterTable <- read.csv(masterFile, stringsAsFactors=FALSE)#
+#
+summaryTable <- as.data.frame(matrix(nrow = 0, ncol = ncol(masterTable)))#
+colnames(summaryTable) <- colnames(masterTable)#
+#
+destinationpath <- '~/Dropbox/tipRatesProject/trees/'
+load('~/Dropbox/tipRatesProject/simulationRefs/MitchellRabosky2016/Rscripts/ddOut_all.RData')
+ddOut_all[[2]][[2]][[1]]
+convColNames <- c('nShifts_effSamp_0.1', 'loglik_effSamp_0.1', 'nShifts_geweke_0.1', 'nGen', 'nShifts_effSamp_0.2', 'nShifts_effSamp_0.3', 'nShifts_effSamp_0.4', 'nShifts_effSamp_0.5', 'nShifts_effSamp_0.6')
+names(ddOut_all[[2]][[2]][[1]]$conv)
+names(ddOut_all[[2]][[2]][[1]]$conv) <- convcolNames
+names(ddOut_all[[2]][[2]][[1]]$conv) <- convColNames
+ddOut_all[[2]][[2]][[1]]
+sapply(ddOut_all[[2]][[1]], function(x) x$conv[8])
+table(sapply(ddOut_all[[2]][[1]], function(x) x$conv[8]) > 200)
+table(sapply(ddOut_all[[2]][[1]], function(x) x$conv[2]) > 200)
+ddOut_all[[2]][[2]][[1]]
+i<-1
+j<-1
+ddOut_all[[2]][[i]][[j]]
+ddOut_all[[2]][[i]][[j]]$Values
+tmp <- ddOut_all[[2]][[i]][[j]]$Values
+colnames(tmp) <- c('trueTerminalBranchLambda', 'bammTipLambda', 'trueTerminalBranchMu', 'bammTipMu')
+head(tmp)
+destinationpath
+setwd(paste0(destinationpath, 'Rabosky2014_DD_k', i, '_', j))
+Rabosky2014convergence <- as.data.frame(matrix(1200, 9))
+colnames(Rabosky2014convergence) <- c('treeName', 'nShifts_effSamp_0.1', 'loglik_effSamp_0.1', 'nShifts_geweke_0.1', 'nGen', 'nShifts_effSamp_0.2', 'nShifts_effSamp_0.3', 'nShifts_effSamp_0.4', 'nShifts_effSamp_0.5', 'nShifts_effSamp_0.6')
+Rabosky2014convergence <- as.data.frame(matrix(1200, 10))
+colnames(Rabosky2014convergence) <- c('treeName', 'nShifts_effSamp_0.1', 'loglik_effSamp_0.1', 'nShifts_geweke_0.1', 'nGen', 'nShifts_effSamp_0.2', 'nShifts_effSamp_0.3', 'nShifts_effSamp_0.4', 'nShifts_effSamp_0.5', 'nShifts_effSamp_0.6')
+c('treeName', 'nShifts_effSamp_0.1', 'loglik_effSamp_0.1', 'nShifts_geweke_0.1', 'nGen', 'nShifts_effSamp_0.2', 'nShifts_effSamp_0.3', 'nShifts_effSamp_0.4', 'nShifts_effSamp_0.5', 'nShifts_effSamp_0.6')
+Rabosky2014convergence <- as.data.frame(matrix(1200, 11))
+colnames(Rabosky2014convergence) <- c('treeName', 'nShifts_effSamp_0.1', 'loglik_effSamp_0.1', 'nShifts_geweke_0.1', 'nGen', 'nShifts_effSamp_0.2', 'nShifts_effSamp_0.3', 'nShifts_effSamp_0.4', 'nShifts_effSamp_0.5', 'nShifts_effSamp_0.6')
+Rabosky2014convergence <- as.data.frame(matrix(nrow = 1200, ncol = 11))
+colnames(Rabosky2014convergence) <- c('treeName', 'nShifts_effSamp_0.1', 'loglik_effSamp_0.1', 'nShifts_geweke_0.1', 'nGen', 'nShifts_effSamp_0.2', 'nShifts_effSamp_0.3', 'nShifts_effSamp_0.4', 'nShifts_effSamp_0.5', 'nShifts_effSamp_0.6')
+head(Rabosky2014convergence)
+Rabosky2014convergence <- as.data.frame(matrix(nrow = 1200, ncol = 10))
+colnames(Rabosky2014convergence) <- c('treeName', 'nShifts_effSamp_0.1', 'loglik_effSamp_0.1', 'nShifts_geweke_0.1', 'nGen', 'nShifts_effSamp_0.2', 'nShifts_effSamp_0.3', 'nShifts_effSamp_0.4', 'nShifts_effSamp_0.5', 'nShifts_effSamp_0.6')
+head(Rabosky2014convergence)
+ddOut_all[[2]][[i]][[j]]$conv
+c(paste0('Rabosky2014_DD_k', i, '_', j), ddOut_all[[2]][[i]][[j]]$conv)
+tmp <- ddOut_all[[2]][[i]][[j]]$Values#
+		colnames(tmp) <- c('trueTerminalBranchLambda', 'bammTipLambda', 'trueTerminalBranchMu', 'bammTipMu')#
+		setwd(paste0(destinationpath, 'Rabosky2014_DD_k', i, '_', j))
+write.csv(tmp, 'tiprates.csv', row.names=FALSE)
+counter <- 1#
+for (i in 1:4) { #number of shifts#
+	for (j in 1:300) { # sim tree number#
+		tmp <- ddOut_all[[2]][[i]][[j]]$Values#
+		colnames(tmp) <- c('trueTerminalBranchLambda', 'bammTipLambda', 'trueTerminalBranchMu', 'bammTipMu')#
+		setwd(paste0(destinationpath, 'Rabosky2014_DD_k', i, '_', j))#
+		write.csv(tmp, 'tiprates.csv', row.names=FALSE)#
+		Rabosky2014convergence[counter,] <- c(paste0('Rabosky2014_DD_k', i, '_', j), ddOut_all[[2]][[i]][[j]]$conv)#
+		counter <- counter + 1#
+	}#
+}
+i
+j
+tmp <- ddOut_all[[2]][[i]][[j]]$Values
+tmp
+ddOut_all[[2]][[i]][[j]]
+length(ddOut_all[[2]][[i]][[j]])
+length(ddOut_all[[2]][[i]][[10]])
+length(ddOut_all[[2]][[i]][[8]])
+paste0('Rabosky2014_DD_k', i, '_', j)
+# keep some of the convgence statistics#
+Rabosky2014convergence <- as.data.frame(matrix(nrow = 1200, ncol = 10))#
+colnames(Rabosky2014convergence) <- c('treeName', 'nShifts_effSamp_0.1', 'loglik_effSamp_0.1', 'nShifts_geweke_0.1', 'nGen', 'nShifts_effSamp_0.2', 'nShifts_effSamp_0.3', 'nShifts_effSamp_0.4', 'nShifts_effSamp_0.5', 'nShifts_effSamp_0.6')#
+#
+missing <- c()#
+counter <- 1#
+for (i in 1:4) { #number of shifts#
+	for (j in 1:300) { # sim tree number#
+		if (length(ddOut_all[[2]][[i]][[j]]) == 6) {#
+			tmp <- ddOut_all[[2]][[i]][[j]]$Values#
+			colnames(tmp) <- c('trueTerminalBranchLambda', 'bammTipLambda', 'trueTerminalBranchMu', 'bammTipMu')#
+			setwd(paste0(destinationpath, 'Rabosky2014_DD_k', i, '_', j))#
+			write.csv(tmp, 'tiprates.csv', row.names=FALSE)#
+			Rabosky2014convergence[counter,] <- c(paste0('Rabosky2014_DD_k', i, '_', j), ddOut_all[[2]][[i]][[j]]$conv)#
+			counter <- counter + 1#
+		} else {#
+			missing <- c(missing, paste0('Rabosky2014_DD_k', i, '_', j))#
+		}	#
+	}#
+}
+missing
+head(Rabosky2014convergence)
+str(Rabosky2014convergence)
+for (i in 2:ncol(Rabosky2014convergence)) {#
+	Rabosky2014convergence[,i] <- as.numeric(Rabosky2014convergence[,2])#
+}
+head(Rabosky2014convergence)
+# keep some of the convgence statistics#
+Rabosky2014convergence <- as.data.frame(matrix(nrow = 1200, ncol = 10))#
+colnames(Rabosky2014convergence) <- c('treeName', 'nShifts_effSamp_0.1', 'loglik_effSamp_0.1', 'nShifts_geweke_0.1', 'nGen', 'nShifts_effSamp_0.2', 'nShifts_effSamp_0.3', 'nShifts_effSamp_0.4', 'nShifts_effSamp_0.5', 'nShifts_effSamp_0.6')#
+#
+missing <- c()#
+counter <- 1#
+for (i in 1:4) { #number of shifts#
+	for (j in 1:300) { # sim tree number#
+		if (length(ddOut_all[[2]][[i]][[j]]) == 6) {#
+			tmp <- ddOut_all[[2]][[i]][[j]]$Values#
+			colnames(tmp) <- c('trueTerminalBranchLambda', 'bammTipLambda', 'trueTerminalBranchMu', 'bammTipMu')#
+			setwd(paste0(destinationpath, 'Rabosky2014_DD_k', i, '_', j))#
+			write.csv(tmp, 'tiprates.csv', row.names=FALSE)#
+			Rabosky2014convergence[counter,] <- c(paste0('Rabosky2014_DD_k', i, '_', j), ddOut_all[[2]][[i]][[j]]$conv)#
+			counter <- counter + 1#
+		} else {#
+			missing <- c(missing, paste0('Rabosky2014_DD_k', i, '_', j))#
+		}	#
+	}#
+}#
+#
+for (i in 2:ncol(Rabosky2014convergence)) {#
+	Rabosky2014convergence[,i] <- as.numeric(Rabosky2014convergence[,i])#
+}
+head(Rabosky2014convergence)
+# keep some of the convgence statistics#
+Rabosky2014convergence <- as.data.frame(matrix(nrow = 1200, ncol = 10))#
+colnames(Rabosky2014convergence) <- c('treeName', 'nShifts_effSamp_0.1', 'loglik_effSamp_0.1', 'nShifts_geweke_0.1', 'nGen', 'nShifts_effSamp_0.2', 'nShifts_effSamp_0.3', 'nShifts_effSamp_0.4', 'nShifts_effSamp_0.5', 'nShifts_effSamp_0.6')#
+#
+missing <- c()#
+counter <- 1#
+for (i in 1:4) { #number of shifts#
+	for (j in 1:300) { # sim tree number#
+		if (length(ddOut_all[[2]][[i]][[j]]) == 6) {#
+			tmp <- ddOut_all[[2]][[i]][[j]]$Values#
+			colnames(tmp) <- c('trueTerminalBranchLambda', 'bammTipLambda', 'trueTerminalBranchMu', 'bammTipMu')#
+			setwd(paste0(destinationpath, 'Rabosky2014_DD_k', i, '_', j))#
+			write.csv(tmp, 'tiprates.csv', row.names=FALSE)#
+			Rabosky2014convergence[counter,] <- c(paste0('Rabosky2014_DD_k', i, '_', j), ddOut_all[[2]][[i]][[j]]$conv)#
+		} else {#
+			missing <- c(missing, paste0('Rabosky2014_DD_k', i, '_', j))#
+		}#
+		counter <- counter + 1	#
+	}#
+}#
+#
+for (i in 2:ncol(Rabosky2014convergence)) {#
+	Rabosky2014convergence[,i] <- as.numeric(Rabosky2014convergence[,i])#
+}
+head(Rabosky2014convergence)
+ddOut_all[[2]][[1]][[1]]$conv
+ddOut_all[[2]][[1]][[4]]$conv

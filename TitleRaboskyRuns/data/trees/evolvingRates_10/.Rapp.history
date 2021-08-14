@@ -1,0 +1,1003 @@
+dir()
+regimeSummary <- read.csv('~/Dropbox/tipRatesProject/regimeSummary.csv', stringsAsFactors=FALSE)
+file.choose()
+regimeSummary <- read.csv('regimeSummary.csv', stringsAsFactors=FALSE)
+head(regimeSummary)
+rr <- lm(tipNetDiv ~ tipLambda, data = regimeSummary)
+rr
+summary(rr)
+head(regimeSummary)
+cor.test(rr$resid, regimeSummary$lambdaDR)
+cor.test(rr$resid, regimeSummary$netDivBAMM)
+plot(regimeSummary$tipLambda ~ regimeSummary$tipNetDiv)
+cor.test(regimeSummary$tipNetDiv, regimeSummary$netDivBAMM)
+cor.test(regimeSummary$tipNetDiv, regimeSummary$lambdaDR
+)
+cor.test(regimeSummary$tipLambda, regimeSummary$lambdaDR)
+cor.test(regimeSummary$tipLambda, regimeSummary$lambdaBAMM)
+head(regimeSummary)
+xx <- regimeSummary[regimeSummary$nTips >= 10, ]
+dim(xx)
+cor.test(xx$tipLambda, xx$lambdaBAMM)
+cor.test(xx$tipLambda, xx$lambdaDR)
+cor.test(xx$tipNetDiv, xx$lambdaDR)
+cor.test(xx$tipNetDiv, xx$lambdaBAMM)
+cor.test(xx$tipNetDiv, xx$netDIvBAMM)
+cor.test(xx$tipNetDiv, xx$netDivBAMM)
+quit()
+dat <- read.csv('~/Dropbox/tipRatesProject/rateErrorMetrics.csv', stringsAsFactors=FALSE)#
+#
+# set infinite values to NA#
+for (i in 6:ncol(dat)) {#
+	if (length(which(!is.finite(dat[,i]))) > 0) {#
+		dat[which(!is.finite(dat[,i])), i] <- NA#
+	}#
+}
+require(vioplot)
+dat2 <- dat[which(dat$setname %in% c('MooreEtAl2016','RaboskyEtAl2017','fossilBAMM','MeyerWiens2017')),]#
+#
+datSplit <- split(dat2, dat2$nRegimes)#
+#
+# collapse shift number >= 10 into same category#
+datSplit2 <- datSplit#
+datSplit <- datSplit2[as.character(1:10)]#
+datSplit[['10']] <- do.call(rbind, datSplit2[which(names(datSplit2) == '10'):length(datSplit2)])
+par(mfrow=c(1,5))
+i<-1
+tipMetric <- rateMetrics[i]
+rateMetrics <- c('CRBDlambda', 'lambdaTB', 'lambdaND', 'lambdaDR', 'lambdaBAMM')
+errorMetricNames <- c(PE1='Prop. Error 1', PE2='Prop. Error 2', PE3='Prop. Error 3', PE4='Prop. 4', r2='OLS R2', slope='OLS slope', absoluteError='mean absolute error')
+tipMetric <- rateMetrics[i]
+errorCol <- Reduce(intersect, list(grep(rateType, colnames(dat)), grep(rateMetrics[i], colnames(dat)), grep(errorMetric, colnames(dat))))
+rateType='tipLambda'
+tipMetric <- rateMetrics[i]#
+	errorCol <- Reduce(intersect, list(grep(rateType, colnames(dat)), grep(rateMetrics[i], colnames(dat)), grep(errorMetric, colnames(dat))))
+errorMetric <- 'absoluteError'
+tipMetric <- rateMetrics[i]#
+	errorCol <- Reduce(intersect, list(grep(rateType, colnames(dat)), grep(rateMetrics[i], colnames(dat)), grep(errorMetric, colnames(dat))))
+errorCol
+plot.new()
+yrange <- c(-0.2, 0.2)
+plot.window(xlim = c(range(as.numeric(names(datSplit)))), ylim = yrange)
+axis(1, at = as.numeric(names(datSplit)), labels = names(datSplit))
+axis(2)
+?vioplot
+vioplot(datSplit[[1]], at = 1)
+vioplot(datSplit[[1]][, errorCol], at = 1)
+tipMetric <- rateMetrics[i]#
+	errorCol <- Reduce(intersect, list(grep(rateType, colnames(dat)), grep(rateMetrics[i], colnames(dat)), grep(errorMetric, colnames(dat))))#
+	plot.new()#
+	plot.window(xlim = c(range(as.numeric(names(datSplit)))), ylim = yrange)#
+	axis(1, at = as.numeric(names(datSplit)), labels = names(datSplit))#
+	axis(2)
+vioplot(datSplit[[1]][, errorCol], at = 1, add=TRUE)
+par(mfrow=c(1,5))
+tipMetric <- rateMetrics[i]#
+	errorCol <- Reduce(intersect, list(grep(rateType, colnames(dat)), grep(rateMetrics[i], colnames(dat)), grep(errorMetric, colnames(dat))))#
+	plot.new()#
+	plot.window(xlim = c(range(as.numeric(names(datSplit)))), ylim = yrange)#
+	axis(1, at = as.numeric(names(datSplit)), labels = names(datSplit))#
+	axis(2)#
+	vioplot(datSplit[[1]][, errorCol], at = 1, add=TRUE, drawRect=FALSE)
+par(mfrow=c(1,5))
+tipMetric <- rateMetrics[i]#
+	errorCol <- Reduce(intersect, list(grep(rateType, colnames(dat)), grep(rateMetrics[i], colnames(dat)), grep(errorMetric, colnames(dat))))#
+	plot.new()#
+	plot.window(xlim = c(range(as.numeric(names(datSplit)))), ylim = yrange)#
+	axis(1, at = as.numeric(names(datSplit)), labels = names(datSplit))#
+	axis(2)#
+	for (j in 1:length(datSplit)) {#
+		vioplot(datSplit[[i]][, errorCol], at = i, add=TRUE, drawRect=FALSE)#
+	}
+par(mfrow=c(1,5))
+tipMetric <- rateMetrics[i]#
+	errorCol <- Reduce(intersect, list(grep(rateType, colnames(dat)), grep(rateMetrics[i], colnames(dat)), grep(errorMetric, colnames(dat))))#
+	plot.new()#
+	plot.window(xlim = c(range(as.numeric(names(datSplit)))), ylim = yrange)#
+	axis(1, at = as.numeric(names(datSplit)), labels = names(datSplit))#
+	axis(2)#
+	for (j in 1:length(datSplit)) {#
+		vioplot(datSplit[[j]][, errorCol], at = j, add=TRUE, drawRect=FALSE)#
+	}
+tipMetric <- rateMetrics[i]#
+	errorCol <- Reduce(intersect, list(grep(rateType, colnames(dat)), grep(rateMetrics[i], colnames(dat)), grep(errorMetric, colnames(dat))))#
+	plot.new()#
+	plot.window(xlim = c(range(as.numeric(names(datSplit)))), ylim = yrange)#
+	axis(1, at = as.numeric(names(datSplit)), labels = names(datSplit))#
+	axis(2)
+vioplot(datSplit[[j]][, errorCol], at = j, add=TRUE, drawRect=FALSE)
+vioplot(datSplit[[j]][, errorCol], at = j, add=TRUE, drawRect=FALSE, rectCol = NA)
+par(mfrow=c(1,5))
+tipMetric <- rateMetrics[i]#
+	errorCol <- Reduce(intersect, list(grep(rateType, colnames(dat)), grep(rateMetrics[i], colnames(dat)), grep(errorMetric, colnames(dat))))#
+	plot.new()#
+	plot.window(xlim = c(range(as.numeric(names(datSplit)))), ylim = yrange)#
+	axis(1, at = as.numeric(names(datSplit)), labels = names(datSplit))#
+	axis(2)
+vioplot(datSplit[[j]][, errorCol], at = j, add=TRUE, drawRect=FALSE, rectCol = NA)
+vioplot
+par(mfrow=c(1,5))
+tipMetric <- rateMetrics[i]#
+	errorCol <- Reduce(intersect, list(grep(rateType, colnames(dat)), grep(rateMetrics[i], colnames(dat)), grep(errorMetric, colnames(dat))))#
+	plot.new()#
+	plot.window(xlim = c(range(as.numeric(names(datSplit)))), ylim = yrange)#
+	axis(1, at = as.numeric(names(datSplit)), labels = names(datSplit))#
+	axis(2)#
+	for (j in 1:length(datSplit)) {#
+		vioplot(datSplit[[j]][, errorCol], at = j, add=TRUE, drawRect=FALSE, rectCol = NA)#
+	}
+tipMetric <- rateMetrics[i]#
+	errorCol <- Reduce(intersect, list(grep(rateType, colnames(dat)), grep(rateMetrics[i], colnames(dat)), grep(errorMetric, colnames(dat))))#
+	plot.new()#
+	plot.window(xlim = c(range(as.numeric(names(datSplit)))), ylim = yrange)#
+	axis(1, at = as.numeric(names(datSplit)), labels = names(datSplit))#
+	axis(2)#
+	for (j in 1:length(datSplit)) {#
+		vioplot(datSplit[[j]][, errorCol], at = j, add=TRUE, drawRect=FALSE, rectCol = NA, wex=0.5)#
+	}
+tipMetric <- rateMetrics[i]#
+	errorCol <- Reduce(intersect, list(grep(rateType, colnames(dat)), grep(rateMetrics[i], colnames(dat)), grep(errorMetric, colnames(dat))))#
+	plot.new()#
+	plot.window(xlim = c(range(as.numeric(names(datSplit)))), ylim = yrange)#
+	axis(1, at = as.numeric(names(datSplit)), labels = names(datSplit))#
+	axis(2)#
+	for (j in 1:length(datSplit)) {#
+		vioplot(datSplit[[j]][, errorCol], at = j, add=TRUE, drawRect=FALSE, rectCol = NA, wex=0.75)#
+	}
+tipMetric <- rateMetrics[i]#
+	errorCol <- Reduce(intersect, list(grep(rateType, colnames(dat)), grep(rateMetrics[i], colnames(dat)), grep(errorMetric, colnames(dat))))#
+	plot.new()#
+	plot.window(xlim = c(range(as.numeric(names(datSplit)))), ylim = yrange)#
+	axis(1, at = as.numeric(names(datSplit)), labels = names(datSplit))#
+	axis(2)#
+	for (j in 1:length(datSplit)) {#
+		vioplot(datSplit[[j]][, errorCol], at = j, add=TRUE, drawRect=FALSE, rectCol = NA, wex=0.75, col='black')#
+	}
+par(mfrow=c(1,5))
+tipMetric <- rateMetrics[i]#
+	errorCol <- Reduce(intersect, list(grep(rateType, colnames(dat)), grep(rateMetrics[i], colnames(dat)), grep(errorMetric, colnames(dat))))#
+	plot.new()#
+	plot.window(xlim = c(range(as.numeric(names(datSplit)))), ylim = yrange)#
+	axis(1, at = as.numeric(names(datSplit)), labels = names(datSplit))#
+	axis(2)#
+	for (j in 1:length(datSplit)) {#
+		vioplot(datSplit[[j]][, errorCol], at = j, add=TRUE, drawRect=FALSE, rectCol = NA, wex=0.75, col='white')#
+	}
+tipMetric <- rateMetrics[i]#
+	errorCol <- Reduce(intersect, list(grep(rateType, colnames(dat)), grep(rateMetrics[i], colnames(dat)), grep(errorMetric, colnames(dat))))#
+	plot.new()#
+	plot.window(xlim = c(range(as.numeric(names(datSplit)))), ylim = yrange)#
+	axis(1, at = as.numeric(names(datSplit)), labels = names(datSplit))#
+	axis(2)#
+	for (j in 1:length(datSplit)) {#
+		vioplot(datSplit[[j]][, errorCol], at = j, add=TRUE, drawRect=FALSE, rectCol = NA, wex=0.75, col=gray(0.8))#
+	}
+par(mfrow=c(1,5))#
+#
+for (i in 1:5) {#
+	tipMetric <- rateMetrics[i]#
+	errorCol <- Reduce(intersect, list(grep(rateType, colnames(dat)), grep(rateMetrics[i], colnames(dat)), grep(errorMetric, colnames(dat))))#
+	plot.new()#
+	plot.window(xlim = c(range(as.numeric(names(datSplit)))), ylim = yrange)#
+	axis(1, at = as.numeric(names(datSplit)), labels = names(datSplit))#
+	axis(2)#
+	for (j in 1:length(datSplit)) {#
+		vioplot(datSplit[[j]][, errorCol], at = j, add=TRUE, drawRect=FALSE, rectCol = NA, wex=0.75, col=gray(0.8))#
+	}#
+#
+}
+par(mfrow=c(1,5))#
+#
+for (i in 1:5) {#
+	tipMetric <- rateMetrics[i]#
+	errorCol <- Reduce(intersect, list(grep(rateType, colnames(dat)), grep(rateMetrics[i], colnames(dat)), grep(errorMetric, colnames(dat))))#
+	plot.new()#
+	plot.window(xlim = c(range(as.numeric(names(datSplit)))), ylim = yrange)#
+	axis(1, at = as.numeric(names(datSplit)), labels = names(datSplit))#
+	axis(2)#
+	for (j in 1:length(datSplit)) {#
+		vioplot(datSplit[[j]][, errorCol], at = j, add=TRUE, drawRect=FALSE, rectCol = NA, wex=0.75, col=gray(0.8), range= 1)#
+	}#
+#
+}
+par(mfrow=c(1,5))#
+#
+for (i in 1:5) {#
+	tipMetric <- rateMetrics[i]#
+	errorCol <- Reduce(intersect, list(grep(rateType, colnames(dat)), grep(rateMetrics[i], colnames(dat)), grep(errorMetric, colnames(dat))))#
+	plot.new()#
+	plot.window(xlim = c(range(as.numeric(names(datSplit)))), ylim = yrange)#
+	axis(1, at = as.numeric(names(datSplit)), labels = names(datSplit))#
+	axis(2)#
+	for (j in 1:length(datSplit)) {#
+		vioplot(datSplit[[j]][, errorCol], at = j, add=TRUE, drawRect=FALSE, rectCol = NA, wex=0.75, col=gray(0.8), range= 0.5)#
+	}#
+#
+}
+?boxplot
+i<-1
+par(mfrow=c(1,5))
+tipMetric <- rateMetrics[i]#
+	errorCol <- Reduce(intersect, list(grep(rateType, colnames(dat)), grep(rateMetrics[i], colnames(dat)), grep(errorMetric, colnames(dat))))#
+	plot.new()#
+	plot.window(xlim = c(range(as.numeric(names(datSplit)))), ylim = yrange)#
+	axis(1, at = as.numeric(names(datSplit)), labels = names(datSplit))#
+	axis(2)
+boxplot(datSplit[[j]][, errorCol], at = j, add=TRUE, wex=0.75, col=gray(0.8))
+par(mfrow=c(1,5))#
+#
+for (i in 1:5) {#
+	tipMetric <- rateMetrics[i]#
+	errorCol <- Reduce(intersect, list(grep(rateType, colnames(dat)), grep(rateMetrics[i], colnames(dat)), grep(errorMetric, colnames(dat))))#
+	plot.new()#
+	plot.window(xlim = c(range(as.numeric(names(datSplit)))), ylim = yrange)#
+	axis(1, at = as.numeric(names(datSplit)), labels = names(datSplit))#
+	axis(2)#
+	for (j in 1:length(datSplit)) {#
+		boxplot(datSplit[[j]][, errorCol], at = j, add=TRUE, wex=0.75, col=gray(0.8), border='blue')#
+	}#
+#
+}
+?par
+par(mfrow=c(1,5))#
+#
+for (i in 1:5) {#
+	tipMetric <- rateMetrics[i]#
+	errorCol <- Reduce(intersect, list(grep(rateType, colnames(dat)), grep(rateMetrics[i], colnames(dat)), grep(errorMetric, colnames(dat))))#
+	plot.new()#
+	plot.window(xlim = c(range(as.numeric(names(datSplit)))), ylim = yrange)#
+	axis(1, at = as.numeric(names(datSplit)), labels = names(datSplit))#
+	axis(2)#
+	for (j in 1:length(datSplit)) {#
+		boxplot(datSplit[[j]][, errorCol], at = j, add=TRUE, wex=0.75, col=gray(0.8), bty='n')#
+	}#
+#
+}
+par(mfrow=c(1,5))#
+#
+for (i in 1:5) {#
+	tipMetric <- rateMetrics[i]#
+	errorCol <- Reduce(intersect, list(grep(rateType, colnames(dat)), grep(rateMetrics[i], colnames(dat)), grep(errorMetric, colnames(dat))))#
+	plot.new()#
+	plot.window(xlim = c(range(as.numeric(names(datSplit)))), ylim = yrange)#
+	axis(1, at = as.numeric(names(datSplit)), labels = names(datSplit))#
+	axis(2)#
+	for (j in 1:length(datSplit)) {#
+		boxplot(datSplit[[j]][, errorCol], at = j, add=TRUE, wex=0.75, col=gray(0.8), bty='n', outline=F)#
+	}#
+#
+}
+par(mfrow=c(1,5))#
+#
+for (i in 1:5) {#
+	tipMetric <- rateMetrics[i]#
+	errorCol <- Reduce(intersect, list(grep(rateType, colnames(dat)), grep(rateMetrics[i], colnames(dat)), grep(errorMetric, colnames(dat))))#
+	plot.new()#
+	plot.window(xlim = c(range(as.numeric(names(datSplit)))), ylim = yrange)#
+	axis(1, at = as.numeric(names(datSplit)), labels = names(datSplit))#
+	axis(2)#
+	for (j in 1:length(datSplit)) {#
+		boxplot(datSplit[[j]][, errorCol], at = j, add=TRUE, wex=0.75, col=gray(0.8), bty='n', outline=F)#
+	}#
+	abline(h=0, lty=3)#
+#
+}
+par(mfrow=c(1,5))#
+#
+for (i in 1:5) {#
+	tipMetric <- rateMetrics[i]#
+	errorCol <- Reduce(intersect, list(grep(rateType, colnames(dat)), grep(rateMetrics[i], colnames(dat)), grep(errorMetric, colnames(dat))))#
+	plot.new()#
+	plot.window(xlim = c(range(as.numeric(names(datSplit)))), ylim = yrange)#
+	axis(1, at = as.numeric(names(datSplit)), labels = names(datSplit))#
+	axis(2)#
+	for (j in 1:length(datSplit)) {#
+		boxplot(datSplit[[j]][, errorCol], at = j, add=TRUE, wex=0.75, col=gray(0.8), bty='u', outline=F)#
+	}#
+	abline(h=0, lty=3)#
+#
+}
+par(mfrow=c(1,5))#
+#
+for (i in 1:5) {#
+	tipMetric <- rateMetrics[i]#
+	errorCol <- Reduce(intersect, list(grep(rateType, colnames(dat)), grep(rateMetrics[i], colnames(dat)), grep(errorMetric, colnames(dat))))#
+	plot.new()#
+	plot.window(xlim = c(range(as.numeric(names(datSplit)))), ylim = yrange)#
+	axis(1, at = as.numeric(names(datSplit)), labels = names(datSplit))#
+	axis(2)#
+	for (j in 1:length(datSplit)) {#
+		boxplot(datSplit[[j]][, errorCol], at = j, add=TRUE, wex=0.75, col=gray(0.8), bty='n', outline=F, drawRect=F)#
+	}#
+	abline(h=0, lty=3)#
+#
+}
+?par
+tmp <- boxplot(datSplit[[j]][, errorCol], at = j, wex=0.75, plot=F)
+tmp
+boxplot(datSplit[[j]][, errorCol], plot=F)
+tmp <- boxplot(datSplit[[j]][, errorCol], plot=F)
+par(mfrow=c(1,5))
+i<-1
+tipMetric <- rateMetrics[i]#
+	errorCol <- Reduce(intersect, list(grep(rateType, colnames(dat)), grep(rateMetrics[i], colnames(dat)), grep(errorMetric, colnames(dat))))#
+	plot.new()#
+	plot.window(xlim = c(range(as.numeric(names(datSplit)))), ylim = yrange)#
+	axis(1, at = as.numeric(names(datSplit)), labels = names(datSplit))#
+	axis(2)
+j<-1
+tmp <- boxplot(datSplit[[j]][, errorCol], plot=F)
+rect(tmp$stats[1,2], tmp$stats[4,2])
+tmp$stats[1,2]
+tmp
+tmp$stats
+rect(tmp$stats[1,1], tmp$stats[4,1])
+tmp$stats[1,1]
+width <- 0.2
+rect(j - width/2, tmp$stats[1,1], j + width/2, tmp$stats[4,1])
+width=0.4
+rect(j - width/2, tmp$stats[1,1], j + width/2, tmp$stats[4,1])
+par(mfrow=c(1,5))
+tipMetric <- rateMetrics[i]#
+	errorCol <- Reduce(intersect, list(grep(rateType, colnames(dat)), grep(rateMetrics[i], colnames(dat)), grep(errorMetric, colnames(dat))))#
+	plot.new()#
+	plot.window(xlim = c(range(as.numeric(names(datSplit)))), ylim = yrange)#
+	axis(1, at = as.numeric(names(datSplit)), labels = names(datSplit))#
+	axis(2)
+tmp <- boxplot(datSplit[[j]][, errorCol], plot=F)
+rect(j - width/2, tmp$stats[1,1], j + width/2, tmp$stats[4,1], col=gray(0.75))
+segments(j, tmp$stats[2,1], j, tmp$stats[4,1], lty=2)
+segments(j, tmp$stats[1,1], j, tmp$stats[2,1], lty=2)
+par(mfrow=c(1,5))
+tipMetric <- rateMetrics[i]#
+	errorCol <- Reduce(intersect, list(grep(rateType, colnames(dat)), grep(rateMetrics[i], colnames(dat)), grep(errorMetric, colnames(dat))))#
+	plot.new()#
+	plot.window(xlim = c(range(as.numeric(names(datSplit)))), ylim = yrange)#
+	axis(1, at = as.numeric(names(datSplit)), labels = names(datSplit))#
+	axis(2)
+tmp <- boxplot(datSplit[[j]][, errorCol], plot=F)
+rect(j - width/2, tmp$stats[2,1], j + width/2, tmp$stats[4,1], col=gray(0.75))
+segments(j, tmp$stats[1,1], j, tmp$stats[2,1], lty=2)
+segments(j, tmp$stats[4,1], j, tmp$stats[5,1], lty=2)
+arrows(j, tmp$stats[1,1], j, tmp$stats[2,1], lty=2, angle=90, length=0.1)
+arrows(j, tmp$stats[2,1], j, tmp$stats[1,1], lty=2, angle=90, length=0.05)
+segments(j - width/2, tmp$stats[1,1], j + width/2, tmp$stats[1,1])
+par(mfrow=c(1,5))
+tipMetric <- rateMetrics[i]#
+	errorCol <- Reduce(intersect, list(grep(rateType, colnames(dat)), grep(rateMetrics[i], colnames(dat)), grep(errorMetric, colnames(dat))))#
+	plot.new()#
+	plot.window(xlim = c(range(as.numeric(names(datSplit)))), ylim = yrange)#
+	axis(1, at = as.numeric(names(datSplit)), labels = names(datSplit))#
+	axis(2)
+tmp <- boxplot(datSplit[[j]][, errorCol], plot=F)#
+		rect(j - width/2, tmp$stats[2,1], j + width/2, tmp$stats[4,1], col=gray(0.75))#
+		segments(j, tmp$stats[1,1], j, tmp$stats[2,1], lty=2)#
+		segments(j, tmp$stats[4,1], j, tmp$stats[5,1], lty=2)#
+		segments(j - width/2, tmp$stats[1,1], j + width/2, tmp$stats[1,1])#
+		segments(j - width/2, tmp$stats[4,1], j + width/2, tmp$stats[4,1])
+segments(j - width/2, tmp$stats[5,1], j + width/2, tmp$stats[5,1])
+segments(j - width/2, tmp$stats[3,1], j + width/2, tmp$stats[3,1], lwd=2)
+par(mfrow=c(1,5))
+tipMetric <- rateMetrics[i]#
+	errorCol <- Reduce(intersect, list(grep(rateType, colnames(dat)), grep(rateMetrics[i], colnames(dat)), grep(errorMetric, colnames(dat))))#
+	plot.new()#
+	plot.window(xlim = c(range(as.numeric(names(datSplit)))), ylim = yrange)#
+	axis(1, at = as.numeric(names(datSplit)), labels = names(datSplit))#
+	axis(2)#
+	for (j in 1:length(datSplit)) {#
+		tmp <- boxplot(datSplit[[j]][, errorCol], plot=F)#
+		rect(j - width/2, tmp$stats[2,1], j + width/2, tmp$stats[4,1], col=gray(0.75))#
+		segments(j, tmp$stats[1,1], j, tmp$stats[2,1], lty=2)#
+		segments(j, tmp$stats[4,1], j, tmp$stats[5,1], lty=2)#
+		segments(j - width/2, tmp$stats[1,1], j + width/2, tmp$stats[1,1])#
+		segments(j - width/2, tmp$stats[5,1], j + width/2, tmp$stats[5,1])#
+		segments(j - width/2, tmp$stats[3,1], j + width/2, tmp$stats[3,1], lwd=2)#
+		# boxplot(datSplit[[j]][, errorCol], at = j, add=TRUE, wex=0.75, col=gray(0.8), bty='n', outline=F)#
+	}#
+	abline(h=0, lty=3)
+tipMetric <- rateMetrics[i]#
+	errorCol <- Reduce(intersect, list(grep(rateType, colnames(dat)), grep(rateMetrics[i], colnames(dat)), grep(errorMetric, colnames(dat))))#
+	plot.new()#
+	plot.window(xlim = c(range(as.numeric(names(datSplit)))), ylim = yrange)#
+	axis(1, at = as.numeric(names(datSplit)), labels = names(datSplit))#
+	axis(2)
+for (j in 1:length(datSplit)) {#
+		# tmp <- boxplot(datSplit[[j]][, errorCol], plot=F)#
+		# rect(j - width/2, tmp$stats[2,1], j + width/2, tmp$stats[4,1], col=gray(0.75))#
+		# segments(j, tmp$stats[1,1], j, tmp$stats[2,1], lty=2)#
+		# segments(j, tmp$stats[4,1], j, tmp$stats[5,1], lty=2)#
+		# segments(j - width/2, tmp$stats[1,1], j + width/2, tmp$stats[1,1])#
+		# segments(j - width/2, tmp$stats[5,1], j + width/2, tmp$stats[5,1])#
+		# segments(j - width/2, tmp$stats[3,1], j + width/2, tmp$stats[3,1], lwd=2)#
+		boxplot(datSplit[[j]][, errorCol], at = j, add=TRUE, wex=0.75, col=gray(0.8), bty='n', outline=F)#
+	}
+abline(h=0, lty=3)
+tipMetric <- rateMetrics[i]#
+	errorCol <- Reduce(intersect, list(grep(rateType, colnames(dat)), grep(rateMetrics[i], colnames(dat)), grep(errorMetric, colnames(dat))))#
+	plot.new()#
+	plot.window(xlim = c(range(as.numeric(names(datSplit)))), ylim = yrange)#
+	axis(1, at = as.numeric(names(datSplit)), labels = names(datSplit))#
+	axis(2)#
+	for (j in 1:length(datSplit)) {#
+		tmp <- boxplot(datSplit[[j]][, errorCol], plot=F)#
+		rect(j - width/2, tmp$stats[2,1], j + width/2, tmp$stats[4,1], col=gray(0.75))#
+		segments(j, tmp$stats[1,1], j, tmp$stats[2,1], lty=2)#
+		segments(j, tmp$stats[4,1], j, tmp$stats[5,1], lty=2)#
+		segments(j - width/2, tmp$stats[1,1], j + width/2, tmp$stats[1,1])#
+		segments(j - width/3, tmp$stats[5,1], j + width/3, tmp$stats[5,1])#
+		segments(j - width/3, tmp$stats[3,1], j + width/3, tmp$stats[3,1], lwd=1.5)#
+		# boxplot(datSplit[[j]][, errorCol], at = j, add=TRUE, wex=0.75, col=gray(0.8), bty='n', outline=F)#
+	}
+par(mfrow=c(1,5))#
+#
+width <- 0.4#
+#
+for (i in 1:5) {#
+	tipMetric <- rateMetrics[i]#
+	errorCol <- Reduce(intersect, list(grep(rateType, colnames(dat)), grep(rateMetrics[i], colnames(dat)), grep(errorMetric, colnames(dat))))#
+	plot.new()#
+	plot.window(xlim = c(range(as.numeric(names(datSplit)))), ylim = yrange)#
+	axis(1, at = as.numeric(names(datSplit)), labels = names(datSplit))#
+	axis(2)#
+	for (j in 1:length(datSplit)) {#
+		tmp <- boxplot(datSplit[[j]][, errorCol], plot=F)#
+		rect(j - width/2, tmp$stats[2,1], j + width/2, tmp$stats[4,1], col=gray(0.75))#
+		segments(j, tmp$stats[1,1], j, tmp$stats[2,1], lty=2)#
+		segments(j, tmp$stats[4,1], j, tmp$stats[5,1], lty=2)#
+		segments(j - width/2, tmp$stats[1,1], j + width/2, tmp$stats[1,1])#
+		segments(j - width/3, tmp$stats[5,1], j + width/3, tmp$stats[5,1])#
+		segments(j - width/3, tmp$stats[3,1], j + width/3, tmp$stats[3,1], lwd=2)#
+		# boxplot(datSplit[[j]][, errorCol], at = j, add=TRUE, wex=0.75, col=gray(0.8), bty='n', outline=F)#
+	}#
+	abline(h=0, lty=3)#
+#
+}
+errorLabel
+par(mfrow=c(1,5))#
+#
+width <- 0.4#
+#
+for (i in 1:5) {#
+	tipMetric <- rateMetrics[i]#
+	errorCol <- Reduce(intersect, list(grep(rateType, colnames(dat)), grep(rateMetrics[i], colnames(dat)), grep(errorMetric, colnames(dat))))#
+	plot.new()#
+	plot.window(xlim = c(range(as.numeric(names(datSplit)))), ylim = yrange)#
+	axis(1, at = as.numeric(names(datSplit)), labels = names(datSplit))#
+	axis(2)#
+	for (j in 1:length(datSplit)) {#
+		tmp <- boxplot(datSplit[[j]][, errorCol], plot=F)#
+		rect(j - width/2, tmp$stats[2,1], j + width/2, tmp$stats[4,1], col=gray(0.75))#
+		segments(j, tmp$stats[1,1], j, tmp$stats[2,1], lty=2)#
+		segments(j, tmp$stats[4,1], j, tmp$stats[5,1], lty=2)#
+		segments(j - width/2, tmp$stats[1,1], j + width/2, tmp$stats[1,1])#
+		segments(j - width/3, tmp$stats[5,1], j + width/3, tmp$stats[5,1])#
+		segments(j - width/3, tmp$stats[3,1], j + width/3, tmp$stats[3,1], lwd=2)#
+		# boxplot(datSplit[[j]][, errorCol], at = j, add=TRUE, wex=0.75, col=gray(0.8), bty='n', outline=F)#
+	}#
+	abline(h=0, lty=3)#
+	mtext('nRegimes', side = 1, cex=0.5, line = 2)#
+	mtext('mean absolute error', side = 2, cex=0.5, line = 2)#
+	title(main = rateMetrics[i], line = -0.5)#
+}#
+mtext('multi-regime constant-rate', outer=TRUE, line = -2)#
+#
+}
+par(mfrow=c(1,5))#
+#
+width <- 0.4#
+yrange <- c(-0.15, 0.15)#
+#
+for (i in 1:5) {#
+	tipMetric <- rateMetrics[i]#
+	errorCol <- Reduce(intersect, list(grep(rateType, colnames(dat)), grep(rateMetrics[i], colnames(dat)), grep(errorMetric, colnames(dat))))#
+	plot.new()#
+	plot.window(xlim = c(range(as.numeric(names(datSplit)))), ylim = yrange)#
+	axis(1, at = as.numeric(names(datSplit)), labels = names(datSplit))#
+	axis(2)#
+	for (j in 1:length(datSplit)) {#
+		tmp <- boxplot(datSplit[[j]][, errorCol], plot=F)#
+		rect(j - width/2, tmp$stats[2,1], j + width/2, tmp$stats[4,1], col=gray(0.75))#
+		segments(j, tmp$stats[1,1], j, tmp$stats[2,1], lty=2)#
+		segments(j, tmp$stats[4,1], j, tmp$stats[5,1], lty=2)#
+		segments(j - width/2, tmp$stats[1,1], j + width/2, tmp$stats[1,1])#
+		segments(j - width/3, tmp$stats[5,1], j + width/3, tmp$stats[5,1])#
+		segments(j - width/3, tmp$stats[3,1], j + width/3, tmp$stats[3,1], lwd=2)#
+		# boxplot(datSplit[[j]][, errorCol], at = j, add=TRUE, wex=0.75, col=gray(0.8), bty='n', outline=F)#
+	}#
+	abline(h=0, lty=3)#
+	mtext('nRegimes', side = 1, cex=0.5, line = 2)#
+	mtext('mean absolute error', side = 2, cex=0.5, line = 2)#
+	title(main = rateMetrics[i], line = -0.5)#
+}#
+mtext('multi-regime constant-rate', outer=TRUE, line = -2)#
+#
+}
+pdf('~/Dropbox/tipRatesProject/preliminaryplots/errorAcrossRegimeNum_absoluteError2.pdf', width=10, height=3)#
+par(mfrow=c(1,5))#
+#
+width <- 0.4#
+yrange <- c(-0.15, 0.15)#
+#
+for (i in 1:5) {#
+	tipMetric <- rateMetrics[i]#
+	errorCol <- Reduce(intersect, list(grep(rateType, colnames(dat)), grep(rateMetrics[i], colnames(dat)), grep(errorMetric, colnames(dat))))#
+	plot.new()#
+	plot.window(xlim = c(range(as.numeric(names(datSplit)))), ylim = yrange)#
+	axis(1, at = as.numeric(names(datSplit)), labels = names(datSplit))#
+	axis(2)#
+	for (j in 1:length(datSplit)) {#
+		tmp <- boxplot(datSplit[[j]][, errorCol], plot=F)#
+		rect(j - width/2, tmp$stats[2,1], j + width/2, tmp$stats[4,1], col=gray(0.75))#
+		segments(j, tmp$stats[1,1], j, tmp$stats[2,1], lty=2)#
+		segments(j, tmp$stats[4,1], j, tmp$stats[5,1], lty=2)#
+		segments(j - width/2, tmp$stats[1,1], j + width/2, tmp$stats[1,1])#
+		segments(j - width/3, tmp$stats[5,1], j + width/3, tmp$stats[5,1])#
+		segments(j - width/3, tmp$stats[3,1], j + width/3, tmp$stats[3,1], lwd=2)#
+		# boxplot(datSplit[[j]][, errorCol], at = j, add=TRUE, wex=0.75, col=gray(0.8), bty='n', outline=F)#
+	}#
+	abline(h=0, lty=3)#
+	mtext('nRegimes', side = 1, cex=0.5, line = 2)#
+	mtext('mean absolute error', side = 2, cex=0.5, line = 2)#
+	title(main = rateMetrics[i], line = -0.5)#
+}#
+mtext('multi-regime constant-rate', outer=TRUE, line = -2)#
+dev.off()
+Lambda <- 0.2#
+#
+treeList <- vector('list', 100)#
+for (i in 1:100) {#
+	cat(i, '\n')#
+	Eps <- runif(1, 0.5, 1)#
+	Mu <- Eps * Lambda#
+	treeList[[i]] <- sim.bd.taxa(100, 1, Lambda, Mu, complete=FALSE)[[1]]#
+}
+require(TreeSim)
+Lambda <- 0.2#
+#
+treeList <- vector('list', 100)#
+for (i in 1:100) {#
+	cat(i, '\n')#
+	Eps <- runif(1, 0.5, 1)#
+	Mu <- Eps * Lambda#
+	treeList[[i]] <- sim.bd.taxa(100, 1, Lambda, Mu, complete=FALSE)[[1]]#
+}
+treeList <- vector('list', 100)#
+trueparams <- as.data.frame(matrix(nrow=100, ncol = 2))#
+colnames(trueparams) <- c('lambda','mu')#
+trueparams[,1] <- Lambda
+for (i in 1:100) {#
+	cat(i, '\n')#
+	Eps <- runif(1, 0.5, 1)#
+	Mu <- Eps * Lambda#
+	treeList[[i]] <- sim.bd.taxa(100, 1, Lambda, Mu, complete=FALSE)[[1]]#
+}
+trueparams
+treeList <- vector('list', 100)#
+trueparams <- as.data.frame(matrix(nrow=100, ncol = 2))#
+colnames(trueparams) <- c('lambda','mu')#
+trueparams[,1] <- Lambda#
+#
+for (i in 1:100) {#
+	cat(i, '\n')#
+	Eps <- runif(1, 0.5, 1)#
+	Mu <- Eps * Lambda#
+	trueparams[i,2] <- Mu#
+	treeList[[i]] <- sim.bd.taxa(100, 1, Lambda, Mu, complete=FALSE)[[1]]#
+}
+trueparams
+source('~/Dropbox/tipRatesProject/tipRateFunctions.R')
+ls()
+dr <- lapply(treeList, function(x) DRstat(x))
+meanDR <- sapply(dr, mean)
+plot(Lambda - trueparams[,2], meanDR)
+plot(Lambda - trueparams[,2], meanDR, xlim = c(0, 0.35), ylim = c(0, 0.35))
+require(ppcor)#
+require(AICcmodavg)#
+#
+regimeSummary <- read.csv('~/Dropbox/tipRatesProject/regimeSummary.csv', stringsAsFactors=FALSE)
+summary(lm(lambdaDR ~ tipLambda, data = regimeSummary))#
+summary(lm(lambdaDR ~ tipNetDiv, data = regimeSummary))
+fit1 <- lm(lambdaDR ~ tipLambda, data = regimeSummary)#
+fit2 <- lm(lambdaDR ~ tipNetDiv, data = regimeSummary)#
+#
+aictab(list(lambda=fit1, netdiv=fit2))
+allRatesList <- readRDS('~/Dropbox/tipRatesProject/allRatesList.rds')
+qq <- do.call(rbind, qq)
+qq <- do.call(rbind, allRatesList)
+unique(qq$setname)
+unique(regimeSummary$setname)
+qq <- qq[which(qq$setname %in% unique(regimeSummary$setname)),]
+head(qq)
+fit1 <- lm(lambdaDR ~ tipLambda, data = qq)
+fit2 <- lm(lambdaDR ~ tipNetDiv, data = qq)
+aictab(list(lambda=fit1, netdiv=fit2))
+summary(fit1)
+summary(fit2)
+summary(lm(lambdaDR ~ tipLambda + tipNetDiv, data = qq))
+# Summarize results by true regime#
+## For multi-regime trees, summarize tip rates (true and inferred) by known regimes#
+#
+outfile <- '~/Dropbox/tipRatesProject/regimeSummary.csv'#
+#
+trueRates <- read.csv('~/Dropbox/tipRatesProject/trueTipRates.csv', stringsAsFactors=FALSE)#
+estimatedRates <- read.csv('~/Dropbox/tipRatesProject/estimatedTipRates.csv', stringsAsFactors=FALSE)#
+treeDat <- read.csv('~/Dropbox/tipRatesProject/treeSummary.csv', stringsAsFactors=FALSE)#
+crbd <- read.csv('~/Dropbox/tipRatesProject/estimatedCRBD.csv', stringsAsFactors=FALSE)#
+#
+trueRatesList <- split(trueRates, trueRates$treeName)#
+estimatedRatesList <- split(estimatedRates, estimatedRates$treeName)#
+#
+# make sure lists are in the same order, and tips are in the same order in each list element#
+identical(names(trueRatesList), names(estimatedRatesList))#
+#
+for (i in 1:length(trueRatesList)) {#
+	xx <- trueRatesList[[i]]$tipName#
+	xx <- sort(xx)#
+	trueRatesList[[i]] <- trueRatesList[[i]][match(xx, trueRatesList[[i]]$tipName),]#
+	estimatedRatesList[[i]] <- estimatedRatesList[[i]][match(xx, estimatedRatesList[[i]]$tipName),]#
+}#
+#
+# put CRBD table in same order#
+ordering <- sapply(names(trueRatesList), function(x) which(crbd$treeName == x))#
+crbd <- crbd[ordering,]#
+#
+# merge the two, and add CRBD lambda and mu (identical values across tip names)#
+allRatesList <- vector('list', length = length(trueRatesList))#
+names(allRatesList) <- names(trueRatesList)#
+for (i in 1:length(trueRatesList)) {#
+	allRatesList[[i]] <- cbind.data.frame(trueRatesList[[i]], estimatedRatesList[[i]][, c('lambdaTB', 'lambdaND', 'lambdaDR', 'lambdaBAMM', 'netDivBAMM')], CRBDlambda = crbd[i, 'lambda'], CRBDmu = crbd[i, 'mu'])#
+}
+setvec <- c('MitchellRabosky2016','MeyerWiens2017','fossilBAMM','MooreEtAl2016','RaboskyEtAl2017','highTurnoverBD','LambdaEqualsMu')
+setInd <- unique(treeDat[which(treeDat$setname %in% setvec), 'treeName'])#
+#
+regimeList <- list()#
+#
+counter <- 1#
+for (i in 1:length(setInd)) {#
+	cat(i, 'of', length(setInd), '\n')#
+	xx <- allRatesList[[setInd[i]]]#
+	# take average of all tip metrics, grouped by regimeID#
+	tmp <- aggregate(xx[, colnames(xx)[which(colnames(xx) == 'tipLambda'):ncol(xx)]], list(xx$regimeID), mean)#
+	regimeList[[counter]] <- cbind(treeName = xx[1, 'treeName'], setname = xx[1, 'setname'], nTips = aggregate(xx$regimeID, list(xx$regimeID), length)$x, tmp)#
+	counter <- counter + 1	#
+}#
+#
+regimeSummary <- do.call(rbind, regimeList)#
+regimeSummary <- regimeSummary[, -which(colnames(regimeSummary) == 'Group.1')]#
+regimeSummary <- as.data.frame(regimeSummary, stringsAsFactors=FALSE)#
+#
+for (i in 3:ncol(regimeSummary)) {#
+	regimeSummary[, i] <- as.numeric(regimeSummary[, i])#
+}#
+regimeSummary[,1] <- as.character(regimeSummary[,1])#
+regimeSummary[,2] <- as.character(regimeSummary[,2])#
+#
+write.csv(regimeSummary, outfile, row.names = FALSE)
+## Diversity-dependent trees#
+outfile <- '~/Dropbox/tipRatesProject/regimeSummary_dd.csv'#
+#
+setvec <- c('fossilBAMMDD', 'Rabosky2014_DD_k1', 'Rabosky2014_DD_k2', 'Rabosky2014_DD_k3', 'Rabosky2014_DD_k4')#
+#
+setInd <- unique(treeDat[which(treeDat$setname %in% setvec), 'treeName'])#
+#
+regimeList <- list()#
+#
+counter <- 1#
+for (i in 1:length(setInd)) {#
+	cat(i, 'of', length(setInd), '\n')#
+	xx <- allRatesList[[setInd[i]]]#
+	# take average of all tip metrics, grouped by regimeID#
+	tmp <- aggregate(xx[, colnames(xx)[which(colnames(xx) == 'tipLambda'):ncol(xx)]], list(xx$regimeID), mean)#
+	regimeList[[counter]] <- cbind(treeName = xx[1, 'treeName'], setname = xx[1, 'setname'], nTips = aggregate(xx$regimeID, list(xx$regimeID), length)$x, tmp)#
+	counter <- counter + 1	#
+}#
+#
+regimeSummary <- do.call(rbind, regimeList)#
+regimeSummary <- regimeSummary[, -which(colnames(regimeSummary) == 'Group.1')]#
+regimeSummary <- as.data.frame(regimeSummary, stringsAsFactors=FALSE)#
+#
+for (i in 3:ncol(regimeSummary)) {#
+	regimeSummary[, i] <- as.numeric(regimeSummary[, i])#
+}#
+regimeSummary[,1] <- as.character(regimeSummary[,1])#
+regimeSummary[,2] <- as.character(regimeSummary[,2])#
+#
+write.csv(regimeSummary, outfile, row.names = FALSE)
+unique(treeDat$setname)
+setvec <- c('evolvingRates')
+setInd <- unique(treeDat[which(treeDat$setname %in% setvec), 'treeName'])
+regimeList <- list()
+counter <- 1#
+for (i in 1:length(setInd)) {#
+	cat(i, 'of', length(setInd), '\n')#
+	xx <- allRatesList[[setInd[i]]]#
+	# take average of all tip metrics, grouped by regimeID#
+	tmp <- aggregate(xx[, colnames(xx)[which(colnames(xx) == 'tipLambda'):ncol(xx)]], list(xx$regimeID), mean)#
+	regimeList[[counter]] <- cbind(treeName = xx[1, 'treeName'], setname = xx[1, 'setname'], nTips = aggregate(xx$regimeID, list(xx$regimeID), length)$x, tmp)#
+	counter <- counter + 1	#
+}
+regimeSummary <- do.call(rbind, regimeList)#
+regimeSummary <- regimeSummary[, -which(colnames(regimeSummary) == 'Group.1')]#
+regimeSummary <- as.data.frame(regimeSummary, stringsAsFactors=FALSE)
+for (i in 3:ncol(regimeSummary)) {#
+	regimeSummary[, i] <- as.numeric(regimeSummary[, i])#
+}#
+regimeSummary[,1] <- as.character(regimeSummary[,1])#
+regimeSummary[,2] <- as.character(regimeSummary[,2])
+head(regimeSummary)
+outfile
+outfile <- '~/Dropbox/tipRatesProject/regimeSummary_evolvingRates.csv'
+outfile
+write.csv(regimeSummary, outfile, row.names = FALSE)
+## Read in datasets#
+trueRates <- read.csv('~/Dropbox/tipRatesProject/trueTipRates.csv', stringsAsFactors=FALSE)#
+estimatedRates <- read.csv('~/Dropbox/tipRatesProject/estimatedTipRates.csv', stringsAsFactors=FALSE)#
+treeDat <- read.csv('~/Dropbox/tipRatesProject/treeSummary.csv', stringsAsFactors=FALSE)#
+crbd <- read.csv('~/Dropbox/tipRatesProject/estimatedCRBD.csv', stringsAsFactors=FALSE)
+outfile <- '~/Dropbox/tipRatesProject/rateErrorMetrics.csv'
+trueRatesList <- split(trueRates, trueRates$treeName)#
+estimatedRatesList <- split(estimatedRates, estimatedRates$treeName)#
+#
+# make sure lists are in the same order, and tips are in the same order in each list element#
+identical(names(trueRatesList), names(estimatedRatesList))#
+#
+for (i in 1:length(trueRatesList)) {#
+	xx <- trueRatesList[[i]]$tipName#
+	xx <- sort(xx)#
+	trueRatesList[[i]] <- trueRatesList[[i]][match(xx, trueRatesList[[i]]$tipName),]#
+	estimatedRatesList[[i]] <- estimatedRatesList[[i]][match(xx, estimatedRatesList[[i]]$tipName),]#
+}#
+#
+# put CRBD table in same order#
+ordering <- sapply(names(trueRatesList), function(x) which(crbd$treeName == x))#
+crbd <- crbd[ordering,]
+# merge the two, and add CRBD lambda and mu (identical values across tip names)#
+allRatesList <- vector('list', length = length(trueRatesList))#
+names(allRatesList) <- names(trueRatesList)#
+for (i in 1:length(trueRatesList)) {#
+	allRatesList[[i]] <- cbind.data.frame(trueRatesList[[i]], estimatedRatesList[[i]][, c('lambdaTB', 'lambdaND', 'lambdaDR', 'lambdaBAMM', 'netDivBAMM')], CRBDlambda = crbd[i, 'lambda'], CRBDmu = crbd[i, 'mu'])#
+}
+saveRDS(allRatesList, '~/Dropbox/tipRatesProject/allRatesList.rds')
+meanAbsoluteError <- function(estimated, true) {#
+	mean(estimated - true)#
+}#
+#
+# PROPORTIONAL ERROR METRICS (from Rabosky et al. 2014 appendix)#
+#
+# estimated = vector of estimated tip values#
+# true = true tip values#
+#
+# overall mean proportional error#
+propError1 <- function(estimated, true) {#
+	sum((estimated - true) / true) / length(true)#
+}#
+#
+# overall mean proportional errror, weighted by the relative size of the regime#
+# regimeVec is a categorical vector of regimeID of the same length as vec estimated and vec true.#
+# it should represent the relative size of the regime, to the whole tree#
+propError2 <- function(estimated, true, regimeVec) {#
+	regimeVecProp <- setNames(as.numeric(table(regimeVec) / length(regimeVec)), names(table(regimeVec)))#
+	regimeVec <- regimeVecProp[regimeVec]#
+	sum(((estimated - true) / true) * regimeVec)#
+}#
+#
+# mean error over all tips, using log-transformed rates#
+propError3 <- function(estimated, true) {#
+	exp(sum(log(estimated) - log(true)) / length(true))#
+}#
+#
+# mean error over all tips, using log-transformed rates, where rates are weighted by regime size.#
+propError4 <- function(estimated, true, regimeVec) {#
+	regimeVecProp <- setNames(as.numeric(table(regimeVec) / length(regimeVec)), names(table(regimeVec)))#
+	regimeVec <- regimeVecProp[regimeVec]#
+	exp(sum((log(estimated) - log(true)) * regimeVec))#
+}#
+# ols regression R2 and slope#
+olsRegression <- function(estimated, true) {#
+	if (!all(is.na(estimated))) {#
+		ols <- lm(estimated ~ true)#
+		if (nrow(summary(ols)$coefficients) > 1) {#
+			setNames(c(summary(ols)$coefficients[2,1], summary(ols)$adj.r.squared), c('slope','r2'))#
+		} else {#
+			setNames(c(NA, NA), c('slope','r2'))#
+		}#
+	} else {#
+		setNames(c(NA, NA), c('slope','r2'))#
+	}#
+}
+# -----------------------------------------------#
+#
+# calculate different error metrics between true and estimated rates for each tree#
+#
+dat <- as.data.frame(matrix(nrow = nrow(crbd), ncol = 6))#
+colnames(dat) <- c('treeName', 'setname', 'nTips', 'nRegimes', 'processType', 'colless')#
+#
+dat[, c('treeName','setname', 'CRBD_lambda', 'CRBD_mu', 'colless')] <- crbd[,c('treeName','setname','lambda','mu','colless')]#
+#
+for (i in 1:nrow(dat)) {#
+	tmp <- treeDat[which(treeDat$treeName == dat[i, 'treeName']),]#
+	dat[i, 'nTips'] <- tmp[1, 'nTips_all']#
+	dat[i, 'nRegimes'] <- nrow(tmp)#
+	if (grepl('Rabosky2014', tmp[1, 'setname'])) {#
+		dat[i, 'processType'] <- 'diversity-dependent'#
+	} else if (tmp[1, 'setname'] == 'evolvingRates') {#
+		dat[i, 'processType'] <- 'evolvingRates'#
+	} else {#
+		dat[i, 'processType'] <- 'birth-death'#
+	}#
+}#
+#
+# check ordering#
+identical(names(allRatesList), dat$treeName)
+tipMetricHeaders <- c('CRBDlambda','lambdaTB','lambdaND','lambdaDR','lambdaBAMM')#
+tipMetricHeadersNetDiv <- c('CRBDlambda','lambdaTB','lambdaND','lambdaDR','netDivBAMM')#
+#
+for (i in 1:nrow(dat)) {#
+	for (j in 1:length(tipMetricHeaders)) {#
+		# speciation rate#
+		dat[i, paste0('tipLambda_', tipMetricHeaders[j], '_PE1')] <- propError1(allRatesList[[i]][, tipMetricHeaders[j]], allRatesList[[i]]$tipLambda)#
+#
+		dat[i, paste0('tipLambda_', tipMetricHeaders[j], '_PE2')] <- propError2(allRatesList[[i]][, tipMetricHeaders[j]], allRatesList[[i]]$tipLambda, allRatesList[[i]]$regimeID)#
+#
+		dat[i, paste0('tipLambda_', tipMetricHeaders[j], '_PE3')] <- propError3(allRatesList[[i]][, tipMetricHeaders[j]], allRatesList[[i]]$tipLambda)#
+#
+		dat[i, paste0('tipLambda_', tipMetricHeaders[j], '_PE4')] <- propError4(allRatesList[[i]][, tipMetricHeaders[j]], allRatesList[[i]]$tipLambda, allRatesList[[i]]$regimeID)#
+#
+		dat[i, paste0('tipLambda_', tipMetricHeaders[j], '_slope')] <- olsRegression(allRatesList[[i]][, tipMetricHeaders[j]], allRatesList[[i]]$tipLambda)[1]#
+#
+		dat[i, paste0('tipLambda_', tipMetricHeaders[j], '_r2')] <- olsRegression(allRatesList[[i]][, tipMetricHeaders[j]], allRatesList[[i]]$tipLambda)[2]#
+#
+		dat[i, paste0('tipLambda_', tipMetricHeaders[j], '_absoluteError')] <- meanAbsoluteError(allRatesList[[i]][, tipMetricHeaders[j]], allRatesList[[i]]$tipLambda)#
+		# Net diversification rate#
+		dat[i, paste0('tipNetDiv_', tipMetricHeadersNetDiv[j], '_PE1')] <- propError1(allRatesList[[i]][, tipMetricHeadersNetDiv[j]], allRatesList[[i]]$tipNetDiv)#
+#
+		dat[i, paste0('tipNetDiv_', tipMetricHeadersNetDiv[j], '_PE2')] <- propError2(allRatesList[[i]][, tipMetricHeadersNetDiv[j]], allRatesList[[i]]$tipNetDiv, allRatesList[[i]]$regimeID)#
+#
+		dat[i, paste0('tipNetDiv_', tipMetricHeadersNetDiv[j], '_PE3')] <- propError3(allRatesList[[i]][, tipMetricHeadersNetDiv[j]], allRatesList[[i]]$tipNetDiv)#
+#
+		dat[i, paste0('tipNetDiv_', tipMetricHeadersNetDiv[j], '_PE4')] <- propError4(allRatesList[[i]][, tipMetricHeadersNetDiv[j]], allRatesList[[i]]$tipNetDiv, allRatesList[[i]]$regimeID)#
+#
+		dat[i, paste0('tipNetDiv_', tipMetricHeadersNetDiv[j], '_slope')] <- olsRegression(allRatesList[[i]][, tipMetricHeadersNetDiv[j]], allRatesList[[i]]$tipNetDiv)[1]#
+#
+		dat[i, paste0('tipNetDiv_', tipMetricHeadersNetDiv[j], '_r2')] <- olsRegression(allRatesList[[i]][, tipMetricHeadersNetDiv[j]], allRatesList[[i]]$tipNetDiv)[2]#
+#
+	dat[i, paste0('tipNetDiv_', tipMetricHeadersNetDiv[j], '_absoluteError')] <- meanAbsoluteError(allRatesList[[i]][, tipMetricHeadersNetDiv[j]], allRatesList[[i]]$tipNetDiv)#
+	}#
+}#
+#
+head(dat)
+basepath <- '~/Dropbox/tipRatesProject/trees/'#
+treefolders <- list.files(basepath)#
+#
+outfile <- '~/Dropbox/tipRatesProject/estimatedTipRates.csv'#
+#
+require(ape)#
+require(geiger)#
+require(BAMMtools)#
+require(phangorn)#
+require(phytools)#
+#
+source('~/Dropbox/tipRatesProject/tipRateFunctions.R')#
+source('~/Dropbox/tipRatesProject/sourceFxns.R')#
+#
+tipTableColumns <- c('treeName','setname','tipName','lambdaTB','lambdaND','lambdaDR','lambdaBAMM', 'netDivBAMM')#
+#
+# reorder treefolders#
+treefolders <- treefolders[order(gsub('(.+)_(\\d+)$', '\\1', treefolders), as.numeric(gsub('(.+)_(\\d+)$', '\\2', treefolders)))]#
+#
+estimRatesList <- vector('list', length(treefolders))#
+names(estimRatesList) <- treefolders#
+#
+BAMMmissing <- c()
+head(treefolders)
+head(treefolders, 12)
+i<-10
+cat(i, 'of', length(treefolders), '\n')#
+	setwd(paste0(basepath, treefolders[i]))#
+	files <- list.files()#
+	tr <- read.tree(grep('\\.tre$', files, value = TRUE))
+tipTable <- as.data.frame(matrix(nrow = length(tr$tip.label), ncol = length(tipTableColumns)))
+length(tr$tip.label)
+colnames(tipTable) <- tipTableColumns
+tipTable$treeName <- treefolders[i]#
+	tipTable$setname <- gsub('(.+)_(\\d+)$', '\\1', treefolders[i])#
+	tipTable$tipName <- tr$tip.label
+tipTable$lambdaTB <- inverseTerminalBranches(tr)#
+	# node density#
+	tipTable$lambdaND <- nodeDensity(tr)#
+	# DR#
+	tipTable$lambdaDR <- DRstat(tr)
+DRstat(tr)
+any(grepl('event_data.txt|event_out.txt', files))
+ed <- getEventData(tr, grep('event_data.txt|event_out.txt', files, value = TRUE), burnin=0.5, nsamples=1000)
+ed
+ed$meanTipLambda
+tipTable$lambdaBAMM <- ed$meanTipLambda#
+		tipTable$netDivBAMM <- ed$meanTipLambda - ed$meanTipMu
+tipTable$netDivBAMM
+any(grepl('event_data.txt|event_out.txt', files))
+estimRatesList <- vector('list', length(treefolders))#
+names(estimRatesList) <- treefolders#
+#
+BAMMmissing <- c()#
+#
+for (i in 1:length(treefolders)) {#
+	cat(i, 'of', length(treefolders), '\n')#
+	setwd(paste0(basepath, treefolders[i]))#
+	files <- list.files()#
+	tr <- read.tree(grep('\\.tre$', files, value = TRUE))#
+	tipTable <- as.data.frame(matrix(nrow = length(tr$tip.label), ncol = length(tipTableColumns)))#
+	colnames(tipTable) <- tipTableColumns#
+	tipTable$treeName <- treefolders[i]#
+	tipTable$setname <- gsub('(.+)_(\\d+)$', '\\1', treefolders[i])#
+	tipTable$tipName <- tr$tip.label#
+	# inverse terminal branch lengths#
+	tipTable$lambdaTB <- inverseTerminalBranches(tr)#
+	# node density#
+	tipTable$lambdaND <- nodeDensity(tr)#
+	# DR#
+	tipTable$lambdaDR <- DRstat(tr)#
+	# BAMM results can either be in the form of BAMM data files, or as a file containing tip rates#
+	if (any(grepl('event_data.txt|event_out.txt', files))) {#
+		ed <- getEventData(tr, grep('event_data.txt|event_out.txt', files, value = TRUE), burnin=0.5, nsamples=1000)#
+		tipTable$lambdaBAMM <- ed$meanTipLambda#
+		tipTable$netDivBAMM <- ed$meanTipLambda - ed$meanTipMu#
+	} else if ('tiprates.csv' %in% files) {#
+		bammres <- read.csv('tiprates.csv')#
+		tipTable$lambdaBAMM <- bammres$bammTipLambda#
+		tipTable$netDivBAMM <- bammres$bammTipLambda - bammres$bammTipMu#
+	} else {#
+		# BAMM files not present. log this.#
+		BAMMmissing <- c(BAMMmissing, treefolders[i])#
+	}#
+	estimRatesList[[treefolders[i]]] <- tipTable#
+}
+outfile
+estimatedTipRates <- read.csv(outfile, stringsAsFactors=FALSE)
+head(estimatedTipRates)
+ind <- which(estimatedTipRates$treeName == 'evolvingRates_10')
+ind
+length(ind)
+estimatedTipRates[ind,]
+cat(i, 'of', length(treefolders), '\n')
+i<-10
+cat(i, 'of', length(treefolders), '\n')
+setwd(paste0(basepath, treefolders[i]))
+files <- list.files()
+tr <- read.tree(grep('\\.tre$', files, value = TRUE))
+tr
+tipTable <- as.data.frame(matrix(nrow = length(tr$tip.label), ncol = length(tipTableColumns)))#
+	colnames(tipTable) <- tipTableColumns#
+	tipTable$treeName <- treefolders[i]#
+	tipTable$setname <- gsub('(.+)_(\\d+)$', '\\1', treefolders[i])#
+	tipTable$tipName <- tr$tip.label#
+	# inverse terminal branch lengths#
+	tipTable$lambdaTB <- inverseTerminalBranches(tr)#
+	# node density#
+	tipTable$lambdaND <- nodeDensity(tr)#
+	# DR#
+	tipTable$lambdaDR <- DRstat(tr)
+(any(grepl('event_data.txt|event_out.txt', files)))
+if (any(grepl('event_data.txt|event_out.txt', files))) {#
+		ed <- getEventData(tr, grep('event_data.txt|event_out.txt', files, value = TRUE), burnin=0.5, nsamples=1000)#
+		tipTable$lambdaBAMM <- ed$meanTipLambda#
+		tipTable$netDivBAMM <- ed$meanTipLambda - ed$meanTipMu#
+	} else if ('tiprates.csv' %in% files) {#
+		bammres <- read.csv('tiprates.csv')#
+		tipTable$lambdaBAMM <- bammres$bammTipLambda#
+		tipTable$netDivBAMM <- bammres$bammTipLambda - bammres$bammTipMu#
+	} else {#
+		# BAMM files not present. log this.#
+		BAMMmissing <- c(BAMMmissing, treefolders[i])#
+	}
+head(tipTable)
+head(estimatedTipRates[ind,])
+estimatedTipRates[ind, 'lambdaBAMM'] <- tipTable$lambdaBAMM
+estimatedTipRates[ind, 'netDivBAMM'] <- tipTable$netDivBAMM
+head(estimatedTipRates[ind,])
+outfile
+write.csv(estimatedTipRates, outfile, row.names=FALSE)
+missing <- which(estimatedTipRates$lambdaBAMM)
+missing <- which(is.na(estimatedTipRates$lambdaBAMM))
+head(missing)
+unique(estimatedTipRates[missing, 'treeName'])
