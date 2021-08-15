@@ -10,4 +10,3 @@ future::plan(cluster, workers = cl)
 cache_rerun_b4 <- drake::new_cache(path = "drake_cache_rerun_b4", hash_algorithm = "md5")
 make(New_sim_runs_beaulieu4, cache=cache_rerun_b4, parallelism="future", jobs=96)
 parallel::stopCluster(cl)
-
