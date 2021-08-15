@@ -6,7 +6,7 @@
 #' @param possibilities The possible_combos object
 #' @param tree_index which tree is being used
 
-DoSingleRun <- function(dir, phy, root_type="madfitz", possibilities, tree_index, n.cores=1) {
+DoSingleRun <- function(dir, phy, root_type="madfitz", possibilities, tree_index, n.cores=1, chunk.size=10) {
 #	print(system(paste0("ls data/title_rabosky_dryad/trees/", dir)))
 #	print(paste0("data/title_rabosky_dryad/trees/", dir, "/", dir, ".tre"))
 #	phy <- NULL
@@ -25,7 +25,7 @@ DoSingleRun <- function(dir, phy, root_type="madfitz", possibilities, tree_index
 			load(output_files[1])
 			hisse_result_all<- misse.list
 		} else {
-			hisse_result_all <- hisse::MiSSEGreedy(phy, f=1, root.type=root_type, possible.combos=possibilities, chunk.size=1, n.cores=1, save.file=paste0("results/",unname(Sys.info()["nodename"]), "_",tree_index, ".rda"), stop.deltaAICc=1000, sann=TRUE)
+			hisse_result_all <- hisse::MiSSEGreedy(phy, f=1, root.type=root_type, possible.combos=possibilities, chunk.size=chunk.size, n.cores=n.cores, save.file=paste0("results/",unname(Sys.info()["nodename"]), "_",tree_index, ".rda"), stop.deltaAICc=10, sann=TRUE)
 			#cat(paste0("Finished fit to tree ", tree_index), file=paste0("results/",unname(Sys.info()["nodename"]), "_",tree_index, "_newrun.log"), append=TRUE)
 		}
 		hisse_result_nonredundant <- PruneRedundantModels(hisse_result_all)
