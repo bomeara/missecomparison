@@ -16,6 +16,7 @@ try(ipifyseed <- sqrt(as.numeric(gsub("\\.", "", as.character(ipify::get_ip())))
 set.seed(as.integer(round(runif(1, min=1, max=1e5)) + ipifyseed))
 
 trees_for_me_to_run <- read.csv("trees_for_Brian.csv")
+trees_for_me_to_run <- rbind(trees_for_me_to_run, read.csv("more_trees_for_Brian.csv"))
 
 tree_info <- read.csv(file="data/title_rabosky_dryad/tipRates_dryad/dataFiles/treeSummary.csv",stringsAsFactors=FALSE)
 tree_names <- unique(tree_info$treeName)
