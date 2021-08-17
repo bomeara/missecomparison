@@ -16,7 +16,7 @@ treeTipMerge <- function(x) {
 all_results <- data.frame()
 model_average_results <- data.frame()
 best_results <- data.frame()
-dones <- c(list.files("results", pattern="done_recon", full.names=TRUE), list.files("results_March2021", pattern="done_recon", full.names=TRUE))
+dones <- c(list.files("results", pattern="done_recon", full.names=TRUE), list.files("new_results", pattern="done_recon", full.names=TRUE))
 for (i in seq_along(dones)) {
 	print(paste0("Loading ", i, " of ", length(dones)))
 	try(load(dones[i]))
@@ -207,47 +207,62 @@ gridVal = 100
 rates <- c("turnover","lambda","mu","netDiv","extinctionFraction")
 software <- c("BAMM","MiSSEbest","MiSSEavg")
 
-pdf("without_eps_fixed.pdf", width=7, height=10)
+#pdf("without_eps_fixed.pdf", width=7, height=10)
 #plot.new()
-par(mfrow=c(5,3))
-for(rate_index in seq_along(rates)){
-  for(software_index in seq_along(software)){
-    s0 <- as.data.frame(rates.cleaned.good[rates.cleaned.good$estimator==software[software_index],])
-    r0 <- s0[s0$actual_parameter==rates[rate_index],]
-    r0 <- subset(r0, !r0$true_value%in%(boxplot(r0$true_value, plot=F)$out))
-    if(rates[rate_index]=="extinctionFraction") {
-      if(software[software_index] %in% c("MiSSEbest", "MiSSEavg")) {
-       r0 <- subset(r0, !r0$fixed_eps %in% c(0,0.9))
-      }
-    }
-    plot(r0$true_value, r0$parameter_value, col="white", xlab=paste0(rates[rate_index], " true"), ylab=paste0(rates[rate_index], " estimated"), main=paste0(software[software_index]), xlim=c(0,1), ylim=c(0,1))
-    heatscatterpoints(r0$true_value, r0$parameter_value, xlim=c(0,10),ylim=c(0,10))
-    abline(0, 1)
-  }
-}
-dev.off()
+#par(mfrow=c(5,3))
+#for(rate_index in seq_along(rates)){
+#  for(software_index in seq_along(software)){
+#    s0 <- as.data.frame(rates.cleaned.good[rates.cleaned.good$estimator==software[software_index],])
+#    r0 <- s0[s0$actual_parameter==rates[rate_index],]
+#    r0 <- subset(r0, !r0$true_value%in%(boxplot(r0$true_value, plot=F)$out))
+#    if(rates[rate_index]=="extinctionFraction") {
+#      if(software[software_index] %in% c("MiSSEbest", "MiSSEavg")) {
+#       r0 <- subset(r0, !r0$fixed_eps %in% c(0,0.9))
+#      }
+#    }
+#    plot(r0$true_value, r0$parameter_value, col="white", xlab=paste0(rates[rate_index], " true"), ylab=paste0(rates[rate_index], #estimated"), main=paste0(software[software_index]), xlim=c(0,1), ylim=c(0,1))
+#    heatscatterpoints(r0$true_value, r0$parameter_value, xlim=c(0,10),ylim=c(0,10))
+#    abline(0, 1)
+#  }
+#}
+#dev.off()
 #-----
 
-pdf("with_eps_fixed.pdf", width=7, height=10)
+#pdf("with_eps_fixed.pdf", width=7, height=10)
+#plot.new()
+#par(mfrow=c(5,3))
+#for(rate_index in seq_along(rates)){
+#  for(software_index in seq_along(software)){
+#    s0 <- as.data.frame(rates.cleaned.good[rates.cleaned.good$estimator==software[software_index],])
+#    r0 <- s0[s0$actual_parameter==rates[rate_index],]
+#    r0 <- subset(r0, !r0$true_value%in%(boxplot(r0$true_value, plot=F)$out))
+#    #if(rates[rate_index]=="extinctionFraction") {
+#    #  if(software[software_index] %in% c("MiSSEbest", "MiSSEavg")) {
+#    #    r0 <- subset(r0, !r0$fixed_eps %in% c(0,0.9))
+#    # }
+#    #}
+#    plot(r0$true_value, r0$parameter_value, col="white", xlab=paste0(rates[rate_index], " true"), ylab=paste0(rates[rate_index], " estimated"), main=paste0(software[software_index]), xlim=c(0,1), ylim=c(0,1))
+#    heatscatterpoints(r0$true_value, r0$parameter_value, xlim=c(0,10),ylim=c(0,10))
+#    abline(0, 1)
+#  }
+#}
+#dev.off()
+
+#
+pdf("comp_new_results_AUG2021.pdf", width=7, height=10)
 #plot.new()
 par(mfrow=c(5,3))
 for(rate_index in seq_along(rates)){
   for(software_index in seq_along(software)){
     s0 <- as.data.frame(rates.cleaned.good[rates.cleaned.good$estimator==software[software_index],])
     r0 <- s0[s0$actual_parameter==rates[rate_index],]
-    r0 <- subset(r0, !r0$true_value%in%(boxplot(r0$true_value, plot=F)$out))
-    #if(rates[rate_index]=="extinctionFraction") {
-    #  if(software[software_index] %in% c("MiSSEbest", "MiSSEavg")) {
-    #    r0 <- subset(r0, !r0$fixed_eps %in% c(0,0.9))
-    # }
-    #}
+    #r0 <- subset(r0, !r0$true_value%in%(boxplot(r0$true_value, plot=F)$out)) # remove outlier?
     plot(r0$true_value, r0$parameter_value, col="white", xlab=paste0(rates[rate_index], " true"), ylab=paste0(rates[rate_index], " estimated"), main=paste0(software[software_index]), xlim=c(0,1), ylim=c(0,1))
     heatscatterpoints(r0$true_value, r0$parameter_value, xlim=c(0,10),ylim=c(0,10))
     abline(0, 1)
   }
 }
 dev.off()
-
 
 
 #----------------------

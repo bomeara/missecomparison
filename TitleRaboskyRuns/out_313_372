@@ -1,0 +1,194 @@
+── Attaching packages ─────────────────────────────────────── tidyverse 1.3.1 ──
+✔ ggplot2 3.3.5     ✔ purrr   0.3.4
+✔ tibble  3.1.3     ✔ dplyr   1.0.7
+✔ tidyr   1.1.3     ✔ stringr 1.4.0
+✔ readr   1.4.0     ✔ forcats 0.5.1
+── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
+✖ dplyr::filter() masks stats::filter()
+✖ dplyr::lag()    masks stats::lag()
+
+Attaching package: ‘magrittr’
+
+The following object is masked from ‘package:purrr’:
+
+    set_names
+
+The following object is masked from ‘package:tidyr’:
+
+    extract
+
+
+Attaching package: ‘drake’
+
+The following objects are masked from ‘package:tidyr’:
+
+    expand, gather
+
+Skipping install of 'hisse' from a github remote, the SHA1 (d3e78c22) has not changed since last install.
+  Use `force = TRUE` to force installation
+Loading required package: ape
+Loading required package: deSolve
+Loading required package: GenSA
+Loading required package: subplex
+Loading required package: nloptr
+
+Attaching package: ‘future’
+
+The following object is masked from ‘package:drake’:
+
+    plan
+
+
+Attaching package: ‘batchtools’
+
+The following object is masked from ‘package:purrr’:
+
+    flatten
+
+
+Attaching package: ‘data.table’
+
+The following objects are masked from ‘package:dplyr’:
+
+    between, first, last
+
+The following object is masked from ‘package:purrr’:
+
+    transpose
+
+[1] "passed loading packages"
+R version 4.1.1 (2021-08-10)
+Platform: x86_64-pc-linux-gnu (64-bit)
+Running under: Ubuntu 18.04.5 LTS
+
+Matrix products: default
+BLAS:   /usr/lib/x86_64-linux-gnu/blas/libblas.so.3.7.1
+LAPACK: /usr/lib/x86_64-linux-gnu/lapack/liblapack.so.3.7.1
+
+locale:
+ [1] LC_CTYPE=en_US.UTF-8       LC_NUMERIC=C              
+ [3] LC_TIME=en_US.UTF-8        LC_COLLATE=en_US.UTF-8    
+ [5] LC_MONETARY=en_US.UTF-8    LC_MESSAGES=en_US.UTF-8   
+ [7] LC_PAPER=en_US.UTF-8       LC_NAME=C                 
+ [9] LC_ADDRESS=C               LC_TELEPHONE=C            
+[11] LC_MEASUREMENT=en_US.UTF-8 LC_IDENTIFICATION=C       
+
+attached base packages:
+[1] parallel  stats     graphics  grDevices utils     datasets  methods  
+[8] base     
+
+other attached packages:
+ [1] data.table_1.14.0        batchtools_0.9.15        future.batchtools_0.10.0
+ [4] future_1.21.0            hisse_2.1.3              nloptr_1.2.2.2          
+ [7] subplex_1.6              GenSA_1.1.7              deSolve_1.28            
+[10] ape_5.5                  drake_7.13.2             progress_1.2.2          
+[13] magrittr_2.0.1           forcats_0.5.1            stringr_1.4.0           
+[16] dplyr_1.0.7              purrr_0.3.4              readr_1.4.0             
+[19] tidyr_1.1.3              tibble_3.1.3             ggplot2_3.3.5           
+[22] tidyverse_1.3.1         
+
+loaded via a namespace (and not attached):
+  [1] colorspace_2.0-2        ellipsis_0.3.2          rprojroot_2.0.2        
+  [4] corpcor_1.6.9           fs_1.5.0                rstudioapi_0.13        
+  [7] listenv_0.8.0           remotes_2.4.0           corHMM_2.7             
+ [10] fansi_0.5.0             mvtnorm_1.1-2           lubridate_1.7.10       
+ [13] xml2_1.3.2              codetools_0.2-18        mnormt_2.0.2           
+ [16] cachem_1.0.5            pkgload_1.2.1           jsonlite_1.7.2         
+ [19] broom_0.7.7             Rmpfr_0.8-4             dbplyr_2.1.1           
+ [22] png_0.1-7               compiler_4.1.1          httr_1.4.2             
+ [25] backports_1.2.1         assertthat_0.2.1        Matrix_1.3-4           
+ [28] fastmap_1.1.0           cli_3.0.1               prettyunits_1.1.1      
+ [31] tools_4.1.1             gmp_0.6-2               igraph_1.2.6           
+ [34] coda_0.19-4             gtable_0.3.0            glue_1.4.2             
+ [37] clusterGeneration_1.3.7 rappdirs_0.3.3          maps_3.3.0             
+ [40] fastmatch_1.1-3         Rcpp_1.0.7              cellranger_1.1.0       
+ [43] vctrs_0.3.8             nlme_3.1-152            globals_0.14.0         
+ [46] ps_1.6.0                testthat_3.0.4          rvest_1.0.0            
+ [49] lifecycle_1.0.0         phangorn_2.7.1          devtools_2.4.2         
+ [52] geiger_2.0.7            MASS_7.3-54             scales_1.1.1           
+ [55] hms_1.1.0               TreeSim_2.4             expm_0.999-6           
+ [58] curl_4.3.1              gridExtra_2.3           memoise_2.0.0          
+ [61] paleotree_3.3.25        diversitree_0.9-16      stringi_1.6.2          
+ [64] desc_1.3.0              plotrix_3.8-1           checkmate_2.0.0        
+ [67] phytools_0.7-80         filelock_1.0.2          pkgbuild_1.2.0         
+ [70] storr_1.2.5             rlang_0.4.11            pkgconfig_2.0.3        
+ [73] bitops_1.0-7            lattice_0.20-44         processx_3.5.2         
+ [76] tidyselect_1.1.1        parallelly_1.26.0       R6_2.5.0               
+ [79] generics_0.1.0          base64url_1.4           combinat_0.0-8         
+ [82] txtq_0.2.4              DBI_1.1.1               pillar_1.6.2           
+ [85] haven_2.4.1             withr_2.4.2             nnet_7.3-16            
+ [88] scatterplot3d_0.3-41    RCurl_1.98-1.3          modelr_0.1.8           
+ [91] crayon_1.4.1            utf8_1.2.2              tmvnsim_1.0-2          
+ [94] viridis_0.6.1           usethis_2.0.1           grid_4.1.1             
+ [97] readxl_1.3.1            callr_3.7.0             reprex_2.0.0           
+[100] digest_0.6.27           numDeriv_2016.8-1.1     brew_1.0-6             
+[103] munsell_0.5.0           viridisLite_0.4.0       sessioninfo_1.1.1      
+[106] quadprog_1.5-8         
+▶ target all_trees
+── Attaching packages ─────────────────────────────────────── tidyverse 1.3.1 ──
+✔ ggplot2 3.3.5     ✔ purrr   0.3.4
+✔ tibble  3.1.3     ✔ dplyr   1.0.7
+✔ tidyr   1.1.3     ✔ stringr 1.4.0
+✔ readr   1.4.0     ✔ forcats 0.5.1
+── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
+✖ tidyr::expand() masks drake::expand()
+✖ dplyr::filter() masks stats::filter()
+✖ tidyr::gather() masks drake::gather()
+✖ dplyr::lag()    masks stats::lag()
+
+Attaching package: ‘magrittr’
+
+The following object is masked from ‘package:purrr’:
+
+    set_names
+
+The following object is masked from ‘package:tidyr’:
+
+    extract
+
+
+Attaching package: ‘future’
+
+The following object is masked from ‘package:drake’:
+
+    plan
+
+
+Attaching package: ‘batchtools’
+
+The following object is masked from ‘package:purrr’:
+
+    flatten
+
+
+Attaching package: ‘data.table’
+
+The following objects are masked from ‘package:dplyr’:
+
+    between, first, last
+
+The following object is masked from ‘package:purrr’:
+
+    transpose
+
+▶ target tree_names
+▶ target subset_trees3
+▶ dynamic drake_target_1
+❯ subtarget drake_target_1_ff1e1d8d
+❯ subtarget drake_target_1_1469c460
+❯ subtarget drake_target_1_480e65f1
+❯ subtarget drake_target_1_bbdac64c
+❯ subtarget drake_target_1_72268d89
+❯ subtarget drake_target_1_deaf1125
+❯ subtarget drake_target_1_52f2c3ec
+❯ subtarget drake_target_1_3dbe69b7
+❯ subtarget drake_target_1_4b5164cd
+❯ subtarget drake_target_1_871a73d7
+❯ subtarget drake_target_1_51a4d2b8
+❯ subtarget drake_target_1_daa17af8
+❯ subtarget drake_target_1_5c8ad575
+❯ subtarget drake_target_1_aca0b6f7
+❯ subtarget drake_target_1_6572f82f
+❯ subtarget drake_target_1_133e0529
+❯ subtarget drake_target_1_593ed32b
+❯ subtarget drake_target_1_8f4d1108

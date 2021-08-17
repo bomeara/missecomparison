@@ -218,4 +218,26 @@ New_sim_runs_beaulieu4 <- drake_plan(
 
 #write.csv(tree_names[193:312], file="trees_for_Brian.csv") # These are going to Brian's 
 
+Second_sim_runs_beaulieu4 <- drake_plan(
+  base.dir = "/home/tvasconcelos/missecomparison/TitleRaboskyRuns",
+  #base.dir = "/Users/thaisvasconcelos/Desktop/misse_mme_paper/missecomparison/TitleRaboskyRuns",
+  all_trees = load.all.trees(base.dir, where="labcomputer"),
+  tree_names = names(all_trees),
+  subset_trees3 = tree_names[313:372],
+  target(DoSingleRun_new(dir=subset_trees3, 
+                         phy=all_trees, 
+                         root_type="madfitz", n.cores=NULL), dynamic=map(subset_trees3))
+)
+
+
+Second_sim_runs_beaulieu3 <- drake_plan(
+  base.dir = "/home/tvasconcelos/missecomparison/TitleRaboskyRuns",
+  #base.dir = "/Users/thaisvasconcelos/Desktop/misse_mme_paper/missecomparison/TitleRaboskyRuns",
+  all_trees = load.all.trees(base.dir, where="labcomputer"),
+  tree_names = names(all_trees),
+  subset_trees4 = tree_names[373:412],
+  target(DoSingleRun_new(dir=subset_trees4, 
+                         phy=all_trees, 
+                         root_type="madfitz", n.cores=NULL), dynamic=map(subset_trees4))
+)
 
