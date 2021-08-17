@@ -43,7 +43,7 @@ phy_ml1 <- force.ultrametric(read.tree("trees/Eucalypts_ML1.tre"))
 # (2) Specify number of possible combos to run
 #########################################################################
 #possibilities_bayes = generateMiSSEGreedyCombinations(max.param=round(ape::Ntip(phy_bayes)/50), vary.both=TRUE, fixed.eps.tries = NA)
-possibilities_ml1 = generateMiSSEGreedyCombinations(max.param=round(ape::Ntip(phy_ml1)/10), vary.both=TRUE, fixed.eps.tries = NA)
+possibilities_ml1 = generateMiSSEGreedyCombinations(max.param=round(ape::Ntip(phy_ml1)/10))
 #possibilities_ml2 = generateMiSSEGreedyCombinations(max.param=round(ape::Ntip(phy_ml2)/50), vary.both=TRUE, fixed.eps.tries = NA)
 
 #########################################################################
@@ -121,7 +121,7 @@ model.set_pruned_ml1 <- PruneRedundantModels(model.set_ml1)
 #########################################################################
 # (9) Reconstruct rates and get tip rates
 #########################################################################
-n.cores=40
+n.cores=20
 
 #model.recons_bayes <- as.list(1:length(model.set_pruned_bayes))
 #for (model_index in 1:length(model.set_pruned_bayes)) {
