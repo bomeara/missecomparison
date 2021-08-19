@@ -36,19 +36,22 @@ results <- list()
 #for (i in seq_along(tree_indices)) {
 foreach (i=seq_along(tree_indices)) %dopar% { 
 	started_runs <- list.files(path="results", pattern="starting.*.rda")
+	done_runs <- list.files(path="results", pattern=".*done_recon.*.rda")
 	tree_index <- tree_indices[i]
 
 	if(!any(grepl(paste0("starting_", tree_index, "_.rda"), started_runs))) { # so we skip ones already started
-		starting_session <- sessionInfo()
-		node <- unname(Sys.info()["nodename"])
-		save(tree_index, starting_session, node, file=paste0("results/starting_", tree_index, "_.rda"))
-		local_result <- NULL
-		possible_combos = hisse::generateMiSSEGreedyCombinations(max.param=max(4,round(ape::Ntip(trees[[tree_index]])/10)), vary.both=TRUE)
-		try(local_result <- DoSingleRun(dir=tree_names[tree_index], phy=trees[[tree_index]], root_type="madfitz", possibilities=possible_combos, tree_index=tree_index, n.cores=parallel::detectCores(), chunk.size=10))
-		#save(local_result, file=paste0("results/",unname(Sys.info()["nodename"]), "_",tree_index, "_local_result_newrun.rda"))
-		if(!is.null(local_result)) {
-			results[[i]] <- local_result
-			#save(results, tree_indices, file=paste0("manual", Sys.info()['nodename'], "_newrun.rda"))
+		if(!any(grepl(paste0("done_recon_", tree_index, "_"), done_runs))) { # so we skip ones already started
+			starting_session <- sessionInfo()
+			node <- unname(Sys.info()["nodename"])
+			save(tree_index, starting_session, node, file=paste0("results/starting_", tree_index, "_.rda"))
+			local_result <- NULL
+			possible_combos = hisse::generateMiSSEGreedyCombinations(max.param=max(4,round(ape::Ntip(trees[[tree_index]])/10)), vary.both=TRUE)
+			try(local_result <- DoSingleRun(dir=tree_names[tree_index], phy=trees[[tree_index]], root_type="madfitz", possibilities=possible_combos, tree_index=tree_index, n.cores=parallel::detectCores(), chunk.size=10))
+			#save(local_result, file=paste0("results/",unname(Sys.info()["nodename"]), "_",tree_index, "_local_result_newrun.rda"))
+			if(!is.null(local_result)) {
+				results[[i]] <- local_result
+				#save(results, tree_indices, file=paste0("manual", Sys.info()['nodename'], "_newrun.rda"))
+			}
 		}
 	}
 }
