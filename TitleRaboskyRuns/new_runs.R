@@ -264,7 +264,7 @@ crashed_runs_beaulieu4 <- drake_plan(
     dones_beaulieu4 = dones[grep("beaulieulab4", dones)],
     names_done_b4 = gsub(paste0(c("_newrun.rda","new_results/beaulieu3_done_recon_","new_results/beaulieulab4_done_recon_"), collapse="|"),"", dones_beaulieu4),
     subset_b4 = names(all_trees)[c(97:192, 313:372, 483:521)], # trees that ran at beaulieu4
-    possible_crashes_b4 <- subset_b4[which(!subset_b4 %in% names_done_b4)],
+    possible_crashes_b4 = subset_b4[which(!subset_b4 %in% names_done_b4)],
     target(DoSingleRun_new(dir=possible_crashes_b4, 
                        phy=all_trees, 
                        root_type="madfitz", n.cores=NULL), dynamic=map(possible_crashes_b4))
