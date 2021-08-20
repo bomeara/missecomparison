@@ -230,7 +230,7 @@ Second_sim_runs_beaulieu4 <- drake_plan(
 )
 
 
-Second_sim_runs_beaulieu3 <- drake_plan(
+Second_sim_runs_beaulieu3 <- drake_plan( # all done
   base.dir = "/home/tvasconcelos/missecomparison/TitleRaboskyRuns",
   #base.dir = "/Users/thaisvasconcelos/Desktop/misse_mme_paper/missecomparison/TitleRaboskyRuns",
   all_trees = load.all.trees(base.dir, where="labcomputer"),
@@ -249,10 +249,28 @@ Third_sim_runs_beaulieu4 <- drake_plan(
   #base.dir = "/Users/thaisvasconcelos/Desktop/misse_mme_paper/missecomparison/TitleRaboskyRuns",
   all_trees = load.all.trees(base.dir, where="labcomputer"),
   tree_names = names(all_trees),
-  subset_trees5 = tree_names[483:length(tree_names)],
+  subset_trees5 = tree_names[483:521],
   target(DoSingleRun_new(dir=subset_trees5, 
                          phy=all_trees, 
                          root_type="madfitz", n.cores=NULL), dynamic=map(subset_trees5))
 )
+
+
+crashed_runs_beaulieu4 <- drake_plan(
+    dones = c(list.files("results", pattern="done_recon", full.names=TRUE), list.files("new_results", pattern="done_recon", full.names=TRUE)),
+    base.dir = "/home/tvasconcelos/missecomparison/TitleRaboskyRuns",
+    all_trees = load.all.trees(base.dir, where="labcomputer"),
+#---- possible crashes in labcomputer4
+    dones_beaulieu4 = dones[grep("beaulieulab4", dones)],
+    names_done_b4 = gsub(paste0(c("_newrun.rda","new_results/beaulieu3_done_recon_","new_results/beaulieulab4_done_recon_"), collapse="|"),"", dones_beaulieu4),
+    subset_b4 = names(all_trees)[c(97:192, 313:372, 483:521)], # trees that ran at beaulieu4
+    possible_crashes_b4 <- subset_b4[which(!subset_b4 %in% names_done_b4)],
+    target(DoSingleRun_new(dir=possible_crashes_b4, 
+                       phy=all_trees, 
+                       root_type="madfitz", n.cores=NULL), dynamic=map(possible_crashes_b4))
+)
+
+
+
 
 
