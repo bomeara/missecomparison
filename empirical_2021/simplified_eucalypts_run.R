@@ -36,7 +36,8 @@ library(phytools)
 # (1) Load tree files
 #########################################################################
 #phy_bayes <- force.ultrametric(read.tree("trees/Eucalypts_Bayes.tre"))
-phy_ml1 <- force.ultrametric(read.tree("trees/Eucalypts_ML1.tre"))
+#phy_ml1 <- force.ultrametric(read.tree("trees/Eucalypts_ML1.tre"))
+phy_ml1 <- read.tree("ML1_modified.tre")
 #phy_ml2 <- force.ultrametric(read.tree("trees/Eucalypts_ML2.tre"))
 
 #########################################################################
