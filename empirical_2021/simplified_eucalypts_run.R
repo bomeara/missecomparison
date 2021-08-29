@@ -111,7 +111,7 @@ model.set_ml1 = MiSSEGreedy(phy=phy_ml1, # the phylogeny
 
 load("Eucalypts_fit_ml1.Rsave")
 model.set_ml1 <- misse.list
-possible.combos_ml1 <- possible.combos
+possible.combos_ml1 <- final.combos
 model.set_pruned_ml1 <- PruneRedundantModels(model.set_ml1)
 
 #load("Eucalypts_fit_ml2.Rsave")
@@ -122,7 +122,7 @@ model.set_pruned_ml1 <- PruneRedundantModels(model.set_ml1)
 #########################################################################
 # (9) Reconstruct rates and get tip rates
 #########################################################################
-n.cores=20
+n.cores=96
 
 #model.recons_bayes <- as.list(1:length(model.set_pruned_bayes))
 #for (model_index in 1:length(model.set_pruned_bayes)) {
@@ -148,6 +148,8 @@ for (model_index in 1:length(model.set_pruned_ml1)) {
                                                                pars = model.set_pruned_ml1[[model_index]]$solution, fixed.eps=model.set_pruned_ml1$fixed.eps , 
                                                                AIC = model.set_pruned_ml1[[model_index]]$AIC, root.type = "madfitz",n.cores=n.cores)   
 }
+save(model.recons_ml1, file="recon.Rsave")
+
 tip.rates_ml1 <- GetModelAveRates(model.recons_ml1, type = "tips")
 save(model.set_pruned_ml1, 
      model.recons_ml1, 
