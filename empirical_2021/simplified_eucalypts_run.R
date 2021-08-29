@@ -37,14 +37,14 @@ library(phytools)
 #########################################################################
 #phy_bayes <- force.ultrametric(read.tree("trees/Eucalypts_Bayes.tre"))
 #phy_ml1 <- force.ultrametric(read.tree("trees/Eucalypts_ML1.tre"))
-phy_ml1 <- read.tree("ML1_modified.tre")
+##      phy_ml1 <- read.tree("ML1_modified.tre")
 #phy_ml2 <- force.ultrametric(read.tree("trees/Eucalypts_ML2.tre"))
 
 #########################################################################
 # (2) Specify number of possible combos to run
 #########################################################################
 #possibilities_bayes = generateMiSSEGreedyCombinations(max.param=round(ape::Ntip(phy_bayes)/50), vary.both=TRUE, fixed.eps.tries = NA)
-possibilities_ml1 = generateMiSSEGreedyCombinations(max.param=round(ape::Ntip(phy_ml1)/10))
+##       possibilities_ml1 = generateMiSSEGreedyCombinations(max.param=round(ape::Ntip(phy_ml1)/10))
 #possibilities_ml2 = generateMiSSEGreedyCombinations(max.param=round(ape::Ntip(phy_ml2)/50), vary.both=TRUE, fixed.eps.tries = NA)
 
 #########################################################################
@@ -56,23 +56,23 @@ f = 0.85
 # (4) Specify a name to save the progress of the greedy
 #########################################################################
 #save.file_bayes = "Eucalypts_fit_bayes.Rsave"
-save.file_ml1 = "Eucalypts_fit_ml1.Rsave"
+##   save.file_ml1 = "Eucalypts_fit_ml1.Rsave"
 #save.file_ml2 = "Eucalypts_fit_ml2.Rsave"
 
 #########################################################################
 # (5) Specify a delta AICc to stop MiSSEgreedy
 #########################################################################
-stop.deltaAICc = 10
+##  stop.deltaAICc = 10
 
 #########################################################################
 # (6) Specify number of cores 
 #########################################################################
-n.cores = 20
+##  n.cores = 20
 
 #########################################################################
 # (7) Specify the chunk size of how many models to run per chunk
 #########################################################################
-chunk.size = 20
+##  chunk.size = 20
 
 #########################################################################
 # (8) Fit MiSSE models
@@ -85,13 +85,13 @@ chunk.size = 20
 #                        n.cores=n.cores, # number of cores
 #                        chunk.size=chunk.size) # size of the "chunk" of models
 
-model.set_ml1 = MiSSEGreedy(phy=phy_ml1, # the phylogeny 
-                        f=f, # sampling fraction
-                        possible.combos=possibilities_ml1, # possible combinations of models
-                        save.file=save.file_ml1, # the name of the file to save
-                        stop.deltaAICc=stop.deltaAICc, # the deltaAIC to stop running
-                        n.cores=n.cores, # number of cores
-                        chunk.size=chunk.size) # size of the "chunk" of models
+#model.set_ml1 = MiSSEGreedy(phy=phy_ml1, # the phylogeny 
+#                        f=f, # sampling fraction
+#                        possible.combos=possibilities_ml1, # possible combinations of models
+#                        save.file=save.file_ml1, # the name of the file to save
+#                        stop.deltaAICc=stop.deltaAICc, # the deltaAIC to stop running
+#                        n.cores=n.cores, # number of cores
+#                        chunk.size=chunk.size) # size of the "chunk" of models
 
 #model.set_ml2 = MiSSEGreedy(phy=phy_ml2, # the phylogeny 
 #                        f=f, # sampling fraction
