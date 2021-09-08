@@ -118,7 +118,7 @@ colnames(RMSE.results) <- parameters
 
 absoluteError.mean.results <- RMSE.results
 absoluteError.median.results <- RMSE.results
-cv.results <- RMSE.results
+proportionalError.results <- RMSE.results
 
 
 # get rid of NAs and weird values for now
@@ -129,10 +129,10 @@ rates.cleaned <- rates.cleaned[(rates.cleaned$lambdaTRUE>0),] #yeah, not sure wh
 # removing fixed eps
 #rates.cleaned <- subset(rates.cleaned, is.na(rates.cleaned$fixed_eps)) 
 
-coef.var <- function(x){
-  cv <- sd(x) / mean(x) * 100
-  return(cv)
-}
+#coef.var <- function(x){
+#  cv <- sd(x) / mean(x) * 100
+#  return(cv)
+#}
 
 for (approach.index in seq_along(approaches)) {
   for (parameter.index in seq_along(parameters)) {
@@ -143,7 +143,7 @@ for (approach.index in seq_along(approaches)) {
       RMSE.results[approach.index, parameter.index] <- Metrics::rmse(estimate, truth)
       absoluteError.mean.results[approach.index, parameter.index] <- mean(abs(estimate-truth))
       absoluteError.median.results[approach.index, parameter.index] <- median(abs(estimate-truth))
-      cv.results[approach.index, parameter.index] <- coef.var(abs(estimate-truth))
+      proportionalError.results[approach.index, parameter.index] <- mean((estimate-truth)/truth)
     }
   }
 }
@@ -156,6 +156,9 @@ print(round(absoluteError.mean.results,3))
 
 print("absolute error, median")
 print(round(absoluteError.median.results,3))
+
+#print("proportional error")
+#print(round(proportionalError.results,3))
 
 pivot_names <- colnames(rates.combined)[grepl("(lambda)|(mu)|(^turnover)|(extinctionFraction)|(netDiv)", colnames(rates.combined))]
 pivot_names <- pivot_names[!grepl("TRUE", pivot_names)]
@@ -249,6 +252,7 @@ software <- c("BAMM","MiSSEbest","MiSSEavg")
 #dev.off()
 
 #
+
 pdf("comp_new_results_AUG2021.pdf", width=7, height=10)
 #plot.new()
 par(mfrow=c(5,3))
@@ -275,16 +279,17 @@ for(trees_index in 1:length(types_of_trees)) {
   # nrow(rates.combined)
   #----------------------
   
-  # get rid of NAs and weird values for now
+  # get rid of NAs and weird values 
   rates.cleaned <- tmp
   rates.cleaned <- rates.cleaned[!is.na(rates.cleaned$netDivBAMM),]
-  rates.cleaned <- rates.cleaned[(rates.cleaned$lambdaTRUE>0),] #yeah, not sure why there'd be no speciation in reality for a tree with >2 taxa
-  
-  #coef.var <- function(x){
-  #  cv <- sd(x) / mean(x) * 100
-  #  return(cv)
-  #}
-  
+  rates.cleaned <- rates.cleaned[(rates.cleaned$lambdaTRUE>0),] 
+  tree_names <- unique(rates.cleaned$treeName)
+  tmp_results <- data.frame(matrix(nrow=length(tree_names), ncol=4))
+  colnames(tmp_results) <- c("tree_name", "RMSE","absoluteError.mean","absoluteError.median")
+  tmp_results$tree_name <- tree_names
+  for(tree_name_index in seq_along(nrow(tmp_results))) {
+    tmp_tree <- tmp_results$tree_name[tree_name_index] 
+    tmp_table <- rates.cleaned[rates.cleaned$treeName==tmp_tree,]
   for (approach.index in seq_along(approaches)) {
     for (parameter.index in seq_along(parameters)) {
       truth <- rates.cleaned[,paste0(parameters[parameter.index],"TRUE")]
@@ -298,7 +303,7 @@ for(trees_index in 1:length(types_of_trees)) {
       }
     }
   }
-  
+  }
   r0 <- list(RMSE.results, absoluteError.mean.results, absoluteError.median.results)
   names(r0) <- c("RMSE", "absolute error, mean", "absolute error, median")
   results_by_type_of_tree[[trees_index]] <- r0
@@ -306,6 +311,28 @@ for(trees_index in 1:length(types_of_trees)) {
 }
 
 results_by_type_of_tree
+
+#----------------------
+# Plots by types of trees
+pdf("comp_new_results_AUG2021_tree_type.pdf", width=7, height=10)
+#plot.new()
+
+par(mfrow=c(5,3))
+for(trees_index in seq_along(types_of_trees)) {
+for(rate_index in seq_along(rates)) {
+  for(software_index in seq_along(software)) { 
+    s0 <- as.data.frame(rates.cleaned.good[rates.cleaned.good$estimator==software[software_index],])
+    t0 <- s0[grep(types_of_trees[trees_index], s0$treeTipString),]
+    r0 <- t0[t0$actual_parameter==rates[rate_index],]
+    #r0 <- subset(r0, !r0$true_value%in%(boxplot(r0$true_value, plot=F)$out)) # remove outlier?
+    plot(r0$true_value, r0$parameter_value, col="white", xlab=paste0(rates[rate_index], " true"), ylab=paste0(rates[rate_index], " estimated"), main=paste0(software[software_index],"_", types_of_trees[trees_index]), xlim=c(0,1), ylim=c(0,1))
+    heatscatterpoints(r0$true_value, r0$parameter_value, xlim=c(0,10),ylim=c(0,10))
+    abline(0, 1)
+    }
+  }
+}
+dev.off()
+
 
 #----------------------
 # Separating by tree height:

@@ -2,12 +2,73 @@
 # Post-run 
 # setwd("~/Desktop/misse_mme_paper/missecomparison/empirical_2021")
 # rm(list=ls())
+library(ape)
 library(hisse)
 
+################################################
+# BAMM
+################################################
+library(BAMMtools)
+library(coda)
+eucalypts <- read.tree("attachments/ML1_modified.tre")
+
+# checking mcmc convergence
+mcmcout <- read.csv("attachments/mcmc_out.txt", header=T)
+#plot(mcmcout$logLik ~ mcmcout$generation)
+burnstart <- floor(0.1 * nrow(mcmcout))
+postburn <- mcmcout[burnstart:nrow(mcmcout), ] # 10% burnin
+effectiveSize(postburn$N_shifts) # over 200
+effectiveSize(postburn$logLik) # over 200
+
+table(postburn$N_shifts ) / nrow(postburn)
+# plotPrior(postburn)
+
+ed <- getEventData(eucalypts, "attachments/event_data.txt", nsamples = 45000)
+
+summary(ed)
+
+pal.name = "Viridis" 
+pal <- hcl.colors(30, palette = pal.name, alpha = 1)
+
+plot <- plot.bammdata(ed, pal=pal)
+addBAMMlegend(plot)
+addBAMMshifts(plot)
+
+
+
+#z <- plot.bammdata(ed, tau = 0.002, lwd=2)
+#addBAMMlegend(z)
+
+bamm_tiprates <- getTipRates(ed)
+
+lambda <- bamm_tiprates$lambda.avg
+mu <- bamm_tiprates$mu.avg
+bamm_tiprates_final <- data.frame(species=names(lambda), lambda=unname(lambda), mu=unname(mu))
+write.csv(bamm_tiprates_final, file="bamm_tiprates_final.csv")
+
+################################################
+# MiSSE 
+################################################
 load("Eucalypts_example_ml1_tree.Rsave") # load results
+
+
+MiSSENet(model.set_pruned_ml1)
+
+PlotMisseSpace(model.set_pruned_ml1, size=10, size2=5, width=2, arrow.size=0.2, arrow.width=0.2)
+
+
+
+?plot.igraph
+
+#
+load("Eucalypts_example_bayes_tree.Rsave") # load results
+model.recons_ml1 <- model.recons_bayes
+tip.rates_ml1 <- tip.rates_bayes
+
+
 tree <- model.recons_ml1[[1]]$phy
 
-View(possible.combos_ml1)
+#View(possible.combos_ml1)
      #tip.rates_best <- hisse::GetModelAveRates(model.recons_ml1[[which.min(unlist(lapply(model.recons_ml1, "[[","AIC")))]], type = "tips")
 #tip.rates_avg <- hisse::GetModelAveRates(model.recons_ml1, type = "tips")
 #tip.rates_ml1

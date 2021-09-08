@@ -247,7 +247,7 @@ Second_sim_runs_beaulieu3 <- drake_plan( # all done
 Third_sim_runs_beaulieu4 <- drake_plan(
   base.dir = "/home/tvasconcelos/missecomparison/TitleRaboskyRuns",
   #base.dir = "/Users/thaisvasconcelos/Desktop/misse_mme_paper/missecomparison/TitleRaboskyRuns",
-  all_trees = load.all.trees(base.dir, where="labcomputer"),
+  all_trees = load.all.trees(base.dir, where="local"),
   tree_names = names(all_trees),
   subset_trees5 = tree_names[483:521],
   target(DoSingleRun_new(dir=subset_trees5, 
@@ -271,6 +271,9 @@ crashed_runs_beaulieu4 <- drake_plan(
 )
 
 
+names(all_trees)
+types_of_trees
+ntips <- lapply(all_trees, ape::Ntip)
+length(grep(types_of_trees[8], names(lapply(all_trees, ape::Ntip))))
 
-
-
+min(unlist(ntips[grep(types_of_trees[8], names(lapply(all_trees, ape::Ntip)))]))
