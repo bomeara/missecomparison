@@ -23,8 +23,16 @@ cl <- future::makeClusterPSOCK(workers=c(rep(c("10.4.9.34"),96)), rscript="/usr/
 #make(Third_sim_runs_beaulieu4, cache=cache_rerun_b4, parallelism="future", jobs=60)
 #parallel::stopCluster(cl)
 
+#sessionInfo() 
+#future::plan(cluster, workers = cl)
+#cache_rerun_b4 <- drake::drake_cache(path = "drake_cache_rerun_b4")
+#make(crashed_runs_beaulieu4, cache=cache_rerun_b4, parallelism="future", jobs=60)
+#parallel::stopCluster(cl)
+
 sessionInfo() 
 future::plan(cluster, workers = cl)
 cache_rerun_b4 <- drake::drake_cache(path = "drake_cache_rerun_b4")
-make(crashed_runs_beaulieu4, cache=cache_rerun_b4, parallelism="future", jobs=60)
+make(rerun_crashed_runs_beaulieu4_final, cache=cache_rerun_b4, parallelism="future", jobs=96)
 parallel::stopCluster(cl)
+
+
