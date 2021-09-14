@@ -76,6 +76,79 @@ get.all.results <- function(base.dir, x=NULL) {
   return(done_trees_number)
 }
 
+get.crashed.trees2 <- function(base.dir, where=c("local","labcomputer")) {
+    all_results <- data.frame()
+    model_average_results <- data.frame()
+    best_results <- data.frame()
+    dones <- c(list.files("results", pattern="done_recon", full.names=TRUE), list.files("new_results", pattern="done_recon", full.names=TRUE))
+    for (i in seq_along(dones)) {
+    print(paste0("Loading ", i, " of ", length(dones)))
+    try(load(dones[i]))
+    if(exists("summary_df")) {
+    
+    all_results <- plyr::rbind.fill(all_results, summary_df)
+    local_weighted <- summary_df %>% group_by(treeName, taxon_id_in_phy, tipName) %>% summarise(
+      turnover = weighted.mean(turnover, AICc_weight),
+      extinction.fraction = weighted.mean(extinction.fraction, AICc_weight),
+      net.div = weighted.mean(net.div, AICc_weight), 
+      speciation = weighted.mean(speciation, AICc_weight),
+      extinction = weighted.mean(extinction, AICc_weight)
+    )
+    model_average_results <- plyr::rbind.fill(model_average_results, local_weighted)
+    best_results <- plyr::rbind.fill(best_results, subset(summary_df, deltaAICc==0))
+    
+    rm(summary_df)
+    rm(delta_AICc)
+    rm(local_weighted)
+  }
+  
+  }
+    rates.ours <- treeTipMerge(all_results)
+    rates.ours.model.average <- treeTipMerge(model_average_results)
+    rates.theirs <- treeTipMerge(read.csv("data/title_rabosky_dryad/tipRates_dryad/dataFiles/estimatedTipRates.csv", stringsAsFactors=FALSE))
+    rates.true <- treeTipMerge(read.csv("data/title_rabosky_dryad/tipRates_dryad/dataFiles/trueTipRates.csv", stringsAsFactors=FALSE))
+
+    rates.ours$unique_string <- paste(rates.ours$treeName, "nturnover", rates.ours$nturnover, "neps", rates.ours$neps, "root", rates.ours$root_type, sep="_")
+    rates.ours.best <- best_results
+    rates.theirs <- rates.theirs[rates.theirs$treeName %in% rates.ours.best$treeName,]
+    rates.true <- rates.true[rates.true$treeName %in% rates.ours.best$treeName,]
+    colnames(rates.true)[which(colnames(rates.true)=="tipLambda")] <- "lambdaTRUE"
+    colnames(rates.true)[which(colnames(rates.true)=="tipMu")] <- "muTRUE"
+    colnames(rates.true)[which(colnames(rates.true)=="tipNetDiv")] <- "netDivTRUE"
+    rates.true$turnoverTRUE <- rates.true$lambdaTRUE + rates.true$muTRUE
+    rates.true$extinctionFractionTRUE <- rates.true$muTRUE / rates.true$lambdaTRUE
+
+    colnames(rates.ours.best)[which(colnames(rates.ours.best)=="turnover")] <- "turnoverMiSSEbest"
+    colnames(rates.ours.best)[which(colnames(rates.ours.best)=="extinction.fraction")] <- "extinctionFractionMiSSEbest"
+    colnames(rates.ours.best)[which(colnames(rates.ours.best)=="net.div")] <- "netDivMiSSEbest"
+    colnames(rates.ours.best)[which(colnames(rates.ours.best)=="speciation")] <- "lambdaMiSSEbest"
+    colnames(rates.ours.best)[which(colnames(rates.ours.best)=="extinction")] <- "muMiSSEbest"
+
+    colnames(rates.ours.model.average)[which(colnames(rates.ours.model.average)=="turnover")] <- "turnoverMiSSEavg"
+    colnames(rates.ours.model.average)[which(colnames(rates.ours.model.average)=="extinction.fraction")] <- "extinctionFractionMiSSEavg"
+    colnames(rates.ours.model.average)[which(colnames(rates.ours.model.average)=="net.div")] <- "netDivMiSSEavg"
+    colnames(rates.ours.model.average)[which(colnames(rates.ours.model.average)=="speciation")] <- "lambdaMiSSEavg"
+    colnames(rates.ours.model.average)[which(colnames(rates.ours.model.average)=="extinction")] <- "muMiSSEavg"
+
+    rates.combined <- merge(rates.ours.best, rates.ours.model.average)
+    rates.combined <- merge(rates.combined, rates.theirs)
+    rates.combined <- merge(rates.combined, rates.true)
+
+    rates.combined$muBAMM <- rates.combined$lambdaBAMM - rates.combined$netDivBAMM
+    rates.combined$turnoverBAMM <- rates.combined$muBAMM + rates.combined$lambdaBAMM
+    rates.combined$extinctionFractionBAMM <- rates.combined$muBAMM / rates.combined$lambdaBAMM
+
+    rates.cleaned <- rates.combined
+
+    dones <- unique(rates.cleaned$treeName)
+    
+    all_trees = load.all.trees(base.dir=base.dir, where=where)
+    to_rerun <- names(all_trees)[!names(all_trees) %in% dones]
+    to_rerun <- subset(to_rerun, !grepl("MeyerWiens2017",to_rerun))
+  return(to_rerun)
+}
+
+
 # 
 # Selecting those that did crash
 get.crashed.trees <- function(trees, done_trees_number) {
@@ -255,7 +328,6 @@ Third_sim_runs_beaulieu4 <- drake_plan(
                          root_type="madfitz", n.cores=NULL), dynamic=map(subset_trees5))
 )
 
-
 crashed_runs_beaulieu4 <- drake_plan(
     dones = c(list.files("results", pattern="done_recon", full.names=TRUE), list.files("new_results", pattern="done_recon", full.names=TRUE)),
     base.dir = "/home/tvasconcelos/missecomparison/TitleRaboskyRuns",
@@ -270,10 +342,17 @@ crashed_runs_beaulieu4 <- drake_plan(
                        root_type="madfitz", n.cores=NULL), dynamic=map(possible_crashes_b4))
 )
 
+##########################################
+# 2021-09-13
+##########################################
+rerun_crashed_runs_beaulieu4_final <- drake_plan(
+  dones = c(list.files("results", pattern="done_recon", full.names=TRUE), list.files("new_results", pattern="done_recon", full.names=TRUE)),
+  base.dir = "/home/tvasconcelos/missecomparison/TitleRaboskyRuns",
+  all_trees = load.all.trees(base.dir, where="labcomputer"),
+  crashed_trees = get.crashed.trees2(base.dir, where="labcomputer"),
+  target(DoSingleRun_new(dir=crashed_trees, 
+                         phy=all_trees, 
+                         root_type="madfitz", n.cores=NULL), dynamic=map(crashed_trees))
+)
 
-names(all_trees)
-types_of_trees
-ntips <- lapply(all_trees, ape::Ntip)
-length(grep(types_of_trees[8], names(lapply(all_trees, ape::Ntip))))
-
-min(unlist(ntips[grep(types_of_trees[8], names(lapply(all_trees, ape::Ntip)))]))
+  
