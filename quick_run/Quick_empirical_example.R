@@ -49,15 +49,15 @@ possible.combos = generateMiSSEGreedyCombinations(max.param=max.param, vary.both
 
 #########################################################################
 # And this is how the possible.combos data.frame should look like:
-#########################################################################
+#####################################################q####################
 head(possible.combos)
 # turnover eps fixed.eps
-# 1        2   1        NA
-# 2        3   1        NA
-# 3       11   1        NA
-# 4        1   1        NA
-# 5        1   2        NA
-# 6        4   1        NA
+# 1         7   1        NA
+# 2         4   3        NA
+# 3         1   1        NA
+# 4         4   2        NA
+# 5         4   1        NA
+# 6         1   2        NA
 
 #########################################################################
 # (4) Specify a sampling fraction.
@@ -249,7 +249,7 @@ head(tip.rates)
 save(model.set_pruned, 
      model.recons, 
      tip.rates, 
-     possible.combos,
+     final.combos,
      file="Lupinus_example.Rsave")
 
 #########################################################################
