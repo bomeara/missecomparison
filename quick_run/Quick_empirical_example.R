@@ -43,10 +43,11 @@ phy <- read.tree("Lupinus.tre")
 # is also a model with two rate classes, but the same extinction fraction 
 # is shared between rate classes. 
 #########################################################################
-max.param = max(4, round(ape::Ntip(phy)/10))
-set.seed(42)
-possible.combos = generateMiSSEGreedyCombinations(max.param=max.param, vary.both=TRUE, fixed.eps.tries=NA)
+#max.param = max(4, round(ape::Ntip(phy)/10))
+#set.seed(42)
+#possible.combos = generateMiSSEGreedyCombinations(max.param=max.param, vary.both=TRUE, fixed.eps.tries=NA)
 
+possible.combos = generateMiSSEGreedyCombinations(max.param=3, vary.both=TRUE, fixed.eps.tries=NA)
 #########################################################################
 # And this is how the possible.combos data.frame should look like:
 #####################################################q####################
@@ -148,6 +149,8 @@ model.set = MiSSEGreedy(phy=phy, # the phylogeny
                         sann=FALSE) # IMPORTANT IMPORTANT IMPORTANT - This argument is here set to F for speed, 
                                 # but it should be set to TRUE for your actual runs. See above. 
 
+ls <- ls()
+print(ls)
 #########################################################################
 # You should see this printed on your console:
 #########################################################################
