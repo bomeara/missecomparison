@@ -18,7 +18,7 @@ library(hisse)
 # it directly from github with the following commands:
 #########################################################################
 install.packages("devtools")
-devtools::install_github("thej022214/hisse")
+devtools::install_github("thej022214/hisse", force=T)
 
 #########################################################################
 # (2) Load tree file.
@@ -27,7 +27,7 @@ devtools::install_github("thej022214/hisse")
 # series of MiSSE models of increasing complexities) and MarginReconMiSSE 
 # (which will reconstruct the rates at the tips using a marginal reconstruction 
 # algorithm). First of all, let's load the tree file that will be used 
-# in this example. Here we analyse the Lupinus tree from Drummond 
+# in this example. Here we analyze the Lupinus tree from Drummond 
 # et al. (2012) [Systematic Biology, 61(3), 443-460].
 #########################################################################
 phy <- read.tree("Lupinus.tre")
@@ -43,34 +43,26 @@ phy <- read.tree("Lupinus.tre")
 # is also a model with two rate classes, but the same extinction fraction 
 # is shared between rate classes. 
 #########################################################################
-turnover.tries = sequence(4) 
-eps.tries = sequence(4)
-max.param = length(turnover.tries) + length(eps.tries)
-fixed.eps.tries = NA
-possible.combos = generateMiSSEGreedyCombinations(max.param=max.param, 
-                                                  turnover.tries=turnover.tries, 
-                                                  eps.tries=eps.tries, 
-                                                  fixed.eps.tries=fixed.eps.tries)
-
-# Note: sometines it is necessary to fix this "manually" (depending on the R version, computer, etc:)
-# possible.combos$fixed.eps <- as.numeric(possible.combos$fixed.eps) 
+max.param = max(4, round(ape::Ntip(phy)/10))
+set.seed(42)
+possible.combos = generateMiSSEGreedyCombinations(max.param=max.param)
 
 #########################################################################
 # And this is how the possible.combos data.frame should look like:
 #########################################################################
 head(possible.combos)
 # turnover eps fixed.eps
-# 1        1   1        NA
-# 2        2   1        NA
-# 3        1   2        NA
-# 4        3   1        NA
-# 5        2   2        NA
-# 6        1   3        NA
+# 1        2   1        NA
+# 2        3   1        NA
+# 3       11   1        NA
+# 4        1   1        NA
+# 5        1   2        NA
+# 6        4   1        NA
 
 #########################################################################
 # (4) Specify a sampling fraction.
 # Sampling fraction is the proportion of species that were sampled in a 
-# tree relative to how many species we believe that exist in reality. In 
+# tree relative to how many species we believe that exist in that clade In 
 # our example, the total number Lupinus species is estimated in 250, so 
 # let's use a sampling fraction of 0.45 for our tree of 120 species. 
 # For more information on why to use a global sampling fraction instead of 
@@ -82,7 +74,7 @@ f = 0.45
 # (5) Specify a file name to save the progress of MiSSEGreedy.
 # Here we give a name for the .Rsave file that will save MiSSEGreedy's 
 # progress in our working directory. IMPORTANT: Remember that you should 
-# change the name of this object for different runs or the file will be 
+# change the name of this object between runs or the file will be 
 # overwritten.
 #########################################################################
 save.file = "Lupinus_fit_fast.Rsave"
@@ -92,10 +84,10 @@ save.file = "Lupinus_fit_fast.Rsave"
 # MiSSEGreedy will fit models of increasing complexities following the order
 # presented in the possible.combos object. However, very complex models, 
 # for example, will likely be a poor fit for most small trees. MiSSEGreedy 
-# will then not necessarily fit all models in the possible.combos object 
+# will then not necessarily fit all models of the possible.combos object 
 # and will stop running when the likelihood and AICc of new models stop 
-# improving. We then want to inform MiSSEGreedy when we think the AICc is not
-# significantly improving anymore with the argument stop.deltaAICc. 
+# improving significantly. We then want to inform MiSSEGreedy when we think 
+# the AICc is not improving anymore with the argument stop.deltaAICc. 
 # Because we are using a relatively small tree in our example (120 tips), 
 # we can also use a small value for the stop.deltaAICc (but this number should 
 # be larger for larger trees). 
@@ -106,36 +98,36 @@ stop.deltaAICc = 2
 # (7) Specify number of cores to run MiSSE.
 # To find out how many cores you have in your computer, you can use:
 #########################################################################
-install.packages("parallel")
+#install.packages("parallel")
 parallel::detectCores()
 # [1] 8 
 
 #########################################################################
 # My macbook has 8 cores, but I will use 4 cores to run MiSSE. You may 
-# want to use a more powerful computer and more cores if you have larger
-# trees.
+# want to use a more powerful computer and more cores if you have a larger
+# tree.
 #########################################################################
-n.cores = 4
+n.cores = 20
 
 #########################################################################
 # (8) Specify the chunk size.
 # This number refers to how many different models MiSSEGreedy will fit at
 # each time before checking if the lowest AICc of the set has a higher 
 # deltaAICc than the number defined as stop.deltaAICc. Here we are going 
-# to set the chunk.size to 3, which means that MiSSEGreedy will fit 3 models 
-# before checking if fit stopped improving.
+# to set the chunk.size to 4, which means that MiSSEGreedy will fit 4 models 
+# before checking if the fit stopped improving.
 #########################################################################
-chunk.size = 3
+chunk.size = 5
 
 #########################################################################
 # (9) Fit MiSSE models using MiSSEGreedy.
 # The following command will take all the arguments set in the steps above
 # to fit a series of MiSSE models using a greedy algorithm. In this run, 
 # all other arguments in the function are set to default, but you should 
-# look at the help page for MiSSEGreedy to set the other arguments according 
+# look at the help page of MiSSEGreedy to set the other arguments according 
 # to your needs.
 #########################################################################
-?MiSSEGreedy()
+#?MiSSEGreedy()
 
 #########################################################################
 # Note that this command can take a while to run depending on the size of 
@@ -144,7 +136,7 @@ chunk.size = 3
 # 20 minutes using 4 cores. IMPORTANT NOTE: Note that we set sann=FALSE 
 # in this run for speed since sann=TRUE (the default) tends to make runs 
 # slower. However, it is strongly advised to use sann=TRUE for real world 
-# optiminations, as it tends to give more accurate parameter estimates.
+# optimizations, as it tends to give more accurate parameter estimates.
 #########################################################################
 model.set = MiSSEGreedy(phy=phy, # the phylogeny 
                         f=f, # sampling fraction
@@ -159,19 +151,20 @@ model.set = MiSSEGreedy(phy=phy, # the phylogeny
 #########################################################################
 # You should see this printed on your console:
 #########################################################################
-# Starting at 2021-07-09 11:51:36
+# Starting at 2021-08-30 16:33:06
 # running on 4 cores.
 # turnover eps fixed.eps
 # 1        1   1        NA
 # 2        2   1        NA
-# 3        1   2        NA
-#
+# 3        1   4        NA
+# 4        2   2        NA
+
 #########################################################################
-# As you will see, even though we "fed" MiSSEGreedy with 16 possible 
+# As you will see, even though we gave MiSSEGreedy several possible 
 # rate-class combinations, it stopped to run as soon as the AICc reached 
 # the specified deltaAICc in contrast to the "best model". In our example,
-# this happened after the third "chunk" of models, i.e. after model number 9. 
-# In the next steps, we will work with this set of 9 models that have 
+# this happened after the second "chunk" of models.
+# In the next steps, we will work with this set of models that have 
 # relatively low AICc.
 #########################################################################
 
@@ -182,20 +175,20 @@ model.set = MiSSEGreedy(phy=phy, # the phylogeny
 class(model.set) 
 # [1] "list"
 length(model.set) 
-# [1] 9
+# [1] 8
 
 #########################################################################
 # You should then prune the redundant models with the following command. 
 # More details about this step, use: 
 #########################################################################
-?PruneRedundantModels()
+# ?PruneRedundantModels()
 #########################################################################
 model.set_pruned <- PruneRedundantModels(model.set)
 length(model.set_pruned) 
-# [1] 9
+# [1] 8
 
 #########################################################################
-# In this case, we kept our same 9 models after prunning, though this number
+# In this case, we kept our same 8 models after prunning, though this number
 # may decrease in cases where there are redundant models in the set.
 #########################################################################
 
@@ -208,7 +201,7 @@ model.recons <- as.list(1:length(model.set_pruned))
 for (model_index in 1:length(model.set_pruned)) {
   nturnover <- length(unique(model.set_pruned[[model_index]]$turnover))
   neps <- length(unique(model.set_pruned[[model_index]]$eps))
-  model.recons[[model_index]] <- hisse::MarginReconMiSSE(phy = model.set_pruned[[model_index]]$phy, f = 0.87, hidden.states = max(c(nturnover, neps)), 
+  model.recons[[model_index]] <- hisse::MarginReconMiSSE(phy = model.set_pruned[[model_index]]$phy, f = 0.45, hidden.states = max(c(nturnover, neps)), 
                                                          pars = model.set_pruned[[model_index]]$solution, fixed.eps=model.set_pruned$fixed.eps , 
                                                          AIC = model.set_pruned[[model_index]]$AIC, root.type = "madfitz",n.cores=n.cores)   
 }
@@ -260,6 +253,9 @@ save(model.set_pruned,
      file="Lupinus_example.Rsave")
 
 #########################################################################
-
-
+# You can also visualize the rates evolving in the tree with the following command, 
+# though rates through time *should not* be interpreted literally. The painting
+# is just to get a "feeling" for the model.
+#painted.tree <- hisse::plot.misse.states(x = model.recons, 
+#                                         rate.param = "speciation", type = "phylo", show.tip.label = F) 
 
