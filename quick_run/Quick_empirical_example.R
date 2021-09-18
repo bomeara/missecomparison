@@ -8,7 +8,7 @@
 # The first step is to make sure hisse is installed in your computer. You 
 # can do that easily with following commands:
 #########################################################################
-install.packages("hisse")
+#install.packages("hisse")
 library(hisse)
 
 #########################################################################
@@ -17,8 +17,8 @@ library(hisse)
 # it may be wise to try the most up to date version of hisse by downloading 
 # it directly from github with the following commands:
 #########################################################################
-install.packages("devtools")
-devtools::install_github("thej022214/hisse", force=T)
+#install.packages("devtools")
+#devtools::install_github("thej022214/hisse", force=T)
 
 #########################################################################
 # (2) Load tree file.
