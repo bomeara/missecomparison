@@ -45,7 +45,7 @@ phy <- read.tree("Lupinus.tre")
 #########################################################################
 max.param = max(4, round(ape::Ntip(phy)/10))
 set.seed(42)
-possible.combos = generateMiSSEGreedyCombinations(max.param=max.param)
+possible.combos = generateMiSSEGreedyCombinations(max.param=max.param, vary.both=TRUE, fixed.eps.tries=NA)
 
 #########################################################################
 # And this is how the possible.combos data.frame should look like:
