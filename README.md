@@ -6,9 +6,9 @@ Tip-rate comparisons between plant height and net-turnover rates in Eucalypteae 
  
 Data from: 
 
-Thornhill, A. H., Crisp, M. D., Külheim, C., Lam, K. E., Nelson, L. A., Yeates, D. K., & Miller, J. T. (2019). A dated molecular perspective of eucalypt taxonomy, evolution and diversification. Australian Systematic Botany, 32(1), 29-48.
+Thornhill, A. H., Crisp, M. D., Külheim, C., Lam, K. E., Nelson, L. A., Yeates, D. K., & Miller, J. T. (2019). A dated molecular perspective of eucalypt taxonomy, evolution and diversification. Australian Systematic Botany, 32(1), 29-48. [10.1071/SB18015](https://www.publish.csiro.au/sb/SB18015)
  
-EUCLID Eucalypts of Australia Edition 4 (2015, internet based, hosted by the Identic Pty Ltd, Brisbane.)link[https://apps.lucidcentral.org/euclid/text/intro/index.html]
+EUCLID Eucalypts of Australia Edition 4 (2015, internet based, hosted by the Identic Pty Ltd, Brisbane.)[link](https://apps.lucidcentral.org/euclid/text/intro/index.html)
 
  
 > Lupinus-quick_run
