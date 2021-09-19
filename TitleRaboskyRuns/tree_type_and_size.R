@@ -7,6 +7,8 @@ library(stats)
 library(ggplot2)
 library(progress)
 library(viridis)
+#install.packages("PMCMR")
+library(PMCMR)
 
 treeTipMerge <- function(x) {
   x$treeTipString <- paste0(x$treeName, "_", x$tipName)
@@ -152,7 +154,6 @@ results_all_trees <- as.data.frame(results_all_trees)
 colnames(results_all_trees) <- c("tree_name","error","parameter","value")
 results_all_trees$value <- as.numeric(results_all_trees$value)
 
-results_all_trees <- subset(results_all_trees, results_all_trees$tree_name!="netDivConstantVariance_231") # weird outliers
 
 types_of_trees <- types_of_trees <- unique(unlist(lapply(strsplit(rates.combined$treeTipString, "_"),"[[",1)))
 length_tree_type <- c()
@@ -188,13 +189,16 @@ approaches <- c("TB", "ND", "DR", "BAMM", "MiSSEbest", "MiSSEavg")
 parameters <- c("mu", "lambda", "netDiv", "turnover", "extinctionFraction")
 error.measurements <- c("RMSE","absoluteError.mean","absoluteError.median")
 
+#############
+one.error.measurement = "absoluteError.mean"
 
 pal.name <- "BuPu"
 pal <- rev(hcl.colors(6, palette = pal.name, alpha = 0.75))
-pdf("RMSE_all.pdf", width=15, height=20)
+pdf(paste0(one.error.measurement, "_all.pdf"), width=15, height=20)
 
 #colnames(results_one_tree_type_one_parameter)
-lambda1 <- organize_table(results_all_trees, one_tree_type[1], parameters[parameters=="lambda"], error.measurements[error.measurements=="RMSE"])
+lambda1 <- organize_table(results_all_trees, one_tree_type[1], parameters[parameters=="lambda"], error.measurements[error.measurements==one.error.measurement])
+
 plot_lambda1 <- ggplot(lambda1, aes(x=parameter, y=log(value), fill=parameter)) +
   #geom_boxplot() + 
   geom_violin(trim=FALSE)+
@@ -212,13 +216,13 @@ plot_lambda1 <- ggplot(lambda1, aes(x=parameter, y=log(value), fill=parameter)) 
         axis.text.y=element_blank(),
         axis.ticks.y=element_blank())
 
-lambda2 <- organize_table(results_all_trees, one_tree_type[2], parameters[parameters=="lambda"], error.measurements[error.measurements=="RMSE"])
+lambda2 <- organize_table(results_all_trees, one_tree_type[2], parameters[parameters=="lambda"], error.measurements[error.measurements==one.error.measurement])
 plot_lambda2 <- ggplot(lambda2, aes(x=parameter, y=log(value), fill=parameter)) +
   #geom_boxplot() + 
   geom_violin(trim=FALSE) +
   theme_bw() +
   theme(legend.position = "none") + 
-  #annotate(geom="text", x=6, y=7, size=5, hjust=0, label="RMSE") + 
+  #annotate(geom="text", x=6, y=7, size=5, hjust=0, label=one.error.measurement) + 
   xlab("") +
   #ggtitle(paste0(one_tree_type[2], " (lambda)", " (N=",length_tree_type[2],")")) +
   ggtitle(paste0(one_tree_type[2], " (N=",length_tree_type[2],")")) +
@@ -231,13 +235,13 @@ plot_lambda2 <- ggplot(lambda2, aes(x=parameter, y=log(value), fill=parameter)) 
         axis.text.y=element_blank(),
         axis.ticks.y=element_blank())
 
-lambda3 <- organize_table(results_all_trees, one_tree_type[3], parameters[parameters=="lambda"], error.measurements[error.measurements=="RMSE"])
+lambda3 <- organize_table(results_all_trees, one_tree_type[3], parameters[parameters=="lambda"], error.measurements[error.measurements==one.error.measurement])
 plot_lambda3 <- ggplot(lambda3, aes(x=parameter, y=log(value), fill=parameter)) +
   #geom_boxplot() + 
   geom_violin(trim=FALSE) + 
   theme_bw() +
   theme(legend.position = "none") + 
-  #annotate(geom="text", x=6, y=7, size=5, hjust=0, label="RMSE") + 
+  #annotate(geom="text", x=6, y=7, size=5, hjust=0, label=one.error.measurement) + 
   xlab("") +
   ggtitle(paste0(one_tree_type[3], " (lambda)", " (N=",length_tree_type[3],")")) +
   ggtitle(paste0(one_tree_type[3], " (N=",length_tree_type[3],")")) +
@@ -251,13 +255,13 @@ plot_lambda3 <- ggplot(lambda3, aes(x=parameter, y=log(value), fill=parameter)) 
         axis.ticks.y=element_blank())
 
 
-lambda4 <- organize_table(results_all_trees, one_tree_type[4], parameters[parameters=="lambda"], error.measurements[error.measurements=="RMSE"])
+lambda4 <- organize_table(results_all_trees, one_tree_type[4], parameters[parameters=="lambda"], error.measurements[error.measurements==one.error.measurement])
 plot_lambda4 <- ggplot(lambda4, aes(x=parameter, y=log(value), fill=parameter)) +
   #geom_boxplot() + 
   geom_violin(trim=FALSE) +
   theme_bw() +
   theme(legend.position = "none") + 
-  #annotate(geom="text", x=6, y=7, size=5, hjust=0, label="RMSE") + 
+  #annotate(geom="text", x=6, y=7, size=5, hjust=0, label=one.error.measurement) + 
   xlab("") +
   ggtitle(paste0(one_tree_type[4], " (lambda)", " (N=",length_tree_type[4],")")) +
   ggtitle(paste0(one_tree_type[4], " (N=",length_tree_type[4],")")) +
@@ -270,13 +274,13 @@ plot_lambda4 <- ggplot(lambda4, aes(x=parameter, y=log(value), fill=parameter)) 
         axis.text.y=element_blank(),
         axis.ticks.y=element_blank())
 
-lambda5 <- organize_table(results_all_trees, one_tree_type[5], parameters[parameters=="lambda"], error.measurements[error.measurements=="RMSE"])
+lambda5 <- organize_table(results_all_trees, one_tree_type[5], parameters[parameters=="lambda"], error.measurements[error.measurements==one.error.measurement])
 plot_lambda5 <- ggplot(lambda5, aes(x=parameter, y=log(value), fill=parameter)) +
   #geom_boxplot() + 
   geom_violin(trim=FALSE) +
   theme_bw() +
   theme(legend.position = "none") + 
-  #annotate(geom="text", x=6, y=7, size=5, hjust=0, label="RMSE") + 
+  #annotate(geom="text", x=6, y=7, size=5, hjust=0, label=one.error.measurement) + 
   xlab("") +
   #ggtitle(paste0(one_tree_type[5], " (lambda)", " (N=",length_tree_type[5],")")) +
   ggtitle(paste0(one_tree_type[5], " (N=",length_tree_type[5],")")) +
@@ -289,13 +293,13 @@ plot_lambda5 <- ggplot(lambda5, aes(x=parameter, y=log(value), fill=parameter)) 
         axis.text.y=element_blank(),
         axis.ticks.y=element_blank())
 
-lambda6 <- organize_table(results_all_trees, one_tree_type[6], parameters[parameters=="lambda"], error.measurements[error.measurements=="RMSE"])
+lambda6 <- organize_table(results_all_trees, one_tree_type[6], parameters[parameters=="lambda"], error.measurements[error.measurements==one.error.measurement])
 plot_lambda6 <- ggplot(lambda6, aes(x=parameter, y=log(value), fill=parameter)) +
   #geom_boxplot() + 
   geom_violin(trim=FALSE) +
   theme_bw() +
   theme(legend.position = "none") + 
-  #annotate(geom="text", x=6, y=7, size=5, hjust=0, label="RMSE") + 
+  #annotate(geom="text", x=6, y=7, size=5, hjust=0, label=one.error.measurement) + 
   xlab("") +
   #ggtitle(paste0(one_tree_type[6], " (lambda)", " (N=",length_tree_type[6],")")) +
   ggtitle(paste0(one_tree_type[6], " (N=",length_tree_type[6],")")) +
@@ -308,13 +312,13 @@ plot_lambda6 <- ggplot(lambda6, aes(x=parameter, y=log(value), fill=parameter)) 
         axis.text.y=element_blank(),
         axis.ticks.y=element_blank())
 
-lambda7 <- organize_table(results_all_trees, one_tree_type[7], parameters[parameters=="lambda"], error.measurements[error.measurements=="RMSE"])
+lambda7 <- organize_table(results_all_trees, one_tree_type[7], parameters[parameters=="lambda"], error.measurements[error.measurements==one.error.measurement])
 plot_lambda7 <- ggplot(lambda7, aes(x=parameter, y=log(value), fill=parameter)) +
   #geom_boxplot() + 
   geom_violin(trim=FALSE) +
   theme_bw() +
   theme(legend.position = "none") + 
-  #annotate(geom="text", x=7, y=7, size=5, hjust=0, label="RMSE") + 
+  #annotate(geom="text", x=7, y=7, size=5, hjust=0, label=one.error.measurement) + 
   xlab("") +
   #ggtitle(paste0(one_tree_type[7], " (lambda)", " (N=",length_tree_type[7],")")) +
   ggtitle(paste0(one_tree_type[7], " (N=",length_tree_type[7],")")) +
@@ -327,13 +331,13 @@ plot_lambda7 <- ggplot(lambda7, aes(x=parameter, y=log(value), fill=parameter)) 
         axis.text.y=element_blank(),
         axis.ticks.y=element_blank())
 
-lambda8 <- organize_table(results_all_trees, one_tree_type[8], parameters[parameters=="lambda"], error.measurements[error.measurements=="RMSE"])
+lambda8 <- organize_table(results_all_trees, one_tree_type[8], parameters[parameters=="lambda"], error.measurements[error.measurements==one.error.measurement])
 plot_lambda8 <- ggplot(lambda8, aes(x=parameter, y=log(value), fill=parameter)) +
   #geom_boxplot() + 
   geom_violin(trim=FALSE) +
   theme_bw() +
   theme(legend.position = "none") + 
-  #annotate(geom="text", x=8, y=7, size=5, hjust=0, label="RMSE") + 
+  #annotate(geom="text", x=8, y=7, size=5, hjust=0, label=one.error.measurement) + 
   xlab("") +
   #ggtitle(paste0(one_tree_type[8], " (lambda)", " (N=",length_tree_type[8],")")) +
   ggtitle(paste0(one_tree_type[8], " (N=",length_tree_type[8],")")) +
@@ -358,15 +362,14 @@ plot_lambda8 <- ggplot(lambda8, aes(x=parameter, y=log(value), fill=parameter)) 
 
 #dev.off()
 
-
 #pdf("errors_other_par.pdf", width=18, height=20)
-mu1 <- organize_table(results_all_trees, one_tree_type[1], parameters[parameters=="mu"], error.measurements[error.measurements=="RMSE"])
+mu1 <- organize_table(results_all_trees, one_tree_type[1], parameters[parameters=="mu"], error.measurements[error.measurements==one.error.measurement])
 plot_mu1 <- ggplot(mu1, aes(x=parameter, y=log(value), fill=parameter)) +
   #geom_boxplot() + 
   geom_violin(trim=FALSE) +
   theme_bw() +
   theme(legend.position = "none") + 
-  #annotate(geom="text", x=6, y=7, size=5, hjust=0, label="RMSE") + 
+  #annotate(geom="text", x=6, y=7, size=5, hjust=0, label=one.error.measurement) + 
   xlab("") +
   #ggtitle(paste0(one_tree_type[1], " (mu)", " (N=",length_tree_type[1],")")) +
   ggtitle("") +
@@ -380,13 +383,13 @@ plot_mu1 <- ggplot(mu1, aes(x=parameter, y=log(value), fill=parameter)) +
       axis.text.y=element_blank(),
       axis.ticks.y=element_blank())
 
-netDiv1 <- organize_table(results_all_trees, one_tree_type[1], parameters[parameters=="netDiv"], error.measurements[error.measurements=="RMSE"])
+netDiv1 <- organize_table(results_all_trees, one_tree_type[1], parameters[parameters=="netDiv"], error.measurements[error.measurements==one.error.measurement])
 plot_netDiv1 <- ggplot(netDiv1, aes(x=parameter, y=log(value), fill=parameter)) +
   #geom_boxplot() + 
   geom_violin(trim=FALSE) +
   theme_bw() +
   theme(legend.position = "none") + 
-  #annotate(geom="text", x=6, y=7, size=5, hjust=0, label="RMSE") + 
+  #annotate(geom="text", x=6, y=7, size=5, hjust=0, label=one.error.measurement) + 
   xlab("") +
   #ggtitle(paste0(one_tree_type[1], " (netDiv)", " (N=",length_tree_type[1],")")) +
   ggtitle("") +
@@ -399,13 +402,13 @@ plot_netDiv1 <- ggplot(netDiv1, aes(x=parameter, y=log(value), fill=parameter)) 
         axis.text.y=element_blank(),
         axis.ticks.y=element_blank())
 
-turnover1 <- organize_table(results_all_trees, one_tree_type[1], parameters[parameters=="turnover"], error.measurements[error.measurements=="RMSE"])
+turnover1 <- organize_table(results_all_trees, one_tree_type[1], parameters[parameters=="turnover"], error.measurements[error.measurements==one.error.measurement])
 plot_turnover1 <- ggplot(turnover1, aes(x=parameter, y=log(value), fill=parameter)) +
   #geom_boxplot() + 
   geom_violin(trim=FALSE) + 
   theme_bw() +
   theme(legend.position = "none") + 
-  #annotate(geom="text", x=6, y=7, size=5, hjust=0, label="RMSE") + 
+  #annotate(geom="text", x=6, y=7, size=5, hjust=0, label=one.error.measurement) + 
   xlab("") +
   #ggtitle(paste0(one_tree_type[1], " (turnover)", " (N=",length_tree_type[1],")")) +
   ggtitle("") +
@@ -418,13 +421,13 @@ plot_turnover1 <- ggplot(turnover1, aes(x=parameter, y=log(value), fill=paramete
         axis.text.y=element_blank(),
         axis.ticks.y=element_blank())
 
-extinctionFraction1 <- organize_table(results_all_trees, one_tree_type[1], parameters[parameters=="extinctionFraction"], error.measurements[error.measurements=="RMSE"])
+extinctionFraction1 <- organize_table(results_all_trees, one_tree_type[1], parameters[parameters=="extinctionFraction"], error.measurements[error.measurements==one.error.measurement])
 plot_extinctionFraction1 <- ggplot(extinctionFraction1, aes(x=parameter, y=log(value), fill=parameter)) +
   #geom_boxplot() + 
   geom_violin(trim=FALSE) +
   theme_bw() +
   theme(legend.position = "none") + 
-  #annotate(geom="text", x=6, y=7, size=5, hjust=0, label="RMSE") + 
+  #annotate(geom="text", x=6, y=7, size=5, hjust=0, label=one.error.measurement) + 
   xlab("") +
   #ggtitle(paste0(one_tree_type[1], " (extinctionFraction)", " (N=",length_tree_type[1],")")) +
   ggtitle("") +
@@ -438,13 +441,13 @@ plot_extinctionFraction1 <- ggplot(extinctionFraction1, aes(x=parameter, y=log(v
         axis.ticks.y=element_blank())
 
 ##
-mu2 <- organize_table(results_all_trees, one_tree_type[2], parameters[parameters=="mu"], error.measurements[error.measurements=="RMSE"])
+mu2 <- organize_table(results_all_trees, one_tree_type[2], parameters[parameters=="mu"], error.measurements[error.measurements==one.error.measurement])
 plot_mu2 <- ggplot(mu2, aes(x=parameter, y=log(value), fill=parameter)) +
   #geom_boxplot() + 
   geom_violin(trim=FALSE) +
   theme_bw() +
   theme(legend.position = "none") + 
-  #annotate(geom="text", x=6, y=7, size=5, hjust=0, label="RMSE") + 
+  #annotate(geom="text", x=6, y=7, size=5, hjust=0, label=one.error.measurement) + 
   xlab("") +
   #ggtitle(paste0(one_tree_type[2], " (mu)", " (N=",length_tree_type[2],")")) +
   scale_x_discrete("parameter",  drop=FALSE) +
@@ -457,13 +460,13 @@ plot_mu2 <- ggplot(mu2, aes(x=parameter, y=log(value), fill=parameter)) +
         axis.text.y=element_blank(),
         axis.ticks.y=element_blank())
 
-netDiv2 <- organize_table(results_all_trees, one_tree_type[2], parameters[parameters=="netDiv"], error.measurements[error.measurements=="RMSE"])
+netDiv2 <- organize_table(results_all_trees, one_tree_type[2], parameters[parameters=="netDiv"], error.measurements[error.measurements==one.error.measurement])
 plot_netDiv2 <- ggplot(netDiv2, aes(x=parameter, y=log(value), fill=parameter)) +
   #geom_boxplot() + 
   geom_violin(trim=FALSE) +
   theme_bw() +
   theme(legend.position = "none") + 
-  #annotate(geom="text", x=6, y=7, size=5, hjust=0, label="RMSE") + 
+  #annotate(geom="text", x=6, y=7, size=5, hjust=0, label=one.error.measurement) + 
   xlab("") +
   #ggtitle(paste0(one_tree_type[2], " (netDiv)", " (N=",length_tree_type[2],")")) +
   scale_x_discrete("parameter",  drop=FALSE) +
@@ -476,13 +479,13 @@ plot_netDiv2 <- ggplot(netDiv2, aes(x=parameter, y=log(value), fill=parameter)) 
         axis.text.y=element_blank(),
         axis.ticks.y=element_blank())
 
-turnover2 <- organize_table(results_all_trees, one_tree_type[2], parameters[parameters=="turnover"], error.measurements[error.measurements=="RMSE"])
+turnover2 <- organize_table(results_all_trees, one_tree_type[2], parameters[parameters=="turnover"], error.measurements[error.measurements==one.error.measurement])
 plot_turnover2 <- ggplot(turnover2, aes(x=parameter, y=log(value), fill=parameter)) +
   #geom_boxplot() + 
   geom_violin(trim=FALSE) +
   theme_bw() +
   theme(legend.position = "none") + 
-  #annotate(geom="text", x=6, y=7, size=5, hjust=0, label="RMSE") + 
+  #annotate(geom="text", x=6, y=7, size=5, hjust=0, label=one.error.measurement) + 
   xlab("") +
   #ggtitle(paste0(one_tree_type[2], " (turnover)", " (N=",length_tree_type[2],")")) +
   scale_x_discrete("parameter",  drop=FALSE) +
@@ -495,13 +498,13 @@ plot_turnover2 <- ggplot(turnover2, aes(x=parameter, y=log(value), fill=paramete
         axis.text.y=element_blank(),
         axis.ticks.y=element_blank())
 
-extinctionFraction2 <- organize_table(results_all_trees, one_tree_type[2], parameters[parameters=="extinctionFraction"], error.measurements[error.measurements=="RMSE"])
+extinctionFraction2 <- organize_table(results_all_trees, one_tree_type[2], parameters[parameters=="extinctionFraction"], error.measurements[error.measurements==one.error.measurement])
 plot_extinctionFraction2 <- ggplot(extinctionFraction2, aes(x=parameter, y=log(value), fill=parameter)) +
   #geom_boxplot() + 
   geom_violin(trim=FALSE) +
   theme_bw() +
   theme(legend.position = "none") + 
-  #annotate(geom="text", x=6, y=7, size=5, hjust=0, label="RMSE") + 
+  #annotate(geom="text", x=6, y=7, size=5, hjust=0, label=one.error.measurement) + 
   xlab("") +
   #ggtitle(paste0(one_tree_type[2], " (extinctionFraction)", " (N=",length_tree_type[2],")")) +
   scale_x_discrete("parameter",  drop=FALSE) +
@@ -515,13 +518,13 @@ plot_extinctionFraction2 <- ggplot(extinctionFraction2, aes(x=parameter, y=log(v
         axis.ticks.y=element_blank())
 ##
 
-mu3 <- organize_table(results_all_trees, one_tree_type[3], parameters[parameters=="mu"], error.measurements[error.measurements=="RMSE"])
+mu3 <- organize_table(results_all_trees, one_tree_type[3], parameters[parameters=="mu"], error.measurements[error.measurements==one.error.measurement])
 plot_mu3 <- ggplot(mu3, aes(x=parameter, y=log(value), fill=parameter)) +
   #geom_boxplot() + 
   geom_violin(trim=FALSE) +
   theme_bw() +
   theme(legend.position = "none") + 
-  #annotate(geom="text", x=6, y=7, size=5, hjust=0, label="RMSE") + 
+  #annotate(geom="text", x=6, y=7, size=5, hjust=0, label=one.error.measurement) + 
   xlab("") +
   #ggtitle(paste0(one_tree_type[3], " (mu)", " (N=",length_tree_type[3],")")) +
   scale_x_discrete("parameter",  drop=FALSE) +
@@ -534,13 +537,13 @@ plot_mu3 <- ggplot(mu3, aes(x=parameter, y=log(value), fill=parameter)) +
         axis.text.y=element_blank(),
         axis.ticks.y=element_blank())
 
-netDiv3 <- organize_table(results_all_trees, one_tree_type[3], parameters[parameters=="netDiv"], error.measurements[error.measurements=="RMSE"])
+netDiv3 <- organize_table(results_all_trees, one_tree_type[3], parameters[parameters=="netDiv"], error.measurements[error.measurements==one.error.measurement])
 plot_netDiv3 <- ggplot(netDiv3, aes(x=parameter, y=log(value), fill=parameter)) +
   #geom_boxplot() + 
   geom_violin(trim=FALSE) +
   theme_bw() +
   theme(legend.position = "none") + 
-  #annotate(geom="text", x=6, y=7, size=5, hjust=0, label="RMSE") + 
+  #annotate(geom="text", x=6, y=7, size=5, hjust=0, label=one.error.measurement) + 
   ggtitle("") +
   xlab("") +
   #ggtitle(paste0(one_tree_type[3], " (netDiv)", " (N=",length_tree_type[3],")")) +
@@ -553,13 +556,13 @@ plot_netDiv3 <- ggplot(netDiv3, aes(x=parameter, y=log(value), fill=parameter)) 
         axis.text.y=element_blank(),
         axis.ticks.y=element_blank())
 
-turnover3 <- organize_table(results_all_trees, one_tree_type[3], parameters[parameters=="turnover"], error.measurements[error.measurements=="RMSE"])
+turnover3 <- organize_table(results_all_trees, one_tree_type[3], parameters[parameters=="turnover"], error.measurements[error.measurements==one.error.measurement])
 plot_turnover3 <- ggplot(turnover3, aes(x=parameter, y=log(value), fill=parameter)) +
   #geom_boxplot() + 
   geom_violin(trim=FALSE) +
   theme_bw() +
   theme(legend.position = "none") + 
-  #annotate(geom="text", x=6, y=7, size=5, hjust=0, label="RMSE") + 
+  #annotate(geom="text", x=6, y=7, size=5, hjust=0, label=one.error.measurement) + 
   xlab("") +
   #ggtitle(paste0(one_tree_type[3], " (turnover)", " (N=",length_tree_type[3],")")) +
   ggtitle("") +
@@ -572,13 +575,13 @@ plot_turnover3 <- ggplot(turnover3, aes(x=parameter, y=log(value), fill=paramete
         axis.text.y=element_blank(),
         axis.ticks.y=element_blank())
 
-extinctionFraction3 <- organize_table(results_all_trees, one_tree_type[3], parameters[parameters=="extinctionFraction"], error.measurements[error.measurements=="RMSE"])
+extinctionFraction3 <- organize_table(results_all_trees, one_tree_type[3], parameters[parameters=="extinctionFraction"], error.measurements[error.measurements==one.error.measurement])
 plot_extinctionFraction3 <- ggplot(extinctionFraction3, aes(x=parameter, y=log(value), fill=parameter)) +
   #geom_boxplot() + 
   geom_violin(trim=FALSE) +
   theme_bw() +
   theme(legend.position = "none") + 
-  #annotate(geom="text", x=6, y=7, size=5, hjust=0, label="RMSE") + 
+  #annotate(geom="text", x=6, y=7, size=5, hjust=0, label=one.error.measurement) + 
   xlab("") +
   #ggtitle(paste0(one_tree_type[3], " (extinctionFraction)", " (N=",length_tree_type[3],")")) +
   scale_x_discrete("parameter",  drop=FALSE) +
@@ -592,13 +595,13 @@ plot_extinctionFraction3 <- ggplot(extinctionFraction3, aes(x=parameter, y=log(v
         axis.ticks.y=element_blank())
 ##
 
-mu4 <- organize_table(results_all_trees, one_tree_type[4], parameters[parameters=="mu"], error.measurements[error.measurements=="RMSE"])
+mu4 <- organize_table(results_all_trees, one_tree_type[4], parameters[parameters=="mu"], error.measurements[error.measurements==one.error.measurement])
 plot_mu4 <- ggplot(mu4, aes(x=parameter, y=log(value), fill=parameter)) +
   #geom_boxplot() + 
   geom_violin(trim=FALSE) +
   theme_bw() +
   theme(legend.position = "none") + 
-  #annotate(geom="text", x=6, y=7, size=5, hjust=0, label="RMSE") + 
+  #annotate(geom="text", x=6, y=7, size=5, hjust=0, label=one.error.measurement) + 
   xlab("") +
   #ggtitle(paste0(one_tree_type[4], " (mu)", " (N=",length_tree_type[4],")")) +
   scale_x_discrete("parameter",  drop=FALSE) +
@@ -611,13 +614,13 @@ plot_mu4 <- ggplot(mu4, aes(x=parameter, y=log(value), fill=parameter)) +
         axis.text.y=element_blank(),
         axis.ticks.y=element_blank())
 
-netDiv4 <- organize_table(results_all_trees, one_tree_type[4], parameters[parameters=="netDiv"], error.measurements[error.measurements=="RMSE"])
+netDiv4 <- organize_table(results_all_trees, one_tree_type[4], parameters[parameters=="netDiv"], error.measurements[error.measurements==one.error.measurement])
 plot_netDiv4 <- ggplot(netDiv4, aes(x=parameter, y=log(value), fill=parameter)) +
   #geom_boxplot() + 
   geom_violin(trim=FALSE) +
   theme_bw() +
   theme(legend.position = "none") + 
-  #annotate(geom="text", x=6, y=7, size=5, hjust=0, label="RMSE") + 
+  #annotate(geom="text", x=6, y=7, size=5, hjust=0, label=one.error.measurement) + 
   xlab("") +
   #ggtitle(paste0(one_tree_type[4], " (netDiv)", " (N=",length_tree_type[4],")")) +
   scale_x_discrete("parameter",  drop=FALSE) +
@@ -630,13 +633,13 @@ plot_netDiv4 <- ggplot(netDiv4, aes(x=parameter, y=log(value), fill=parameter)) 
         axis.text.y=element_blank(),
         axis.ticks.y=element_blank())
 
-turnover4 <- organize_table(results_all_trees, one_tree_type[4], parameters[parameters=="turnover"], error.measurements[error.measurements=="RMSE"])
+turnover4 <- organize_table(results_all_trees, one_tree_type[4], parameters[parameters=="turnover"], error.measurements[error.measurements==one.error.measurement])
 plot_turnover4 <- ggplot(turnover4, aes(x=parameter, y=log(value), fill=parameter)) +
   #geom_boxplot() + 
   geom_violin(trim=FALSE) +
   theme_bw() +
   theme(legend.position = "none") + 
-  #annotate(geom="text", x=6, y=7, size=5, hjust=0, label="RMSE") + 
+  #annotate(geom="text", x=6, y=7, size=5, hjust=0, label=one.error.measurement) + 
   xlab("") +
   #ggtitle(paste0(one_tree_type[4], " (turnover)", " (N=",length_tree_type[4],")")) +
   scale_x_discrete("parameter",  drop=FALSE) +
@@ -649,13 +652,13 @@ plot_turnover4 <- ggplot(turnover4, aes(x=parameter, y=log(value), fill=paramete
         axis.text.y=element_blank(),
         axis.ticks.y=element_blank())
 
-extinctionFraction4 <- organize_table(results_all_trees, one_tree_type[4], parameters[parameters=="extinctionFraction"], error.measurements[error.measurements=="RMSE"])
+extinctionFraction4 <- organize_table(results_all_trees, one_tree_type[4], parameters[parameters=="extinctionFraction"], error.measurements[error.measurements==one.error.measurement])
 plot_extinctionFraction4 <- ggplot(extinctionFraction4, aes(x=parameter, y=log(value), fill=parameter)) +
   #geom_boxplot() + 
   geom_violin(trim=FALSE) +
   theme_bw() +
   theme(legend.position = "none") + 
-  #annotate(geom="text", x=6, y=7, size=5, hjust=0, label="RMSE") + 
+  #annotate(geom="text", x=6, y=7, size=5, hjust=0, label=one.error.measurement) + 
   xlab("") +
   #ggtitle(paste0(one_tree_type[4], " (extinctionFraction)", " (N=",length_tree_type[4],")")) +
   scale_x_discrete("parameter",  drop=FALSE) +
@@ -669,13 +672,13 @@ plot_extinctionFraction4 <- ggplot(extinctionFraction4, aes(x=parameter, y=log(v
         axis.ticks.y=element_blank())
 ##
 
-mu5 <- organize_table(results_all_trees, one_tree_type[5], parameters[parameters=="mu"], error.measurements[error.measurements=="RMSE"])
+mu5 <- organize_table(results_all_trees, one_tree_type[5], parameters[parameters=="mu"], error.measurements[error.measurements==one.error.measurement])
 plot_mu5 <- ggplot(mu5, aes(x=parameter, y=log(value), fill=parameter)) +
   #geom_boxplot() + 
   geom_violin(trim=FALSE) +
   theme_bw() +
   theme(legend.position = "none") + 
-  #annotate(geom="text", x=6, y=7, size=5, hjust=0, label="RMSE") + 
+  #annotate(geom="text", x=6, y=7, size=5, hjust=0, label=one.error.measurement) + 
   xlab("") +
   #ggtitle(paste0(one_tree_type[5], " (mu)", " (N=",length_tree_type[5],")")) +
   scale_x_discrete("parameter",  drop=FALSE) +
@@ -688,13 +691,13 @@ plot_mu5 <- ggplot(mu5, aes(x=parameter, y=log(value), fill=parameter)) +
         axis.text.y=element_blank(),
         axis.ticks.y=element_blank())
 
-netDiv5 <- organize_table(results_all_trees, one_tree_type[5], parameters[parameters=="netDiv"], error.measurements[error.measurements=="RMSE"])
+netDiv5 <- organize_table(results_all_trees, one_tree_type[5], parameters[parameters=="netDiv"], error.measurements[error.measurements==one.error.measurement])
 plot_netDiv5 <- ggplot(netDiv5, aes(x=parameter, y=log(value), fill=parameter)) +
   #geom_boxplot() + 
   geom_violin(trim=FALSE) +
   theme_bw() +
   theme(legend.position = "none") + 
-  #annotate(geom="text", x=6, y=7, size=5, hjust=0, label="RMSE") + 
+  #annotate(geom="text", x=6, y=7, size=5, hjust=0, label=one.error.measurement) + 
   xlab("") +
   #ggtitle(paste0(one_tree_type[5], " (netDiv)", " (N=",length_tree_type[5],")")) +
   scale_x_discrete("parameter",  drop=FALSE) +
@@ -707,13 +710,13 @@ plot_netDiv5 <- ggplot(netDiv5, aes(x=parameter, y=log(value), fill=parameter)) 
         axis.text.y=element_blank(),
         axis.ticks.y=element_blank())
 
-turnover5 <- organize_table(results_all_trees, one_tree_type[5], parameters[parameters=="turnover"], error.measurements[error.measurements=="RMSE"])
+turnover5 <- organize_table(results_all_trees, one_tree_type[5], parameters[parameters=="turnover"], error.measurements[error.measurements==one.error.measurement])
 plot_turnover5 <- ggplot(turnover5, aes(x=parameter, y=log(value), fill=parameter)) +
   #geom_boxplot() + 
   geom_violin(trim=FALSE) +
   theme_bw() +
   theme(legend.position = "none") + 
-  #annotate(geom="text", x=6, y=7, size=5, hjust=0, label="RMSE") + 
+  #annotate(geom="text", x=6, y=7, size=5, hjust=0, label=one.error.measurement) + 
   xlab("") +
   #ggtitle(paste0(one_tree_type[5], " (turnover)", " (N=",length_tree_type[5],")")) +
   scale_x_discrete("parameter",  drop=FALSE) +
@@ -726,13 +729,13 @@ plot_turnover5 <- ggplot(turnover5, aes(x=parameter, y=log(value), fill=paramete
         axis.text.y=element_blank(),
         axis.ticks.y=element_blank())
 
-extinctionFraction5 <- organize_table(results_all_trees, one_tree_type[5], parameters[parameters=="extinctionFraction"], error.measurements[error.measurements=="RMSE"])
+extinctionFraction5 <- organize_table(results_all_trees, one_tree_type[5], parameters[parameters=="extinctionFraction"], error.measurements[error.measurements==one.error.measurement])
 plot_extinctionFraction5 <- ggplot(extinctionFraction5, aes(x=parameter, y=log(value), fill=parameter)) +
   #geom_boxplot() + 
   geom_violin(trim=FALSE) +
   theme_bw() +
   theme(legend.position = "none") + 
-  #annotate(geom="text", x=6, y=7, size=5, hjust=0, label="RMSE") + 
+  #annotate(geom="text", x=6, y=7, size=5, hjust=0, label=one.error.measurement) + 
   xlab("") +
   #ggtitle(paste0(one_tree_type[5], " (extinctionFraction)", " (N=",length_tree_type[5],")")) +
   scale_x_discrete("parameter",  drop=FALSE) +
@@ -746,13 +749,13 @@ plot_extinctionFraction5 <- ggplot(extinctionFraction5, aes(x=parameter, y=log(v
         axis.ticks.y=element_blank())
 ##
 
-mu6 <- organize_table(results_all_trees, one_tree_type[6], parameters[parameters=="mu"], error.measurements[error.measurements=="RMSE"])
+mu6 <- organize_table(results_all_trees, one_tree_type[6], parameters[parameters=="mu"], error.measurements[error.measurements==one.error.measurement])
 plot_mu6 <- ggplot(mu6, aes(x=parameter, y=log(value), fill=parameter)) +
   #geom_boxplot() + 
   geom_violin(trim=FALSE) +
   theme_bw() +
   theme(legend.position = "none") + 
-  #annotate(geom="text", x=6, y=7, size=5, hjust=0, label="RMSE") + 
+  #annotate(geom="text", x=6, y=7, size=5, hjust=0, label=one.error.measurement) + 
   xlab("") +
   #ggtitle(paste0(one_tree_type[6], " (mu)", " (N=",length_tree_type[6],")")) +
   scale_x_discrete("parameter",  drop=FALSE) +
@@ -765,13 +768,13 @@ plot_mu6 <- ggplot(mu6, aes(x=parameter, y=log(value), fill=parameter)) +
         axis.text.y=element_blank(),
         axis.ticks.y=element_blank())
 
-netDiv6 <- organize_table(results_all_trees, one_tree_type[6], parameters[parameters=="netDiv"], error.measurements[error.measurements=="RMSE"])
+netDiv6 <- organize_table(results_all_trees, one_tree_type[6], parameters[parameters=="netDiv"], error.measurements[error.measurements==one.error.measurement])
 plot_netDiv6 <- ggplot(netDiv6, aes(x=parameter, y=log(value), fill=parameter)) +
   #geom_boxplot() + 
   geom_violin(trim=FALSE) +
   theme_bw() +
   theme(legend.position = "none") + 
-  #annotate(geom="text", x=6, y=7, size=5, hjust=0, label="RMSE") + 
+  #annotate(geom="text", x=6, y=7, size=5, hjust=0, label=one.error.measurement) + 
   xlab("") +
   #ggtitle(paste0(one_tree_type[6], " (netDiv)", " (N=",length_tree_type[6],")")) +
   scale_x_discrete("parameter",  drop=FALSE) +
@@ -784,13 +787,13 @@ plot_netDiv6 <- ggplot(netDiv6, aes(x=parameter, y=log(value), fill=parameter)) 
         axis.text.y=element_blank(),
         axis.ticks.y=element_blank())
 
-turnover6 <- organize_table(results_all_trees, one_tree_type[6], parameters[parameters=="turnover"], error.measurements[error.measurements=="RMSE"])
+turnover6 <- organize_table(results_all_trees, one_tree_type[6], parameters[parameters=="turnover"], error.measurements[error.measurements==one.error.measurement])
 plot_turnover6 <- ggplot(turnover6, aes(x=parameter, y=log(value), fill=parameter)) +
   #geom_boxplot() + 
   geom_violin(trim=FALSE) +
   theme_bw() +
   theme(legend.position = "none") + 
-  #annotate(geom="text", x=6, y=7, size=5, hjust=0, label="RMSE") + 
+  #annotate(geom="text", x=6, y=7, size=5, hjust=0, label=one.error.measurement) + 
   xlab("") +
   #ggtitle(paste0(one_tree_type[6], " (turnover)", " (N=",length_tree_type[6],")")) +
   scale_x_discrete("parameter",  drop=FALSE) +
@@ -803,7 +806,7 @@ plot_turnover6 <- ggplot(turnover6, aes(x=parameter, y=log(value), fill=paramete
         axis.text.y=element_blank(),
         axis.ticks.y=element_blank())
 
-extinctionFraction6 <- organize_table(results_all_trees, one_tree_type[6], parameters[parameters=="extinctionFraction"], error.measurements[error.measurements=="RMSE"])
+extinctionFraction6 <- organize_table(results_all_trees, one_tree_type[6], parameters[parameters=="extinctionFraction"], error.measurements[error.measurements==one.error.measurement])
 plot_extinctionFraction6 <- ggplot(extinctionFraction6, aes(x=parameter, y=log(value), fill=parameter)) +
   #geom_boxplot() + 
   geom_violin(trim=FALSE) +
@@ -822,13 +825,13 @@ plot_extinctionFraction6 <- ggplot(extinctionFraction6, aes(x=parameter, y=log(v
         axis.ticks.y=element_blank())
 ##
 
-mu7 <- organize_table(results_all_trees, one_tree_type[7], parameters[parameters=="mu"], error.measurements[error.measurements=="RMSE"])
+mu7 <- organize_table(results_all_trees, one_tree_type[7], parameters[parameters=="mu"], error.measurements[error.measurements==one.error.measurement])
 plot_mu7 <- ggplot(mu7, aes(x=parameter, y=log(value), fill=parameter)) +
   #geom_boxplot() + 
   geom_violin(trim=FALSE) +
   theme_bw() +
   theme(legend.position = "none") + 
-  #annotate(geom="text", x=6, y=7, size=5, hjust=0, label="RMSE") + 
+  #annotate(geom="text", x=6, y=7, size=5, hjust=0, label=one.error.measurement) + 
   xlab("") +
   #ggtitle(paste0(one_tree_type[7], " (mu)", " (N=",length_tree_type[7],")")) +
   scale_x_discrete("parameter",  drop=FALSE) +
@@ -841,13 +844,13 @@ plot_mu7 <- ggplot(mu7, aes(x=parameter, y=log(value), fill=parameter)) +
         axis.text.y=element_blank(),
         axis.ticks.y=element_blank())
 
-netDiv7 <- organize_table(results_all_trees, one_tree_type[7], parameters[parameters=="netDiv"], error.measurements[error.measurements=="RMSE"])
+netDiv7 <- organize_table(results_all_trees, one_tree_type[7], parameters[parameters=="netDiv"], error.measurements[error.measurements==one.error.measurement])
 plot_netDiv7 <- ggplot(netDiv7, aes(x=parameter, y=log(value), fill=parameter)) +
   #geom_boxplot() + 
   geom_violin(trim=FALSE) +
   theme_bw() +
   theme(legend.position = "none") + 
-  #annotate(geom="text", x=6, y=7, size=5, hjust=0, label="RMSE") + 
+  #annotate(geom="text", x=6, y=7, size=5, hjust=0, label=one.error.measurement) + 
   xlab("") +
   #ggtitle(paste0(one_tree_type[7], " (netDiv)", " (N=",length_tree_type[7],")")) +
   scale_x_discrete("parameter",  drop=FALSE) +
@@ -860,13 +863,13 @@ plot_netDiv7 <- ggplot(netDiv7, aes(x=parameter, y=log(value), fill=parameter)) 
         axis.text.y=element_blank(),
         axis.ticks.y=element_blank())
 
-turnover7 <- organize_table(results_all_trees, one_tree_type[7], parameters[parameters=="turnover"], error.measurements[error.measurements=="RMSE"])
+turnover7 <- organize_table(results_all_trees, one_tree_type[7], parameters[parameters=="turnover"], error.measurements[error.measurements==one.error.measurement])
 plot_turnover7 <- ggplot(turnover7, aes(x=parameter, y=log(value), fill=parameter)) +
   #geom_boxplot() + 
   geom_violin(trim=FALSE) +
   theme_bw() +
   theme(legend.position = "none") + 
-  #annotate(geom="text", x=6, y=7, size=5, hjust=0, label="RMSE") + 
+  #annotate(geom="text", x=6, y=7, size=5, hjust=0, label=one.error.measurement) + 
   xlab("") +
   #ggtitle(paste0(one_tree_type[7], " (turnover)", " (N=",length_tree_type[7],")")) +
   scale_x_discrete("parameter",  drop=FALSE) +
@@ -879,13 +882,13 @@ plot_turnover7 <- ggplot(turnover7, aes(x=parameter, y=log(value), fill=paramete
         axis.text.y=element_blank(),
         axis.ticks.y=element_blank())
 
-extinctionFraction7 <- organize_table(results_all_trees, one_tree_type[7], parameters[parameters=="extinctionFraction"], error.measurements[error.measurements=="RMSE"])
+extinctionFraction7 <- organize_table(results_all_trees, one_tree_type[7], parameters[parameters=="extinctionFraction"], error.measurements[error.measurements==one.error.measurement])
 plot_extinctionFraction7 <- ggplot(extinctionFraction7, aes(x=parameter, y=log(value), fill=parameter)) +
   #geom_boxplot() + 
   geom_violin(trim=FALSE) +
   theme_bw() +
   theme(legend.position = "none") + 
-  #annotate(geom="text", x=6, y=7, size=5, hjust=0, label="RMSE") + 
+  #annotate(geom="text", x=6, y=7, size=5, hjust=0, label=one.error.measurement) + 
   xlab("") +
   #ggtitle(paste0(one_tree_type[7], " (extinctionFraction)", " (N=",length_tree_type[7],")")) +
   scale_x_discrete("parameter",  drop=FALSE) +
@@ -899,13 +902,13 @@ plot_extinctionFraction7 <- ggplot(extinctionFraction7, aes(x=parameter, y=log(v
         axis.ticks.y=element_blank())
 ##
 
-mu8 <- organize_table(results_all_trees, one_tree_type[8], parameters[parameters=="mu"], error.measurements[error.measurements=="RMSE"])
+mu8 <- organize_table(results_all_trees, one_tree_type[8], parameters[parameters=="mu"], error.measurements[error.measurements==one.error.measurement])
 plot_mu8 <- ggplot(mu8, aes(x=parameter, y=log(value), fill=parameter)) +
   #geom_boxplot() + 
   geom_violin(trim=FALSE) +
   theme_bw() +
   theme(legend.position = "none") + 
-  #annotate(geom="text", x=6, y=7, size=5, hjust=0, label="RMSE") + 
+  #annotate(geom="text", x=6, y=7, size=5, hjust=0, label=one.error.measurement) + 
   xlab("") +
   #ggtitle(paste0(one_tree_type[8], " (mu)", " (N=",length_tree_type[8],")")) +
   scale_x_discrete("parameter",  drop=FALSE) +
@@ -918,13 +921,13 @@ plot_mu8 <- ggplot(mu8, aes(x=parameter, y=log(value), fill=parameter)) +
         axis.text.y=element_blank(),
         axis.ticks.y=element_blank())
 
-netDiv8 <- organize_table(results_all_trees, one_tree_type[8], parameters[parameters=="netDiv"], error.measurements[error.measurements=="RMSE"])
+netDiv8 <- organize_table(results_all_trees, one_tree_type[8], parameters[parameters=="netDiv"], error.measurements[error.measurements==one.error.measurement])
 plot_netDiv8 <- ggplot(netDiv8, aes(x=parameter, y=log(value), fill=parameter)) +
   #geom_boxplot() + 
   geom_violin(trim=FALSE) +
   theme_bw() +
   theme(legend.position = "none") + 
-  #annotate(geom="text", x=6, y=7, size=5, hjust=0, label="RMSE") + 
+  #annotate(geom="text", x=6, y=7, size=5, hjust=0, label=one.error.measurement) + 
   xlab("") +
   #ggtitle(paste0(one_tree_type[8], " (netDiv)", " (N=",length_tree_type[8],")")) +
   scale_x_discrete("parameter",  drop=FALSE) +
@@ -937,13 +940,13 @@ plot_netDiv8 <- ggplot(netDiv8, aes(x=parameter, y=log(value), fill=parameter)) 
         axis.text.y=element_blank(),
         axis.ticks.y=element_blank())
 
-turnover8 <- organize_table(results_all_trees, one_tree_type[8], parameters[parameters=="turnover"], error.measurements[error.measurements=="RMSE"])
+turnover8 <- organize_table(results_all_trees, one_tree_type[8], parameters[parameters=="turnover"], error.measurements[error.measurements==one.error.measurement])
 plot_turnover8 <- ggplot(turnover8, aes(x=parameter, y=log(value), fill=parameter)) +
   #geom_boxplot() + 
   geom_violin(trim=FALSE) +
   theme_bw() +
   theme(legend.position = "none") + 
-  #annotate(geom="text", x=6, y=7, size=5, hjust=0, label="RMSE") + 
+  #annotate(geom="text", x=6, y=7, size=5, hjust=0, label=one.error.measurement) + 
   xlab("") +
   #ggtitle(paste0(one_tree_type[8], " (turnover)", " (N=",length_tree_type[8],")")) +
   scale_x_discrete("parameter",  drop=FALSE) +
@@ -956,13 +959,13 @@ plot_turnover8 <- ggplot(turnover8, aes(x=parameter, y=log(value), fill=paramete
         axis.text.y=element_blank(),
         axis.ticks.y=element_blank())
 
-extinctionFraction8 <- organize_table(results_all_trees, one_tree_type[8], parameters[parameters=="extinctionFraction"], error.measurements[error.measurements=="RMSE"])
+extinctionFraction8 <- organize_table(results_all_trees, one_tree_type[8], parameters[parameters=="extinctionFraction"], error.measurements[error.measurements==one.error.measurement])
 plot_extinctionFraction8 <- ggplot(extinctionFraction8, aes(x=parameter, y=log(value), fill=parameter)) +
   #geom_boxplot() + 
   geom_violin(trim=FALSE) +
   theme_bw() +
   theme(legend.position = "none") + 
-  #annotate(geom="text", x=6, y=7, size=5, hjust=0, label="RMSE") + 
+  #annotate(geom="text", x=6, y=7, size=5, hjust=0, label=one.error.measurement) + 
   xlab("") +
   #ggtitle(paste0(one_tree_type[8], " (extinctionFraction)", " (N=",length_tree_type[8],")")) +
   scale_x_discrete("parameter",  drop=FALSE) +
@@ -1016,3 +1019,30 @@ grid.arrange(plot_lambda1, plot_mu1, plot_netDiv1, plot_turnover1, plot_extincti
 dev.off()
 
 
+######################################################
+# Krual-wallis
+######################################################
+all_tables <- list(lambda1, mu1, netDiv1, turnover1, extinctionFraction1,
+lambda2, mu2, netDiv2, turnover2, extinctionFraction2,
+lambda3, mu3, netDiv3, turnover3, extinctionFraction3,
+lambda4, mu4, netDiv4, turnover4, extinctionFraction4,
+lambda5, mu5, netDiv5, turnover5, extinctionFraction5,
+lambda6, mu6, netDiv6, turnover6, extinctionFraction6,
+lambda7, mu7, netDiv7, turnover7, extinctionFraction7,
+lambda8, mu8, netDiv8, turnover8, extinctionFraction8)
+
+rate_names <- rep(c("lambda","mu","netDiv","turnover","extinctionFraction"),8)
+
+sink("kruskal_wallis_results.txt")
+for(i in 1:length(all_tables)) {
+    one_table <- all_tables[[i]]
+    tree_name <- gsub("\\_.*","", one_table$tree_name[1])
+    result <- posthoc.kruskal.conover.test(one_table$value, one_table$parameter)
+    print(tree_name)
+    print(rate_names[i])
+    print(result)
+    print("------------------------")
+}
+sink()
+
+citation("PMCMR")

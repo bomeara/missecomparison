@@ -254,6 +254,7 @@ software <- c("BAMM","MiSSEbest","MiSSEavg")
 #
 
 pdf("comp_new_results_AUG2021.pdf", width=7, height=10)
+pal <- hcl.colors(length(1:100), palette = "Viridis", alpha = 1)
 #plot.new()
 par(mfrow=c(5,3))
 for(rate_index in seq_along(rates)){
@@ -262,7 +263,7 @@ for(rate_index in seq_along(rates)){
     r0 <- s0[s0$actual_parameter==rates[rate_index],]
     #r0 <- subset(r0, !r0$true_value%in%(boxplot(r0$true_value, plot=F)$out)) # remove outlier?
     plot(r0$true_value, r0$parameter_value, col="white", xlab=paste0(rates[rate_index], " true"), ylab=paste0(rates[rate_index], " estimated"), main=paste0(software[software_index]), xlim=c(0,1), ylim=c(0,1))
-    heatscatterpoints(r0$true_value, r0$parameter_value, xlim=c(0,10),ylim=c(0,10))
+    heatscatterpoints(r0$true_value, r0$parameter_value, xlim=c(0,10),ylim=c(0,10), colpal="heat")
     abline(0, 1)
   }
 }

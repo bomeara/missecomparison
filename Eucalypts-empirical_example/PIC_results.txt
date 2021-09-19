@@ -1,0 +1,66 @@
+Results including cherries------------------------------
+Regression through the origin 
+
+Call:
+lmorigin(formula = picModel, data = picModel$model, origin = TRUE,      nperm = 999) 
+
+Coefficients and parametric test results 
+ 
+      Coefficient  Std_error t-value Pr(>|t|)
+t0Pic  -0.0035642  0.0078006 -0.4569   0.6479
+
+Two-tailed tests of regression coefficients
+ 
+      Coefficient p-param p-perm
+t0Pic  -0.0035642  0.6479  0.596
+
+One-tailed tests of regression coefficients: 
+test in the direction of the sign of the coefficient
+ 
+      Coefficient p-param p-perm
+t0Pic  -0.0035642  0.3239  0.276
+
+Residual standard error: 0.2098981 on 671 degrees of freedom 
+Multiple R-square: 0.0003110412   Adjusted R-square: -0.001178808 
+
+F-statistic: 0.2087736 on 1 and 671 DF:
+   parametric p-value   : 0.6478782 
+   permutational p-value: 0.596 
+after 999 permutations of raw data 
+ 
+Results removing cherries------------------------------
+Regression through the origin 
+
+Call:
+lmorigin(formula = picModel, data = picModel$model, origin = TRUE,      nperm = 999) 
+
+Coefficients and parametric test results 
+ 
+               Coefficient Std_error t-value Pr(>|t|)  
+t0Pic_nocherry    0.023697  0.013981   1.695  0.09074 .
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+Two-tailed tests of regression coefficients
+ 
+               Coefficient p-param p-perm  
+t0Pic_nocherry    0.023697  0.0907  0.088 .
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+One-tailed tests of regression coefficients: 
+test in the direction of the sign of the coefficient
+ 
+               Coefficient p-param p-perm  
+t0Pic_nocherry    0.023697  0.0454  0.046 *
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+Residual standard error: 0.264099 on 471 degrees of freedom 
+Multiple R-square: 0.00606263   Adjusted R-square: 0.00395236 
+
+F-statistic: 2.872916 on 1 and 471 DF:
+   parametric p-value   : 0.09074246 
+   permutational p-value: 0.088 
+after 999 permutations of raw data 
+ 
