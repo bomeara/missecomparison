@@ -2,7 +2,7 @@ source("new_runs.R")
 setDTthreads(threads=1)
 print("passed loading packages")
 #cl <- future::makeClusterPSOCK(workers=c(rep(c("10.4.9.34", "10.4.9.45"),48)), rscript="/usr/bin/Rscript")
-cl <- future::makeClusterPSOCK(workers=c(rep(c("10.4.9.34"),96)), rscript="/usr/bin/Rscript")
+cl <- future::makeClusterPSOCK(workers=c(rep(c("10.4.9.34"),48)), rscript="/usr/bin/Rscript")
 
 
 #sessionInfo() 
@@ -31,8 +31,8 @@ cl <- future::makeClusterPSOCK(workers=c(rep(c("10.4.9.34"),96)), rscript="/usr/
 
 sessionInfo() 
 future::plan(cluster, workers = cl)
-cache_rerun_b4 <- drake::drake_cache(path = "drake_cache_rerun_b4")
-make(rerun_crashed_runs_beaulieu4_final, cache=cache_rerun_b4, parallelism="future", jobs=96)
+cache_run_crashed <- drake::new_cache(path = "drake_cache_rerun_crashed", hash_algorithm = "md5")
+make(rerun_crashed_runs_beaulieu4_final, cache=cache_run_crashed, parallelism="future", jobs=96)
 parallel::stopCluster(cl)
 
 
