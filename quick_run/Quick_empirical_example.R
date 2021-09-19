@@ -43,21 +43,22 @@ phy <- read.tree("Lupinus.tre")
 # is also a model with two rate classes, but the same extinction fraction 
 # is shared between rate classes. 
 #########################################################################
-max.param = max(4, round(ape::Ntip(phy)/10))
-set.seed(42)
-possible.combos = generateMiSSEGreedyCombinations(max.param=max.param)
+#max.param = max(4, round(ape::Ntip(phy)/10))
+#set.seed(42)
+#possible.combos = generateMiSSEGreedyCombinations(max.param=max.param, vary.both=TRUE, fixed.eps.tries=NA)
 
+possible.combos = generateMiSSEGreedyCombinations(max.param=3, vary.both=TRUE, fixed.eps.tries=NA)
 #########################################################################
 # And this is how the possible.combos data.frame should look like:
-#########################################################################
+#####################################################q####################
 head(possible.combos)
 # turnover eps fixed.eps
-# 1        2   1        NA
-# 2        3   1        NA
-# 3       11   1        NA
-# 4        1   1        NA
-# 5        1   2        NA
-# 6        4   1        NA
+# 1         7   1        NA
+# 2         4   3        NA
+# 3         1   1        NA
+# 4         4   2        NA
+# 5         4   1        NA
+# 6         1   2        NA
 
 #########################################################################
 # (4) Specify a sampling fraction.
@@ -148,6 +149,8 @@ model.set = MiSSEGreedy(phy=phy, # the phylogeny
                         sann=FALSE) # IMPORTANT IMPORTANT IMPORTANT - This argument is here set to F for speed, 
                                 # but it should be set to TRUE for your actual runs. See above. 
 
+ls <- ls()
+print(ls)
 #########################################################################
 # You should see this printed on your console:
 #########################################################################
@@ -249,7 +252,7 @@ head(tip.rates)
 save(model.set_pruned, 
      model.recons, 
      tip.rates, 
-     possible.combos,
+     final.combos,
      file="Lupinus_example.Rsave")
 
 #########################################################################
