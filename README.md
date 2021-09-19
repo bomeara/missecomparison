@@ -15,6 +15,7 @@ EUCLID Eucalypts of Australia Edition 4 (2015, internet based, hosted by the Ide
 > Lupinus-quick_run. 
  
 A quick example of how MiSSE works using the genus *Lupinus* (Fabaceae). 
+ 
 Data from: 
 
  Drummond, C. S., Eastwood, R. J., Miotto, S. T., & Hughes, C. E. (2012). Multiple continental radiations and correlates of diversification in Lupinus (Leguminosae): testing for key innovation with incomplete taxon sampling. Systematic biology, 61(3), 443-460.
