@@ -7,6 +7,7 @@ library(hisse)
 library(BAMMtools)
 library(gridExtra)
 library(viridis)
+library(ggplot2)
 
 ################################################
 # Load MiSSE results
@@ -103,12 +104,13 @@ sink()
 all_pic_table_no_cherries <- as.data.frame(cbind(t0Pic_nocherry, r0Pic_nocherry))
 all_pic_table_w_cherries <- as.data.frame(cbind(t0Pic, r0Pic))
 
-pdf("PIC_w/wo_cherries.pdf", width=8, height=4)
+pdf("PICs.pdf", width=9, height=4)
 no_cherries <- ggplot(all_pic_table_no_cherries, aes(t0Pic_nocherry, r0Pic_nocherry, color = t0Pic_nocherry)) +
         geom_point(shape = 19, size = 3, show.legend = FALSE, alpha=0.75) +
         theme_minimal() +
         scale_color_viridis(option = "B") +
         geom_abline(intercept=0, slope=regression.origin_no_cherry$reg$coefficients, color="red",  linetype="dashed")  +
+        geom_smooth(se=FALSE, formula=y~x-1, col="red", lwd=0.5) +
         ylim(-2, 2) +
         xlim(0,8.5) +
         xlab("PIC log(plant height) (m)") 
@@ -118,12 +120,15 @@ w_cherries <- ggplot(all_pic_table_w_cherries, aes(t0Pic, r0Pic, color = t0Pic))
         theme_minimal() +
         scale_color_viridis(option = "B") +
         geom_abline(intercept=0, slope=regression.origin_w_cherry$reg$coefficients, color="red",  linetype="dashed")  +
+        geom_smooth(se=FALSE, formula=y~x-1, col="red", lwd=0.5) +
         ylim(-2, 2) +
         xlim(0,8.5) +
         xlab("PIC log(plant height) (m)") 
 grid.arrange(w_cherries, no_cherries, nrow=1, ncol=2)
+
 dev.off()
 
+        
 ###############################################
 # Main figure with Eucalypts phylogeny, tree height and rates
 ###############################################
