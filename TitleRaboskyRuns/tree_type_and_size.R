@@ -7,7 +7,6 @@ library(stats)
 library(ggplot2)
 library(progress)
 library(viridis)
-#install.packages("PMCMR")
 library(PMCMR)
 
 treeTipMerge <- function(x) {
@@ -192,7 +191,7 @@ error.measurements <- c("RMSE","absoluteError.mean","absoluteError.median")
 #############
 one.error.measurement = "absoluteError.mean"
 
-pal.name <- "BuPu"
+pal.name <- "Viridis"
 pal <- rev(hcl.colors(6, palette = pal.name, alpha = 0.75))
 pdf(paste0(one.error.measurement, "_all.pdf"), width=15, height=20)
 
@@ -1045,4 +1044,4 @@ for(i in 1:length(all_tables)) {
 }
 sink()
 
-citation("PMCMR")
+#citation("PMCMR")
