@@ -107,7 +107,7 @@ parallel::detectCores()
 # want to use a more powerful computer and more cores if you have a larger
 # tree.
 #########################################################################
-n.cores = 20
+n.cores = 4
 
 #########################################################################
 # (8) Specify the chunk size.
@@ -175,7 +175,7 @@ model.set = MiSSEGreedy(phy=phy, # the phylogeny
 class(model.set) 
 # [1] "list"
 length(model.set) 
-# [1] 8
+# [1] 20
 
 #########################################################################
 # You should then prune the redundant models with the following command. 
@@ -185,10 +185,10 @@ length(model.set)
 #########################################################################
 model.set_pruned <- PruneRedundantModels(model.set)
 length(model.set_pruned) 
-# [1] 8
+# [1] 20
 
 #########################################################################
-# In this case, we kept our same 8 models after prunning, though this number
+# In this case, we kept our same 20 models after prunning, though this number
 # may decrease in cases where there are redundant models in the set.
 #########################################################################
 
@@ -236,13 +236,20 @@ tip.rates <- GetModelAveRates(model.recons, type = "tips")
 # Vasconcelos et al. in prep). The tip.rates should look like this:
 #########################################################################
 head(tip.rates)
-#                  taxon state  turnover   net.div speciation extinct.frac extinction
-# 1      Lupinus_diffusus     0 0.8371675 0.2901501  0.5636588    0.4678924  0.2735087
-# 2    Lupinus_cumulicola     0 0.8404156 0.2924021  0.5664089    0.4672625  0.2740068
-# 3      Lupinus_villosus     0 0.8404156 0.2924021  0.5664089    0.4672625  0.2740068
-# 4    Lupinus_micranthus     0 0.8132777 0.2757810  0.5445294    0.4705892  0.2687484
-# 5 Lupinus_angustifolius     0 0.8211815 0.2795363  0.5503589    0.4704875  0.2708226
-# 6        Lupinus_luteus     0 0.8258186 0.2819912  0.5539049    0.4700129  0.2719137
+#taxon state  turnover   net.div speciation extinct.frac
+#1      Lupinus_diffusus     0 0.7357814 0.3574356  0.5466085    0.3188411
+#2    Lupinus_cumulicola     0 0.7468651 0.3646538  0.5557594    0.3180036
+#3      Lupinus_villosus     0 0.7468651 0.3646538  0.5557594    0.3180036
+#4    Lupinus_micranthus     0 0.6547796 0.3078879  0.4813337    0.3230566
+#5 Lupinus_angustifolius     0 0.6617419 0.3114451  0.4865935    0.3216461
+#6        Lupinus_luteus     0 0.6701315 0.3164497  0.4932906    0.3196910
+#extinction
+#1  0.1891729
+#2  0.1911056
+#3  0.1911056
+#4  0.1734459
+#5  0.1751484
+#6  0.1768409
 
 #########################################################################
 # Recommended to save all files:
@@ -256,6 +263,7 @@ save(model.set_pruned,
 # You can also visualize the rates evolving in the tree with the following command, 
 # though rates through time *should not* be interpreted literally. The painting
 # is just to get a "feeling" for the model.
-#painted.tree <- hisse::plot.misse.states(x = model.recons, 
-#                                         rate.param = "speciation", type = "phylo", show.tip.label = F) 
-
+pdf("Lupinus_example.pdf", width=6, height=9)
+painted.tree <- hisse::plot.misse.states(x = model.recons, 
+                                         rate.param = "turnover", type = "phylo", show.tip.label = T, fsize=0.5) 
+dev.off()
