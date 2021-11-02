@@ -1,5 +1,11 @@
-#setwd("~/Desktop/misse_mme_paper/missecomparison/TitleRaboskyRuns") # TV local
-rm(list=ls())
+############################################################
+# Code to summarize results from tip rate comparisons
+############################################################
+# (1) Plots for Figure 3
+# (2) Accuracy comparison using Kruskal-Wallis 
+############################################################
+# rm(list=ls())
+
 library(Metrics)
 library(tidyverse)
 library(magrittr)
@@ -13,7 +19,9 @@ treeTipMerge <- function(x) {
   x$treeTipString <- paste0(x$treeName, "_", x$tipName)
   return(x)
 }
-
+############################################################
+# Load results
+############################################################
 all_results <- data.frame()
 model_average_results <- data.frame()
 best_results <- data.frame()
@@ -22,21 +30,7 @@ for (i in seq_along(dones)) {
   print(paste0("Loading ", i, " of ", length(dones)))
   try(load(dones[i]))
   if(exists("summary_df")) {
-    
-    # summary_df$loglik <- NA
-    # summary_df$nparam <- NA
-    # good_enough_recon <- which(delta_AICc<20)
-    # model_likelihoods <- sapply(hisse_result_all, "[[", "loglik")
-    # current_row <- 0
-    # for(good_enough_index in seq_along(good_enough_recon)) {
-    # 	for (taxon_index in sequence(length(unique(summary_df$taxon_id_in_phy)))) {
-    # 		current_row <- current_row+1
-    # 		summary_df$loglik[current_row] <- model_likelihoods[good_enough_recon[good_enough_index]]
-    # 		summary_df$nparam[current_row] <- 0.5*(summary_df$AIC[current_row] + 2*summary_df$loglik[current_row])
-    # 	}
-    # }
-    
-    
+
     all_results <- plyr::rbind.fill(all_results, summary_df)
     local_weighted <- summary_df %>% group_by(treeName, taxon_id_in_phy, tipName) %>% summarise(
       turnover = weighted.mean(turnover, AICc_weight),
@@ -54,32 +48,12 @@ for (i in seq_along(dones)) {
   }
   
 }
-#rates.ours <- treeTipMerge(read.csv("result.csv", stringsAsFactors=FALSE))
 rates.ours <- treeTipMerge(all_results)
 rates.ours.model.average <- treeTipMerge(model_average_results)
-
 rates.theirs <- treeTipMerge(read.csv("data/title_rabosky_dryad/tipRates_dryad/dataFiles/estimatedTipRates.csv", stringsAsFactors=FALSE))
 rates.true <- treeTipMerge(read.csv("data/title_rabosky_dryad/tipRates_dryad/dataFiles/trueTipRates.csv", stringsAsFactors=FALSE))
-
 rates.ours$unique_string <- paste(rates.ours$treeName, "nturnover", rates.ours$nturnover, "neps", rates.ours$neps, "root", rates.ours$root_type, sep="_")
-
 rates.ours.best <- best_results
-# rates.ours.best <- data.frame()
-# unique.trees <- unique(rates.ours$treeName)
-# for (i in seq_along(unique.trees)) {
-#   rates.local.df <- rates.ours[which(rates.ours$treeName == unique.trees[i]),]
-#   rates.local <- split(rates.local.df, rates.local.df$unique_string)
-#   AICc <- sapply(lapply(rates.local, "[[", "AICc"),min)
-#   deltaAICcToNext <- NA
-#   if(length(rates.local)>1) {
-#     AICc.sorted <- sort(AICc, decreasing=FALSE)
-#     deltaAICcToNext <- AICc.sorted[2] - AICc.sorted[1]
-#   }
-#   rates.local.best <- rates.local[[which.min(AICc)[1]]]
-#   rates.local.best$numberAlternatives <- length(rates.local)
-#   rates.local.best$deltaAICcToNext <- deltaAICcToNext
-#   rates.ours.best <- rbind(rates.ours.best, rates.local.best)
-# }
 
 rates.theirs <- rates.theirs[rates.theirs$treeName %in% rates.ours.best$treeName,]
 rates.true <- rates.true[rates.true$treeName %in% rates.ours.best$treeName,]
@@ -96,7 +70,6 @@ colnames(rates.ours.best)[which(colnames(rates.ours.best)=="net.div")] <- "netDi
 colnames(rates.ours.best)[which(colnames(rates.ours.best)=="speciation")] <- "lambdaMiSSEbest"
 colnames(rates.ours.best)[which(colnames(rates.ours.best)=="extinction")] <- "muMiSSEbest"
 
-
 colnames(rates.ours.model.average)[which(colnames(rates.ours.model.average)=="turnover")] <- "turnoverMiSSEavg"
 colnames(rates.ours.model.average)[which(colnames(rates.ours.model.average)=="extinction.fraction")] <- "extinctionFractionMiSSEavg"
 colnames(rates.ours.model.average)[which(colnames(rates.ours.model.average)=="net.div")] <- "netDivMiSSEavg"
@@ -111,19 +84,18 @@ rates.combined$muBAMM <- rates.combined$lambdaBAMM - rates.combined$netDivBAMM
 rates.combined$turnoverBAMM <- rates.combined$muBAMM + rates.combined$lambdaBAMM
 rates.combined$extinctionFractionBAMM <- rates.combined$muBAMM / rates.combined$lambdaBAMM
 
-
 # get rid of NAs and weird values for now
 rates.cleaned <- rates.combined
 rates.cleaned <- rates.cleaned[!is.na(rates.cleaned$netDivBAMM),]
 rates.cleaned <- rates.cleaned[(rates.cleaned$lambdaTRUE>0),] #yeah, not sure why there'd be no speciation in reality for a tree with >2 taxa
 
-
+############################################################
+# Organize results by type of tree, metric and parameter
+############################################################
 approaches <- c("TB", "ND", "DR", "BAMM", "MiSSEbest", "MiSSEavg")
 parameters <- c("mu", "lambda", "netDiv", "turnover", "extinctionFraction")
 error.measurements <- c("RMSE","absoluteError.mean","absoluteError.median")
-
 all_trees <- unique(rates.cleaned$treeName)
-#error_results <- data.frame(matrix(nrow=length(all_trees), ncol=length(approaches)*length(parameters)*length(error.measurements)))
 
 results_all_trees <- matrix(nrow=0, ncol=4)
 for (i in seq_along(all_trees)) {
@@ -164,12 +136,13 @@ for(i in types_of_trees){
 names(length_tree_type) <- types_of_trees
 
 
-#boxplot(log(results_all_trees$RMSE_lambdaTB), log(results_all_trees$RMSE_lambdaND),
-#        log(results_all_trees$RMSE_lambdaDR), log(results_all_trees$RMSE_lambdaBAMM), log(results_all_trees$RMSE_lambdaMiSSEbest))
+
+############################################################
+# Plot results
+############################################################
 
 require(ggplot2)
 library(gridExtra)
-
 
 organize_table <- function(results_all_trees, tree_type, parameter, error.measurement){
   results_one_tree_type <- subset(results_all_trees, grepl(tree_type, results_all_trees$tree_name))
@@ -188,12 +161,18 @@ approaches <- c("TB", "ND", "DR", "BAMM", "MiSSEbest", "MiSSEavg")
 parameters <- c("mu", "lambda", "netDiv", "turnover", "extinctionFraction")
 error.measurements <- c("RMSE","absoluteError.mean","absoluteError.median")
 
-#############
-one.error.measurement = "absoluteError.mean"
+############################################################
+# Define measure of error to plot
+############################################################
+one.error.measurement = "absoluteError.mean" # any of c("RMSE","absoluteError.mean","absoluteError.median")
 
+############################################################
+# Make violin plots:
+############################################################
+{
 pal.name <- "Viridis"
 pal <- rev(hcl.colors(6, palette = pal.name, alpha = 0.75))
-pdf(paste0(one.error.measurement, "_all.pdf"), width=15, height=20)
+pdf(paste0("../Supplementary_Material/",one.error.measurement, "_results_comparison.pdf"), width=15, height=20)
 
 #colnames(results_one_tree_type_one_parameter)
 lambda1 <- organize_table(results_all_trees, one_tree_type[1], parameters[parameters=="lambda"], error.measurements[error.measurements==one.error.measurement])
@@ -1016,10 +995,10 @@ grid.arrange(plot_lambda1, plot_mu1, plot_netDiv1, plot_turnover1, plot_extincti
 
 
 dev.off()
-
+}
 
 ######################################################
-# Krual-wallis
+# (2) Krual-wallis
 ######################################################
 all_tables <- list(lambda1, mu1, netDiv1, turnover1, extinctionFraction1,
 lambda2, mu2, netDiv2, turnover2, extinctionFraction2,
@@ -1032,7 +1011,7 @@ lambda8, mu8, netDiv8, turnover8, extinctionFraction8)
 
 rate_names <- rep(c("lambda","mu","netDiv","turnover","extinctionFraction"),8)
 
-sink("kruskal_wallis_results.txt")
+sink(paste0("../Supplementary_Material/",one.error.measurement,"_kruskal_wallis_results.txt"))
 for(i in 1:length(all_tables)) {
     one_table <- all_tables[[i]]
     tree_name <- gsub("\\_.*","", one_table$tree_name[1])

@@ -1,6 +1,6 @@
 # missecomparison
 
-> Eucalypts-empirical_example 
+> Empirical_example-Eucalypts 
  
 Tip-rate comparisons between plant height and net-turnover rates in Eucalypteae (Myrtaceae). 
  
@@ -11,7 +11,7 @@ Thornhill, A. H., Crisp, M. D., Külheim, C., Lam, K. E., Nelson, L. A., Yeates,
 EUCLID Eucalypts of Australia Edition 4 (2015, internet based, hosted by the Identic Pty Ltd, Brisbane.) [link](https://apps.lucidcentral.org/euclid/text/intro/index.html)
 
  
-> Lupinus-quick_run
+> Example_code-Lupinus_quick_run 
  
 A quick example of how MiSSE works using the genus *Lupinus* (Fabaceae). 
  
