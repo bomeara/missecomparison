@@ -83,7 +83,6 @@ sink()
 all_pic_table_no_cherries <- as.data.frame(cbind(pic_wo_cherries_misse$`trait PIC`, pic_wo_cherries_misse$`tip.rate PIC`))
 all_pic_table_w_cherries <- as.data.frame(cbind(pic_w_cherries_misse$`trait PIC`, pic_w_cherries_misse$`tip.rate PIC`))
 
-
 pdf("Eucalypts_PICs.pdf", width=4.5, height=2)
 
 no_cherries <- ggplot(all_pic_table_no_cherries, aes(V1, V2, color = V1)) +
