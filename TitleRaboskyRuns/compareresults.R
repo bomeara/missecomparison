@@ -1,5 +1,6 @@
-#setwd("~/Desktop/misse_mme_paper/missecomparison/TitleRaboskyRuns") # TV local
-rm(list=ls())
+
+
+#rm(list=ls())
 library(Metrics)
 library(tidyverse)
 library(magrittr)
@@ -156,6 +157,32 @@ print(round(absoluteError.mean.results,3))
 
 print("absolute error, median")
 print(round(absoluteError.median.results,3))
+
+
+######################################################
+# BAMM vs. MiSSE comparison
+######################################################
+MiSSEavg_rates <- c("lambdaMiSSEavg","muMiSSEavg","turnoverMiSSEavg","netDivMiSSEavg","extinctionFractionMiSSEavg")
+MiSSEbest_rates <- c("lambdaMiSSEbest","muMiSSEbest","turnoverMiSSEbest","netDivMiSSEbest","extinctionFractionMiSSEbest")
+BAMM_rates <- c("lambdaBAMM","muBAMM","turnoverBAMM","netDivBAMM","extinctionFractionBAMM")
+
+sink(paste0("../Supplementary_Material/MiSSEavg_BAMM_comparison.txt"))
+for(i in 1:5) {
+  print(paste0("Comparison: ", MiSSEavg_rates[i],"_" ,BAMM_rates[i]))
+  result <- median(abs(rates.cleaned[,MiSSEavg_rates[i]] - rates.cleaned[,BAMM_rates[i]]) / rates.cleaned[,MiSSEavg_rates[i]])
+  print(round(result,3))
+  print("------------------------")
+}
+sink()
+
+sink(paste0("../Supplementary_Material/MiSSEbest_BAMM_comparison.txt"))
+for(i in 1:5) {
+  print(paste0("Comparison: ", MiSSEavg_rates[i],"_" ,BAMM_rates[i]))
+  result <- median(abs(rates.cleaned[,MiSSEavg_rates[i]] - rates.cleaned[,BAMM_rates[i]]) / rates.cleaned[,MiSSEavg_rates[i]])
+  print(round(result,3))
+  print("------------------------")
+}
+sink()
 
 #print("proportional error")
 #print(round(proportionalError.results,3))

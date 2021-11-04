@@ -355,17 +355,11 @@ crashed_runs_beaulieu4 <- drake_plan(
 
 
 rerun_crashed_runs_beaulieu4_final <- drake_plan(
-<<<<<<< HEAD
   dones = c(list.files("results", pattern="done_recon", full.names=TRUE), list.files("new_results", pattern="done_recon", full.names=TRUE)),
   #base.dir = "/home/tvasconcelos/missecomparison/TitleRaboskyRuns",
   base.dir = "/Users/thaisvasconcelos/Desktop/misse_mme_paper/missecomparison/TitleRaboskyRuns",
   all_trees = load.all.trees(base.dir, where="local"),
   crashed_trees = get.crashed.trees2(base.dir, where="local"),
-=======
-  base.dir = "/home/tvasconcelos/missecomparison/TitleRaboskyRuns",
-  all_trees = load.all.trees(base.dir, where="labcomputer"),
-  crashed_trees = as.character(read.csv(paste0(base.dir,"/crashed.trees.csv"))[,2]),
->>>>>>> 54a5da25a257c26466523773a74d83142a059dbf
   target(DoSingleRun_new(dir=crashed_trees, 
                          phy=all_trees, 
                          root_type="madfitz", n.cores=NULL), dynamic=map(crashed_trees))
