@@ -15,8 +15,8 @@ treeTipMerge <- function(x) {
   return(x)
 }
 
-base.dir <- "/Users/thaisvasconcelos/Desktop/misse_mme_paper/missecomparison/ClaDScomparison"
-
+#base.dir <- "/Users/thaisvasconcelos/Desktop/misse_mme_paper/missecomparison/ClaDScomparison"
+base.dir <- "/home/tvasconcelos/missecomparison/ClaDScomparison"
 ############################################################
 # Load previous results
 ############################################################
