@@ -110,6 +110,8 @@ for(i in 1:length(tree_names)) {
 
 # making more script for slow trees on Feb 20
 
+
+#base.dir <- "/Users/thaisvasconcelos/Desktop/misse_mme_paper/missecomparison/ClaDScomparison"
 new_tree_path <- paste0(base.dir, "/trees")
 labels_all <- gsub(".tre","",list.files(new_tree_path))
 
@@ -121,6 +123,8 @@ undones <- setdiff(labels_all, labels_partial_results)
 
 tree_names = undones 
 groups <- seq(from=1, to=length(tree_names), by=3)
+
+#base.dir <- "/home/tvasconcelos/missecomparison/ClaDScomparison"
 
 for(k in 1:length(groups)) {
   if(k==length(groups)){
