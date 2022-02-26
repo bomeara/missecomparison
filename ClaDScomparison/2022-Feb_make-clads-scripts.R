@@ -66,6 +66,7 @@ for(i in 1:length(tree_names)) {
 
 # Making ClaDS script for manual parallelization in Julia
 
+
 new_tree_path <- paste0(base.dir, "/trees")
 
 groups <- seq(from=1, to=length(tree_names), by=50)
@@ -125,6 +126,7 @@ tree_names = undones
 groups <- seq(from=1, to=length(tree_names), by=3)
 
 #base.dir <- "/home/tvasconcelos/missecomparison/ClaDScomparison"
+new_tree_path <- paste0(base.dir, "/trees")
 
 for(k in 1:length(groups)) {
   if(k==length(groups)){
@@ -147,4 +149,34 @@ for(k in 1:length(groups)) {
   sink()
 }
 
+#######################
 
+# Making ClaDS script for manual parallelization in Julia - 2nd run
+
+new_tree_path <- paste0(base.dir, "/trees")
+labels_all <- gsub(".tre","",list.files(new_tree_path))
+
+base.dir <- "/home/tvasconcelos/missecomparison/ClaDScomparison"
+new_tree_path <- paste0(base.dir, "/trees")
+
+groups <- seq(from=1, to=length(labels_all), by=10)
+for(k in 1:length(groups)) {
+  if(k==length(groups)){
+    one_group <- labels_all[groups[k]:length(labels_all)]
+  } else { one_group <- labels_all[groups[k]:(groups[k]+50)] }
+  sink(paste0("group",k,"_script.jl"))
+  cat("# mode: julia","\n")
+  cat("\t","using PANDA","\n")
+  cat("# mode: julia","\n")
+  cat("\t","using JLD2","\n")
+  for(i in 1:length(one_group)) {
+    cat("# mode: julia","\n")
+    cat("\t",paste0('my_tree = load_tree("', new_tree_path, '/', one_group[i], '.tre")'),"\n")
+    cat("# mode: julia","\n")
+    cat("\t","output = infer_ClaDS(my_tree, print_state = 100)","\n")
+    cat("# mode: julia","\n")
+    #cat("@save 'output_clads' output", "\n")
+    cat("\t",paste0('save_ClaDS_in_R(output, "',base.dir, '/results_2nd_run/', one_group[i], '_clads_results.Rdata")'),"\n")
+  }
+  sink()
+}
