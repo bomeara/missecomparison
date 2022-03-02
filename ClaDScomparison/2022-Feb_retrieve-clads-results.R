@@ -116,7 +116,7 @@ subset_results <- merge(subset_results, all_clads_tip_rates, by="tipName")
 
 #----------
 
-setdiff(unique(rates.ours$treeName), tree_labels)
+#setdiff(unique(rates.ours$treeName), tree_labels)
 
 
 #write.csv(subset_results, file=paste0("/Users/thaisvasconcelos/Desktop/misse_mme_paper/missecomparison/", Sys.Date(), "_preliminary_clads.csv"))
@@ -128,7 +128,7 @@ setdiff(unique(rates.ours$treeName), tree_labels)
 ############################################################
 # Organize results by type of tree, metric and parameter
 ############################################################
-approaches <- c("TB", "ND", "DR", "BAMM", "MiSSEbest", "MiSSEavg", "ClaDS")
+approaches <- c("TB", "ND", "DR", "BAMM", "ClaDS", "MiSSEbest", "MiSSEavg", )
 parameters <- c("mu", "lambda", "netDiv", "turnover", "extinctionFraction")
 error.measurements <- c("RMSE","absoluteError.mean","absoluteError.median")
 all_trees <- unique(subset_results$treeName)
@@ -191,19 +191,19 @@ organize_table <- function(results_all_trees, tree_type, parameter, error.measur
   #results_one_tree_type_one_parameter$error <- as.factor(results_one_tree_type_one_parameter$error)
   results_one_tree_type_one_parameter$parameter <- gsub(parameter,"", results_one_tree_type_one_parameter$parameter)
   
-  results_one_tree_type_one_parameter$parameter <- factor(results_one_tree_type_one_parameter$parameter, levels=c("TB", "ND", "DR", "BAMM", "MiSSEbest", "MiSSEavg","ClaDS"))
+  results_one_tree_type_one_parameter$parameter <- factor(results_one_tree_type_one_parameter$parameter, levels=c("TB", "ND", "DR", "BAMM", "ClaDS","MiSSEbest", "MiSSEavg"))
   return(results_one_tree_type_one_parameter)
 }
 
 one_tree_type <- c("evolvingRates","fossilBAMM","lambdaConstantVariance","MitchellRabosky2016","MooreEtAl2016","netDivConstantVariance","Rabosky2014","RaboskyEtAl2017")
-approaches <- c("TB", "ND", "DR", "BAMM", "MiSSEbest", "MiSSEavg", "ClaDS")
+approaches <- c("TB", "ND", "DR", "BAMM", "ClaDS", "MiSSEbest", "MiSSEavg")
 parameters <- c("mu", "lambda", "netDiv", "turnover", "extinctionFraction")
 error.measurements <- c("RMSE","absoluteError.mean","absoluteError.median")
 
 ############################################################
 # Define measure of error to plot
 ############################################################
-one.error.measurement = "absoluteError.mean" # any of c("RMSE","absoluteError.mean","absoluteError.median")
+one.error.measurement = "absoluteError.median" # any of c("RMSE","absoluteError.mean","absoluteError.median")
 
 ############################################################
 # Make violin plots:
@@ -1095,12 +1095,12 @@ one.error.measurement = "absoluteError.mean" # any of c("RMSE","absoluteError.me
 pal.name <- "Viridis"
 pal <- rev(hcl.colors(7, palette = pal.name, alpha = 0.75))
 
-pdf(paste0("../Supplementary_Material/",one.error.measurement, "_results_comparison.pdf"), width=15, height=20)
+pdf(paste0("../Supplementary_Material/",one.error.measurement, "_results_comparison_10.pdf"), width=15, height=20)
 #colnames(results_one_tree_type_one_parameter)
 lambda1 <- organize_table(results_all_trees, one_tree_type[1], parameters[parameters=="lambda"], error.measurements[error.measurements==one.error.measurement])
 plot_lambda1 <- ggplot(lambda1, aes(x=parameter, y=value, fill=parameter)) +
   geom_boxplot(outlier.size = 0.8)  +
-#  ##scale_y_continuous(trans='log10') +
+  scale_y_continuous(trans='log10') +
   #geom_boxplot() + 
   #geom_violin(trim=FALSE)+
   theme_bw() +
@@ -1113,16 +1113,16 @@ plot_lambda1 <- ggplot(lambda1, aes(x=parameter, y=value, fill=parameter)) +
   #scale_fill_brewer(palette=pal) +
   scale_fill_manual(values=pal) +
   #geom_boxplot(width=0.1) +
-  coord_flip() #+
-#theme(axis.title.y=element_blank(),
-#      axis.text.y=element_blank(),
-#      axis.ticks.y=element_blank())
+  coord_flip(ylim = c(0.001,10)) +
+  theme(axis.title.y=element_blank(),
+      axis.text.y=element_blank(),
+      axis.ticks.y=element_blank())
 
   
   lambda2 <- organize_table(results_all_trees, one_tree_type[2], parameters[parameters=="lambda"], error.measurements[error.measurements==one.error.measurement])
   plot_lambda2 <- ggplot(lambda2, aes(x=parameter, y=value, fill=parameter)) +
     geom_boxplot(outlier.size = 0.8)  +
-    #scale_y_continuous(trans='log10') +
+    scale_y_continuous(trans='log10') +
     #geom_boxplot() + 
     theme_bw() +
     theme(legend.position = "none") + 
@@ -1134,16 +1134,16 @@ plot_lambda1 <- ggplot(lambda1, aes(x=parameter, y=value, fill=parameter)) +
     scale_x_discrete("",  drop=FALSE) +
     #scale_fill_brewer(palette=pal) +
     scale_fill_manual(values=pal) +
-    coord_flip() #+
-  #theme(axis.title.y=element_blank(),
-  #      axis.text.y=element_blank(),
-  #      axis.ticks.y=element_blank())
+    coord_flip(ylim = c(0.001,10)) +
+    theme(axis.title.y=element_blank(),
+          axis.text.y=element_blank(),
+          axis.ticks.y=element_blank())
   
   lambda3 <- organize_table(results_all_trees, one_tree_type[3], parameters[parameters=="lambda"], error.measurements[error.measurements==one.error.measurement])
   plot_lambda3 <- ggplot(lambda3, aes(x=parameter, y=value, fill=parameter)) +
     #geom_boxplot() + 
     geom_boxplot(outlier.size = 0.8)  +
-    #scale_y_continuous(trans='log10') +
+    scale_y_continuous(trans='log10') +
     theme_bw() +
     theme(legend.position = "none") + 
     #annotate(geom="text", x=6, y=7, size=5, hjust=0, label=one.error.measurement) + 
@@ -1154,14 +1154,14 @@ plot_lambda1 <- ggplot(lambda1, aes(x=parameter, y=value, fill=parameter)) +
     scale_x_discrete("",  drop=FALSE) +
     #scale_fill_brewer(palette=pal) +
     scale_fill_manual(values=pal) +
-    coord_flip() #+
-  #theme(axis.title.y=element_blank(),
-  #      axis.text.y=element_blank(),
-  #      axis.ticks.y=element_blank())
+    coord_flip(ylim = c(0.001,10)) +
+    theme(axis.title.y=element_blank(),
+          axis.text.y=element_blank(),
+          axis.ticks.y=element_blank())
   
   lambda4 <- organize_table(results_all_trees, one_tree_type[4], parameters[parameters=="lambda"], error.measurements[error.measurements==one.error.measurement])
   plot_lambda4 <- ggplot(lambda4, aes(x=parameter, y=value, fill=parameter)) +
-    #scale_y_continuous(trans='log10') +
+    scale_y_continuous(trans='log10') +
     geom_boxplot(outlier.size = 0.8)  +
     #geom_boxplot() + 
     theme_bw() +
@@ -1174,14 +1174,14 @@ plot_lambda1 <- ggplot(lambda1, aes(x=parameter, y=value, fill=parameter)) +
     scale_x_discrete("",  drop=FALSE) +
     #scale_fill_brewer(palette=pal) +
     scale_fill_manual(values=pal) +
-    coord_flip() #+
-  #theme(axis.title.y=element_blank(),
-  #      axis.text.y=element_blank(),
-  #      axis.ticks.y=element_blank())
+    coord_flip(ylim = c(0.001,10)) +
+    theme(axis.title.y=element_blank(),
+          axis.text.y=element_blank(),
+          axis.ticks.y=element_blank())
   
   lambda5 <- organize_table(results_all_trees, one_tree_type[5], parameters[parameters=="lambda"], error.measurements[error.measurements==one.error.measurement])
   plot_lambda5 <- ggplot(lambda5, aes(x=parameter, y=value, fill=parameter)) +
-    #scale_y_continuous(trans='log10') +
+    scale_y_continuous(trans='log10') +
     geom_boxplot(outlier.size = 0.8)  +
     theme_bw() +
     theme(legend.position = "none") + 
@@ -1193,14 +1193,14 @@ plot_lambda1 <- ggplot(lambda1, aes(x=parameter, y=value, fill=parameter)) +
     scale_x_discrete("",  drop=FALSE) +
     #scale_fill_brewer(palette=pal) +
     scale_fill_manual(values=pal) +
-    coord_flip() #+
-  #theme(axis.title.y=element_blank(),
-  #      axis.text.y=element_blank(),
-  #      axis.ticks.y=element_blank())
+    coord_flip(ylim = c(0.001,10)) +
+    theme(axis.title.y=element_blank(),
+          axis.text.y=element_blank(),
+          axis.ticks.y=element_blank())
   
   lambda6 <- organize_table(results_all_trees, one_tree_type[6], parameters[parameters=="lambda"], error.measurements[error.measurements==one.error.measurement])
   plot_lambda6 <- ggplot(lambda6, aes(x=parameter, y=value, fill=parameter)) +
-    #scale_y_continuous(trans='log10') +
+    scale_y_continuous(trans='log10') +
     geom_boxplot(outlier.size = 0.8)  +
     #geom_boxplot() + 
     theme_bw() +
@@ -1213,15 +1213,15 @@ plot_lambda1 <- ggplot(lambda1, aes(x=parameter, y=value, fill=parameter)) +
     scale_x_discrete("",  drop=FALSE) +
     #scale_fill_brewer(palette=pal) +
     scale_fill_manual(values=pal) +
-    coord_flip() #+
-  #theme(axis.title.y=element_blank(),
-  #      axis.text.y=element_blank(),
-  #      axis.ticks.y=element_blank())
+    coord_flip(ylim = c(0.001,10)) +
+    theme(axis.title.y=element_blank(),
+          axis.text.y=element_blank(),
+          axis.ticks.y=element_blank())
   
   lambda7 <- organize_table(results_all_trees, one_tree_type[7], parameters[parameters=="lambda"], error.measurements[error.measurements==one.error.measurement])
   plot_lambda7 <- ggplot(lambda7, aes(x=parameter, y=value, fill=parameter)) +
     geom_boxplot(outlier.size = 0.8)  +
-    #scale_y_continuous(trans='log10') +
+    scale_y_continuous(trans='log10') +
     #geom_boxplot() + 
     theme_bw() +
     theme(legend.position = "none") + 
@@ -1233,15 +1233,15 @@ plot_lambda1 <- ggplot(lambda1, aes(x=parameter, y=value, fill=parameter)) +
     scale_x_discrete("",  drop=FALSE) +
     #scale_fill_brewer(palette=pal) +
     scale_fill_manual(values=pal) +
-    coord_flip() #+
-  #theme(axis.title.y=element_blank(),
-  #      axis.text.y=element_blank(),
-  #      axis.ticks.y=element_blank())
+    coord_flip(ylim = c(0.001,10)) +
+    theme(axis.title.y=element_blank(),
+          axis.text.y=element_blank(),
+          axis.ticks.y=element_blank())
   
   lambda8 <- organize_table(results_all_trees, one_tree_type[8], parameters[parameters=="lambda"], error.measurements[error.measurements==one.error.measurement])
   plot_lambda8 <- ggplot(lambda8, aes(x=parameter, y=value, fill=parameter)) +
     geom_boxplot(outlier.size = 0.8)  +
-    #scale_y_continuous(trans='log10') +
+    scale_y_continuous(trans='log10') +
     #geom_boxplot() + 
     theme_bw() +
     theme(legend.position = "none") + 
@@ -1253,15 +1253,15 @@ plot_lambda1 <- ggplot(lambda1, aes(x=parameter, y=value, fill=parameter)) +
     scale_x_discrete("",  drop=FALSE) +
     #scale_fill_brewer(palette=pal) +
     scale_fill_manual(values=pal) +
-    coord_flip() #+
-  #theme(axis.title.y=element_blank(),
-  #      axis.text.y=element_blank(),
-  #      axis.ticks.y=element_blank())
+    coord_flip(ylim = c(0.001,10)) +
+    theme(axis.title.y=element_blank(),
+          axis.text.y=element_blank(),
+          axis.ticks.y=element_blank())
   
 
   mu1 <- organize_table(results_all_trees, one_tree_type[1], parameters[parameters=="mu"], error.measurements[error.measurements==one.error.measurement])
   plot_mu1 <- ggplot(mu1, aes(x=parameter, y=value, fill=parameter)) +
-    #scale_y_continuous(trans='log10') +
+    scale_y_continuous(trans='log10') +
     geom_boxplot(outlier.size = 0.8)  +
     #geom_boxplot() + 
     theme_bw() +
@@ -1274,14 +1274,14 @@ plot_lambda1 <- ggplot(lambda1, aes(x=parameter, y=value, fill=parameter)) +
     #scale_fill_brewer(palette=pal) +
     scale_fill_manual(values=pal[4:7]) +
     #coord_cartesian(ylim = c(-0.25,0.75)) +
-    coord_flip() +
+    coord_flip(ylim = c(0.001,10)) +
     theme(axis.title.y=element_blank(),
           axis.text.y=element_blank(),
           axis.ticks.y=element_blank())
   
   netDiv1 <- organize_table(results_all_trees, one_tree_type[1], parameters[parameters=="netDiv"], error.measurements[error.measurements==one.error.measurement])
   plot_netDiv1 <- ggplot(netDiv1, aes(x=parameter, y=value, fill=parameter)) +
-    #scale_y_continuous(trans='log10') +
+    scale_y_continuous(trans='log10') +
     geom_boxplot(outlier.size = 0.8)  +
     #geom_boxplot() + 
     theme_bw() +
@@ -1293,7 +1293,7 @@ plot_lambda1 <- ggplot(lambda1, aes(x=parameter, y=value, fill=parameter)) +
     scale_x_discrete("parameter",  drop=FALSE) +
     #scale_fill_brewer(palette=pal) +
     scale_fill_manual(values=pal[4:7]) +
-    coord_flip() +
+    coord_flip(ylim = c(0.001,10)) +
     theme(axis.title.y=element_blank(),
           axis.text.y=element_blank(),
           axis.ticks.y=element_blank())
@@ -1301,7 +1301,7 @@ plot_lambda1 <- ggplot(lambda1, aes(x=parameter, y=value, fill=parameter)) +
   turnover1 <- organize_table(results_all_trees, one_tree_type[1], parameters[parameters=="turnover"], error.measurements[error.measurements==one.error.measurement])
   plot_turnover1 <- ggplot(turnover1, aes(x=parameter, y=value, fill=parameter)) +
     geom_boxplot(outlier.size = 0.8)  +
-    #scale_y_continuous(trans='log10') +
+    scale_y_continuous(trans='log10') +
     #geom_boxplot() + 
     theme_bw() +
     theme(legend.position = "none") + 
@@ -1312,14 +1312,14 @@ plot_lambda1 <- ggplot(lambda1, aes(x=parameter, y=value, fill=parameter)) +
     scale_x_discrete("parameter",  drop=FALSE) +
     #scale_fill_brewer(palette=pal) +
     scale_fill_manual(values=pal[4:7]) +
-    coord_flip() +
+    coord_flip(ylim = c(0.001,10)) +
     theme(axis.title.y=element_blank(),
           axis.text.y=element_blank(),
           axis.ticks.y=element_blank())
   
   extinctionFraction1 <- organize_table(results_all_trees, one_tree_type[1], parameters[parameters=="extinctionFraction"], error.measurements[error.measurements==one.error.measurement])
   plot_extinctionFraction1 <- ggplot(extinctionFraction1, aes(x=parameter, y=value, fill=parameter)) +
-    #scale_y_continuous(trans='log10') +
+    scale_y_continuous(trans='log10') +
     geom_boxplot(outlier.size = 0.8)  +
     #geom_boxplot() + 
     theme_bw() +
@@ -1331,7 +1331,7 @@ plot_lambda1 <- ggplot(lambda1, aes(x=parameter, y=value, fill=parameter)) +
     scale_x_discrete("parameter",  drop=FALSE) +
     #scale_fill_brewer(palette=pal) +
     scale_fill_manual(values=pal[4:7]) +
-    coord_flip() +
+    coord_flip(ylim = c(0.001,10)) +
     theme(axis.title.y=element_blank(),
           axis.text.y=element_blank(),
           axis.ticks.y=element_blank())
@@ -1339,7 +1339,7 @@ plot_lambda1 <- ggplot(lambda1, aes(x=parameter, y=value, fill=parameter)) +
   ##
   mu2 <- organize_table(results_all_trees, one_tree_type[2], parameters[parameters=="mu"], error.measurements[error.measurements==one.error.measurement])
   plot_mu2 <- ggplot(mu2, aes(x=parameter, y=value, fill=parameter)) +
-    #scale_y_continuous(trans='log10') +
+    scale_y_continuous(trans='log10') +
     geom_boxplot(outlier.size = 0.8)  +
     #geom_boxplot() + 
     theme_bw() +
@@ -1351,7 +1351,7 @@ plot_lambda1 <- ggplot(lambda1, aes(x=parameter, y=value, fill=parameter)) +
     ggtitle("") +
     #scale_fill_brewer(palette=pal) +
     scale_fill_manual(values=pal[4:7]) +
-    coord_flip() +
+    coord_flip(ylim = c(0.001,10)) +
     theme(axis.title.y=element_blank(),
           axis.text.y=element_blank(),
           axis.ticks.y=element_blank())
@@ -1359,7 +1359,7 @@ plot_lambda1 <- ggplot(lambda1, aes(x=parameter, y=value, fill=parameter)) +
   netDiv2 <- organize_table(results_all_trees, one_tree_type[2], parameters[parameters=="netDiv"], error.measurements[error.measurements==one.error.measurement])
   plot_netDiv2 <- ggplot(netDiv2, aes(x=parameter, y=value, fill=parameter)) +
     geom_boxplot(outlier.size = 0.8)  +
-    #scale_y_continuous(trans='log10') +
+    scale_y_continuous(trans='log10') +
     #geom_boxplot() + 
     theme_bw() +
     theme(legend.position = "none") + 
@@ -1370,14 +1370,14 @@ plot_lambda1 <- ggplot(lambda1, aes(x=parameter, y=value, fill=parameter)) +
     ggtitle("") +
     #scale_fill_brewer(palette=pal) +
     scale_fill_manual(values=pal[4:7]) +
-    coord_flip() +
+    coord_flip(ylim = c(0.001,10)) +
     theme(axis.title.y=element_blank(),
           axis.text.y=element_blank(),
           axis.ticks.y=element_blank())
   
   turnover2 <- organize_table(results_all_trees, one_tree_type[2], parameters[parameters=="turnover"], error.measurements[error.measurements==one.error.measurement])
   plot_turnover2 <- ggplot(turnover2, aes(x=parameter, y=value, fill=parameter)) +
-    #scale_y_continuous(trans='log10') +
+    scale_y_continuous(trans='log10') +
     geom_boxplot(outlier.size = 0.8)  +
     #geom_boxplot() + 
     theme_bw() +
@@ -1389,14 +1389,14 @@ plot_lambda1 <- ggplot(lambda1, aes(x=parameter, y=value, fill=parameter)) +
     ggtitle("") +
     #scale_fill_brewer(palette=pal) +
     scale_fill_manual(values=pal[4:7]) +
-    coord_flip() +
+    coord_flip(ylim = c(0.001,10)) +
     theme(axis.title.y=element_blank(),
           axis.text.y=element_blank(),
           axis.ticks.y=element_blank())
   
   extinctionFraction2 <- organize_table(results_all_trees, one_tree_type[2], parameters[parameters=="extinctionFraction"], error.measurements[error.measurements==one.error.measurement])
   plot_extinctionFraction2 <- ggplot(extinctionFraction2, aes(x=parameter, y=value, fill=parameter)) +
-    #scale_y_continuous(trans='log10') +
+    scale_y_continuous(trans='log10') +
     geom_boxplot(outlier.size = 0.8)  +
     #geom_boxplot() + 
     theme_bw() +
@@ -1408,7 +1408,7 @@ plot_lambda1 <- ggplot(lambda1, aes(x=parameter, y=value, fill=parameter)) +
     ggtitle("") +
     #scale_fill_brewer(palette=pal) +
     scale_fill_manual(values=pal[4:7]) +
-    coord_flip() +
+    coord_flip(ylim = c(0.001,10)) +
     theme(axis.title.y=element_blank(),
           axis.text.y=element_blank(),
           axis.ticks.y=element_blank())
@@ -1417,7 +1417,7 @@ plot_lambda1 <- ggplot(lambda1, aes(x=parameter, y=value, fill=parameter)) +
   mu3 <- organize_table(results_all_trees, one_tree_type[3], parameters[parameters=="mu"], error.measurements[error.measurements==one.error.measurement])
   plot_mu3 <- ggplot(mu3, aes(x=parameter, y=value, fill=parameter)) +
     geom_boxplot(outlier.size = 0.8)  +
-    #scale_y_continuous(trans='log10') +
+    scale_y_continuous(trans='log10') +
     #geom_boxplot() + 
     theme_bw() +
     theme(legend.position = "none") + 
@@ -1428,7 +1428,7 @@ plot_lambda1 <- ggplot(lambda1, aes(x=parameter, y=value, fill=parameter)) +
     ggtitle("") +
     #scale_fill_brewer(palette=pal) +
     scale_fill_manual(values=pal[4:7]) +
-    coord_flip() +
+    coord_flip(ylim = c(0.001,10)) +
     theme(axis.title.y=element_blank(),
           axis.text.y=element_blank(),
           axis.ticks.y=element_blank())
@@ -1437,7 +1437,7 @@ plot_lambda1 <- ggplot(lambda1, aes(x=parameter, y=value, fill=parameter)) +
   plot_netDiv3 <- ggplot(netDiv3, aes(x=parameter, y=value, fill=parameter)) +
     #geom_boxplot() + 
     geom_boxplot(outlier.size = 0.8)  +
-    #scale_y_continuous(trans='log10') +
+    scale_y_continuous(trans='log10') +
     theme_bw() +
     theme(legend.position = "none") + 
     #annotate(geom="text", x=6, y=7, size=5, hjust=0, label=one.error.measurement) + 
@@ -1447,14 +1447,14 @@ plot_lambda1 <- ggplot(lambda1, aes(x=parameter, y=value, fill=parameter)) +
     scale_x_discrete("parameter",  drop=FALSE) +
     #scale_fill_brewer(palette=pal) +
     scale_fill_manual(values=pal[4:7]) +
-    coord_flip() +
+    coord_flip(ylim = c(0.001,10)) +
     theme(axis.title.y=element_blank(),
           axis.text.y=element_blank(),
           axis.ticks.y=element_blank())
   
   turnover3 <- organize_table(results_all_trees, one_tree_type[3], parameters[parameters=="turnover"], error.measurements[error.measurements==one.error.measurement])
   plot_turnover3 <- ggplot(turnover3, aes(x=parameter, y=value, fill=parameter)) +
-    #scale_y_continuous(trans='log10') +
+    scale_y_continuous(trans='log10') +
     geom_boxplot(outlier.size = 0.8)  +
     #geom_boxplot() + 
     theme_bw() +
@@ -1466,14 +1466,14 @@ plot_lambda1 <- ggplot(lambda1, aes(x=parameter, y=value, fill=parameter)) +
     scale_x_discrete("parameter",  drop=FALSE) +
     #scale_fill_brewer(palette=pal) +
     scale_fill_manual(values=pal[4:7]) +
-    coord_flip() +
+    coord_flip(ylim = c(0.001,10)) +
     theme(axis.title.y=element_blank(),
           axis.text.y=element_blank(),
           axis.ticks.y=element_blank())
   
   extinctionFraction3 <- organize_table(results_all_trees, one_tree_type[3], parameters[parameters=="extinctionFraction"], error.measurements[error.measurements==one.error.measurement])
   plot_extinctionFraction3 <- ggplot(extinctionFraction3, aes(x=parameter, y=value, fill=parameter)) +
-    #scale_y_continuous(trans='log10') +
+    scale_y_continuous(trans='log10') +
     geom_boxplot(outlier.size = 0.8)  +
     #geom_boxplot() + 
     theme_bw() +
@@ -1485,7 +1485,7 @@ plot_lambda1 <- ggplot(lambda1, aes(x=parameter, y=value, fill=parameter)) +
     ggtitle("") +
     #scale_fill_brewer(palette=pal) +
     scale_fill_manual(values=pal[4:7]) +
-    coord_flip() +
+    coord_flip(ylim = c(0.001,10)) +
     theme(axis.title.y=element_blank(),
           axis.text.y=element_blank(),
           axis.ticks.y=element_blank())
@@ -1494,7 +1494,7 @@ plot_lambda1 <- ggplot(lambda1, aes(x=parameter, y=value, fill=parameter)) +
   mu4 <- organize_table(results_all_trees, one_tree_type[4], parameters[parameters=="mu"], error.measurements[error.measurements==one.error.measurement])
   plot_mu4 <- ggplot(mu4, aes(x=parameter, y=value, fill=parameter)) +
     geom_boxplot(outlier.size = 0.8)  +
-    #scale_y_continuous(trans='log10') +
+    scale_y_continuous(trans='log10') +
     #geom_boxplot() + 
     theme_bw() +
     theme(legend.position = "none") + 
@@ -1505,14 +1505,14 @@ plot_lambda1 <- ggplot(lambda1, aes(x=parameter, y=value, fill=parameter)) +
     ggtitle("") +
     #scale_fill_brewer(palette=pal) +
     scale_fill_manual(values=pal[4:7]) +
-    coord_flip() +
+    coord_flip(ylim = c(0.001,10)) +
     theme(axis.title.y=element_blank(),
           axis.text.y=element_blank(),
           axis.ticks.y=element_blank())
   
   netDiv4 <- organize_table(results_all_trees, one_tree_type[4], parameters[parameters=="netDiv"], error.measurements[error.measurements==one.error.measurement])
   plot_netDiv4 <- ggplot(netDiv4, aes(x=parameter, y=value, fill=parameter)) +
-    #scale_y_continuous(trans='log10') +
+    scale_y_continuous(trans='log10') +
     geom_boxplot(outlier.size = 0.8)  +
     #geom_boxplot() + 
     theme_bw() +
@@ -1524,14 +1524,14 @@ plot_lambda1 <- ggplot(lambda1, aes(x=parameter, y=value, fill=parameter)) +
     ggtitle("") +
     #scale_fill_brewer(palette=pal) +
     scale_fill_manual(values=pal[4:7]) +
-    coord_flip() +
+    coord_flip(ylim = c(0.001,10)) +
     theme(axis.title.y=element_blank(),
           axis.text.y=element_blank(),
           axis.ticks.y=element_blank())
   
   turnover4 <- organize_table(results_all_trees, one_tree_type[4], parameters[parameters=="turnover"], error.measurements[error.measurements==one.error.measurement])
   plot_turnover4 <- ggplot(turnover4, aes(x=parameter, y=value, fill=parameter)) +
-    #scale_y_continuous(trans='log10') +
+    scale_y_continuous(trans='log10') +
     geom_boxplot(outlier.size = 0.8)  +
     #geom_boxplot() + 
     theme_bw() +
@@ -1543,14 +1543,14 @@ plot_lambda1 <- ggplot(lambda1, aes(x=parameter, y=value, fill=parameter)) +
     ggtitle("") +
     #scale_fill_brewer(palette=pal) +
     scale_fill_manual(values=pal[4:7]) +
-    coord_flip() +
+    coord_flip(ylim = c(0.001,10)) +
     theme(axis.title.y=element_blank(),
           axis.text.y=element_blank(),
           axis.ticks.y=element_blank())
   
   extinctionFraction4 <- organize_table(results_all_trees, one_tree_type[4], parameters[parameters=="extinctionFraction"], error.measurements[error.measurements==one.error.measurement])
   plot_extinctionFraction4 <- ggplot(extinctionFraction4, aes(x=parameter, y=value, fill=parameter)) +
-    #scale_y_continuous(trans='log10') +
+    scale_y_continuous(trans='log10') +
     geom_boxplot(outlier.size = 0.8)  +
     #geom_boxplot() + 
     theme_bw() +
@@ -1562,7 +1562,7 @@ plot_lambda1 <- ggplot(lambda1, aes(x=parameter, y=value, fill=parameter)) +
     ggtitle("") +
     #scale_fill_brewer(palette=pal) +
     scale_fill_manual(values=pal[4:7]) +
-    coord_flip() +
+    coord_flip(ylim = c(0.001,10)) +
     theme(axis.title.y=element_blank(),
           axis.text.y=element_blank(),
           axis.ticks.y=element_blank())
@@ -1570,7 +1570,7 @@ plot_lambda1 <- ggplot(lambda1, aes(x=parameter, y=value, fill=parameter)) +
   
   mu5 <- organize_table(results_all_trees, one_tree_type[5], parameters[parameters=="mu"], error.measurements[error.measurements==one.error.measurement])
   plot_mu5 <- ggplot(mu5, aes(x=parameter, y=value, fill=parameter)) +
-    #scale_y_continuous(trans='log10') +
+    scale_y_continuous(trans='log10') +
     geom_boxplot(outlier.size = 0.8)  +
     #geom_boxplot() + 
     theme_bw() +
@@ -1582,14 +1582,14 @@ plot_lambda1 <- ggplot(lambda1, aes(x=parameter, y=value, fill=parameter)) +
     ggtitle("") +
     #scale_fill_brewer(palette=pal) +
     scale_fill_manual(values=pal[4:7]) +
-    coord_flip() +
+    coord_flip(ylim = c(0.001,10)) +
     theme(axis.title.y=element_blank(),
           axis.text.y=element_blank(),
           axis.ticks.y=element_blank())
   
   netDiv5 <- organize_table(results_all_trees, one_tree_type[5], parameters[parameters=="netDiv"], error.measurements[error.measurements==one.error.measurement])
   plot_netDiv5 <- ggplot(netDiv5, aes(x=parameter, y=value, fill=parameter)) +
-    #scale_y_continuous(trans='log10') +
+    scale_y_continuous(trans='log10') +
     geom_boxplot(outlier.size = 0.8)  +
     #geom_boxplot() + 
     theme_bw() +
@@ -1601,14 +1601,14 @@ plot_lambda1 <- ggplot(lambda1, aes(x=parameter, y=value, fill=parameter)) +
     ggtitle("") +
     #scale_fill_brewer(palette=pal) +
     scale_fill_manual(values=pal[4:7]) +
-    coord_flip() +
+    coord_flip(ylim = c(0.001,10)) +
     theme(axis.title.y=element_blank(),
           axis.text.y=element_blank(),
           axis.ticks.y=element_blank())
   
   turnover5 <- organize_table(results_all_trees, one_tree_type[5], parameters[parameters=="turnover"], error.measurements[error.measurements==one.error.measurement])
   plot_turnover5 <- ggplot(turnover5, aes(x=parameter, y=value, fill=parameter)) +
-    #scale_y_continuous(trans='log10') +
+    scale_y_continuous(trans='log10') +
     geom_boxplot(outlier.size = 0.8)  +
     #geom_boxplot() + 
     theme_bw() +
@@ -1620,14 +1620,14 @@ plot_lambda1 <- ggplot(lambda1, aes(x=parameter, y=value, fill=parameter)) +
     ggtitle("") +
     #scale_fill_brewer(palette=pal) +
     scale_fill_manual(values=pal[4:7]) +
-    coord_flip() +
+    coord_flip(ylim = c(0.001,10)) +
     theme(axis.title.y=element_blank(),
           axis.text.y=element_blank(),
           axis.ticks.y=element_blank())
   
   extinctionFraction5 <- organize_table(results_all_trees, one_tree_type[5], parameters[parameters=="extinctionFraction"], error.measurements[error.measurements==one.error.measurement])
   plot_extinctionFraction5 <- ggplot(extinctionFraction5, aes(x=parameter, y=value, fill=parameter)) +
-    #scale_y_continuous(trans='log10') +
+    scale_y_continuous(trans='log10') +
     geom_boxplot(outlier.size = 0.8)  +
     #geom_boxplot() + 
     theme_bw() +
@@ -1639,7 +1639,7 @@ plot_lambda1 <- ggplot(lambda1, aes(x=parameter, y=value, fill=parameter)) +
     ggtitle("") +
     #scale_fill_brewer(palette=pal) +
     scale_fill_manual(values=pal[4:7]) +
-    coord_flip() +
+    coord_flip(ylim = c(0.001,10)) +
     theme(axis.title.y=element_blank(),
           axis.text.y=element_blank(),
           axis.ticks.y=element_blank())
@@ -1647,7 +1647,7 @@ plot_lambda1 <- ggplot(lambda1, aes(x=parameter, y=value, fill=parameter)) +
   
   mu6 <- organize_table(results_all_trees, one_tree_type[6], parameters[parameters=="mu"], error.measurements[error.measurements==one.error.measurement])
   plot_mu6 <- ggplot(mu6, aes(x=parameter, y=value, fill=parameter)) +
-    #scale_y_continuous(trans='log10') +
+    scale_y_continuous(trans='log10') +
     geom_boxplot(outlier.size = 0.8)  +
     #geom_boxplot() + 
     theme_bw() +
@@ -1659,14 +1659,14 @@ plot_lambda1 <- ggplot(lambda1, aes(x=parameter, y=value, fill=parameter)) +
     ggtitle("") +
     #scale_fill_brewer(palette=pal) +
     scale_fill_manual(values=pal[4:7]) +
-    coord_flip() +
+    coord_flip(ylim = c(0.001,10)) +
     theme(axis.title.y=element_blank(),
           axis.text.y=element_blank(),
           axis.ticks.y=element_blank())
   
   netDiv6 <- organize_table(results_all_trees, one_tree_type[6], parameters[parameters=="netDiv"], error.measurements[error.measurements==one.error.measurement])
   plot_netDiv6 <- ggplot(netDiv6, aes(x=parameter, y=value, fill=parameter)) +
-    #scale_y_continuous(trans='log10') +
+    scale_y_continuous(trans='log10') +
     geom_boxplot(outlier.size = 0.8)  +
     #geom_boxplot() + 
     theme_bw() +
@@ -1678,14 +1678,14 @@ plot_lambda1 <- ggplot(lambda1, aes(x=parameter, y=value, fill=parameter)) +
     ggtitle("") +
     #scale_fill_brewer(palette=pal) +
     scale_fill_manual(values=pal[4:7]) +
-    coord_flip() +
+    coord_flip(ylim = c(0.001,10)) +
     theme(axis.title.y=element_blank(),
           axis.text.y=element_blank(),
           axis.ticks.y=element_blank())
   
   turnover6 <- organize_table(results_all_trees, one_tree_type[6], parameters[parameters=="turnover"], error.measurements[error.measurements==one.error.measurement])
   plot_turnover6 <- ggplot(turnover6, aes(x=parameter, y=value, fill=parameter)) +
-    #scale_y_continuous(trans='log10') +
+    scale_y_continuous(trans='log10') +
     geom_boxplot(outlier.size = 0.8)  +
     #geom_boxplot() + 
     theme_bw() +
@@ -1697,14 +1697,14 @@ plot_lambda1 <- ggplot(lambda1, aes(x=parameter, y=value, fill=parameter)) +
     ggtitle("") +
     #scale_fill_brewer(palette=pal) +
     scale_fill_manual(values=pal[4:7]) +
-    coord_flip() +
+    coord_flip(ylim = c(0.001,10)) +
     theme(axis.title.y=element_blank(),
           axis.text.y=element_blank(),
           axis.ticks.y=element_blank())
   
   extinctionFraction6 <- organize_table(results_all_trees, one_tree_type[6], parameters[parameters=="extinctionFraction"], error.measurements[error.measurements==one.error.measurement])
   plot_extinctionFraction6 <- ggplot(extinctionFraction6, aes(x=parameter, y=value, fill=parameter)) +
-    #scale_y_continuous(trans='log10') +
+    scale_y_continuous(trans='log10') +
     geom_boxplot(outlier.size = 0.8)  +
     #geom_boxplot() + 
     theme_bw() +
@@ -1715,7 +1715,7 @@ plot_lambda1 <- ggplot(lambda1, aes(x=parameter, y=value, fill=parameter)) +
     ggtitle("") +
     #scale_fill_brewer(palette=pal) +
     scale_fill_manual(values=pal[4:7]) +
-    coord_flip() +
+    coord_flip(ylim = c(0.001,10)) +
     theme(axis.title.y=element_blank(),
           axis.text.y=element_blank(),
           axis.ticks.y=element_blank())
@@ -1723,7 +1723,7 @@ plot_lambda1 <- ggplot(lambda1, aes(x=parameter, y=value, fill=parameter)) +
   
   mu7 <- organize_table(results_all_trees, one_tree_type[7], parameters[parameters=="mu"], error.measurements[error.measurements==one.error.measurement])
   plot_mu7 <- ggplot(mu7, aes(x=parameter, y=value, fill=parameter)) +
-    #scale_y_continuous(trans='log10') +
+    scale_y_continuous(trans='log10') +
     geom_boxplot(outlier.size = 0.8)  +
     #geom_boxplot() + 
     theme_bw() +
@@ -1735,14 +1735,14 @@ plot_lambda1 <- ggplot(lambda1, aes(x=parameter, y=value, fill=parameter)) +
     ggtitle("") +
     #scale_fill_brewer(palette=pal) +
     scale_fill_manual(values=pal[4:7]) +
-    coord_flip() +
+    coord_flip(ylim = c(0.001,10)) +
     theme(axis.title.y=element_blank(),
           axis.text.y=element_blank(),
           axis.ticks.y=element_blank())
   
   netDiv7 <- organize_table(results_all_trees, one_tree_type[7], parameters[parameters=="netDiv"], error.measurements[error.measurements==one.error.measurement])
   plot_netDiv7 <- ggplot(netDiv7, aes(x=parameter, y=value, fill=parameter)) +
-    #scale_y_continuous(trans='log10') +
+    scale_y_continuous(trans='log10') +
     geom_boxplot(outlier.size = 0.8)  +
     #geom_boxplot() + 
     theme_bw() +
@@ -1754,14 +1754,14 @@ plot_lambda1 <- ggplot(lambda1, aes(x=parameter, y=value, fill=parameter)) +
     ggtitle("") +
     #scale_fill_brewer(palette=pal) +
     scale_fill_manual(values=pal[4:7]) +
-    coord_flip() +  
+    coord_flip(ylim = c(0.001,10)) +
     theme(axis.title.y=element_blank(),
           axis.text.y=element_blank(),
           axis.ticks.y=element_blank())
   
   turnover7 <- organize_table(results_all_trees, one_tree_type[7], parameters[parameters=="turnover"], error.measurements[error.measurements==one.error.measurement])
   plot_turnover7 <- ggplot(turnover7, aes(x=parameter, y=value, fill=parameter)) +
-    #scale_y_continuous(trans='log10') +
+    scale_y_continuous(trans='log10') +
     geom_boxplot(outlier.size = 0.8)  +
     #geom_boxplot() + 
     theme_bw() +
@@ -1773,14 +1773,14 @@ plot_lambda1 <- ggplot(lambda1, aes(x=parameter, y=value, fill=parameter)) +
     ggtitle("") +
     #scale_fill_brewer(palette=pal) +
     scale_fill_manual(values=pal[4:7]) +
-    coord_flip() +
+    coord_flip(ylim = c(0.001,10)) +
     theme(axis.title.y=element_blank(),
           axis.text.y=element_blank(),
           axis.ticks.y=element_blank())
   
   extinctionFraction7 <- organize_table(results_all_trees, one_tree_type[7], parameters[parameters=="extinctionFraction"], error.measurements[error.measurements==one.error.measurement])
   plot_extinctionFraction7 <- ggplot(extinctionFraction7, aes(x=parameter, y=value, fill=parameter)) +
-    #scale_y_continuous(trans='log10') +
+    scale_y_continuous(trans='log10') +
     geom_boxplot(outlier.size = 0.8)  +
     #geom_boxplot() + 
     theme_bw() +
@@ -1792,7 +1792,7 @@ plot_lambda1 <- ggplot(lambda1, aes(x=parameter, y=value, fill=parameter)) +
     ggtitle("") +
     #scale_fill_brewer(palette=pal) +
     scale_fill_manual(values=pal[4:7]) +
-    coord_flip() +
+    coord_flip(ylim = c(0.001,10)) +
     theme(axis.title.y=element_blank(),
           axis.text.y=element_blank(),
           axis.ticks.y=element_blank())
@@ -1800,7 +1800,7 @@ plot_lambda1 <- ggplot(lambda1, aes(x=parameter, y=value, fill=parameter)) +
   
   mu8 <- organize_table(results_all_trees, one_tree_type[8], parameters[parameters=="mu"], error.measurements[error.measurements==one.error.measurement])
   plot_mu8 <- ggplot(mu8, aes(x=parameter, y=value, fill=parameter)) +
-    #scale_y_continuous(trans='log10') +
+    scale_y_continuous(trans='log10') +
     geom_boxplot(outlier.size = 0.8)  +
     #geom_boxplot() + 
     theme_bw() +
@@ -1812,14 +1812,14 @@ plot_lambda1 <- ggplot(lambda1, aes(x=parameter, y=value, fill=parameter)) +
     ggtitle("") +
     #scale_fill_brewer(palette=pal) +
     scale_fill_manual(values=pal[4:7]) +
-    coord_flip() +
+    coord_flip(ylim = c(0.001,10)) +
     theme(axis.title.y=element_blank(),
           axis.text.y=element_blank(),
           axis.ticks.y=element_blank())
   
   netDiv8 <- organize_table(results_all_trees, one_tree_type[8], parameters[parameters=="netDiv"], error.measurements[error.measurements==one.error.measurement])
   plot_netDiv8 <- ggplot(netDiv8, aes(x=parameter, y=value, fill=parameter)) +
-    #scale_y_continuous(trans='log10') +
+    scale_y_continuous(trans='log10') +
     geom_boxplot(outlier.size = 0.8)  +
     #geom_boxplot() + 
     theme_bw() +
@@ -1831,14 +1831,14 @@ plot_lambda1 <- ggplot(lambda1, aes(x=parameter, y=value, fill=parameter)) +
     ggtitle("") +
     #scale_fill_brewer(palette=pal) +
     scale_fill_manual(values=pal[4:7]) +
-    coord_flip() +
+    coord_flip(ylim = c(0.001,10)) +
     theme(axis.title.y=element_blank(),
           axis.text.y=element_blank(),
           axis.ticks.y=element_blank())
   
   turnover8 <- organize_table(results_all_trees, one_tree_type[8], parameters[parameters=="turnover"], error.measurements[error.measurements==one.error.measurement])
   plot_turnover8 <- ggplot(turnover8, aes(x=parameter, y=value, fill=parameter)) +
-    #scale_y_continuous(trans='log10') +
+    scale_y_continuous(trans='log10') +
     geom_boxplot(outlier.size = 0.8)  +
     #geom_boxplot() + 
     theme_bw() +
@@ -1850,14 +1850,14 @@ plot_lambda1 <- ggplot(lambda1, aes(x=parameter, y=value, fill=parameter)) +
     ggtitle("") +
     #scale_fill_brewer(palette=pal) +
     scale_fill_manual(values=pal[4:7]) +
-    coord_flip() +
+    coord_flip(ylim = c(0.001,10)) +
     theme(axis.title.y=element_blank(),
           axis.text.y=element_blank(),
           axis.ticks.y=element_blank())
   
   extinctionFraction8 <- organize_table(results_all_trees, one_tree_type[8], parameters[parameters=="extinctionFraction"], error.measurements[error.measurements==one.error.measurement])
   plot_extinctionFraction8 <- ggplot(extinctionFraction8, aes(x=parameter, y=value, fill=parameter)) +
-    #scale_y_continuous(trans='log10') +
+    scale_y_continuous(trans='log10') +
     geom_boxplot(outlier.size = 0.8)  +
     #geom_boxplot() + 
     theme_bw() +
@@ -1869,7 +1869,7 @@ plot_lambda1 <- ggplot(lambda1, aes(x=parameter, y=value, fill=parameter)) +
     ggtitle("") +
     #scale_fill_brewer(palette=pal) +
     scale_fill_manual(values=pal[4:7]) +
-    coord_flip() +
+    coord_flip(ylim = c(0.001,10)) +
     theme(axis.title.y=element_blank(),
           axis.text.y=element_blank(),
           axis.ticks.y=element_blank())
