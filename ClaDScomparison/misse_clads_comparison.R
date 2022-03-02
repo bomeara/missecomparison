@@ -45,7 +45,7 @@ load.all.trees <- function(base.dir, where=c("local","labcomputer"), ref=c("titl
       path <- "/Users/thaisvasconcelos/Desktop/misse_mme_paper/missecomparison/ClaDScomparison/original_trees/trees/ClaDS2/"
     }
     if(where=="labcomputer") {
-      path <- "/home/tvasconcelos/missecomparison/TitleRaboskyRuns/missecomparison/ClaDScomparison/original_trees/trees/ClaDS2/"
+      path <- "/home/tvasconcelos/missecomparison/ClaDScomparison/original_trees/trees/ClaDS2/"
     }
     tree_files <- list.files(path)
     for(i in 1:length(tree_files)){
