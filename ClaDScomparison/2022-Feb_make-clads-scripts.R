@@ -111,7 +111,6 @@ for(i in 1:length(tree_names)) {
 
 # making more script for slow trees on Feb 20
 
-
 #base.dir <- "/Users/thaisvasconcelos/Desktop/misse_mme_paper/missecomparison/ClaDScomparison"
 new_tree_path <- paste0(base.dir, "/trees")
 labels_all <- gsub(".tre","",list.files(new_tree_path))
@@ -149,10 +148,10 @@ for(k in 1:length(groups)) {
   sink()
 }
 
-#######################
 
+###################################################
 # Making ClaDS script for manual parallelization in Julia - 2nd run
-
+###################################################
 new_tree_path <- paste0(base.dir, "/trees")
 labels_all <- gsub(".tre","",list.files(new_tree_path))
 
@@ -177,6 +176,40 @@ for(k in 1:length(groups)) {
     cat("# mode: julia","\n")
     #cat("@save 'output_clads' output", "\n")
     cat("\t",paste0('save_ClaDS_in_R(output, "',base.dir, '/results_2nd_run/', one_group[i], '_clads_results.Rdata")'),"\n")
+  }
+  sink()
+}
+
+
+###################################################
+# Making ClaDS script for manual parallelization in Julia - 2nd run
+###################################################
+base.dir <- "/Users/thaisvasconcelos/Desktop/misse_mme_paper/missecomparison/ClaDScomparison"
+new_tree_path <- paste0(base.dir, "/original_trees/trees/ClaDS2")
+tree_files <- list.files(new_tree_path)[grep(".tre$", list.files(new_tree_path))]
+labels_all <- gsub(".tre","",tree_files)
+
+base.dir <- "/home/tvasconcelos/missecomparison/ClaDScomparison"
+new_tree_path <- paste0(base.dir, "/original_trees/trees/ClaDS2")
+
+groups <- seq(from=1, to=length(labels_all), by=5)
+for(k in 1:length(groups)) {
+  if(k==length(groups)){
+    one_group <- labels_all[groups[k]:length(labels_all)]
+  } else { one_group <- labels_all[groups[k]:(groups[k]+50)] }
+  sink(paste0("group",k,"_script.jl"))
+  cat("# mode: julia","\n")
+  cat("\t","using PANDA","\n")
+  cat("# mode: julia","\n")
+  cat("\t","using JLD2","\n")
+  for(i in 1:length(one_group)) {
+    cat("# mode: julia","\n")
+    cat("\t",paste0('my_tree = load_tree("', new_tree_path, '/', one_group[i], '.tre")'),"\n")
+    cat("# mode: julia","\n")
+    cat("\t","output = infer_ClaDS(my_tree, print_state = 100)","\n")
+    cat("# mode: julia","\n")
+    #cat("@save 'output_clads' output", "\n")
+    cat("\t",paste0('save_ClaDS_in_R(output, "',base.dir, '/MiSSE_ClaDS_comparison/clads/', one_group[i], '_clads_results.Rdata")'),"\n")
   }
   sink()
 }

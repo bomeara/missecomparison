@@ -1,4 +1,4 @@
-#rm(list=ls())
+# rm(list=ls())
 
 ############################################################
 # Code to summarize results from tip rate comparisons
@@ -104,6 +104,7 @@ for(result_index in 1:length(clads.results)) {
   tmp_tiprates$muClaDS <- tmp_tiprates$lambdaClaDS * tmp_tiprates$extinctionFractionClaDS  
   tmp_tiprates$turnoverClaDS <- tmp_tiprates$lambdaClaDS + tmp_tiprates$muClaDS
   tmp_tiprates$netDivClaDS <- tmp_tiprates$lambdaClaDS - tmp_tiprates$muClaDS
+  tmp_tiprates$treeName <- gsub("_clads_results.Rdata","", clads.results[result_index])
   clads_tip_rates[[result_index]] <- tmp_tiprates
   print(result_index)
 }
@@ -111,7 +112,7 @@ all_clads_tip_rates <- do.call(rbind, clads_tip_rates)
 
 tree_labels <- gsub("_clads_results.Rdata","", clads.results)
 subset_results <- subset(rates.cleaned, rates.cleaned$treeName %in% tree_labels)
-subset_results <- merge(subset_results, all_clads_tip_rates, by="tipName")
+subset_results <- merge(subset_results, all_clads_tip_rates,  by=c("treeName","tipName"))
   
 
 #----------
@@ -128,7 +129,7 @@ subset_results <- merge(subset_results, all_clads_tip_rates, by="tipName")
 ############################################################
 # Organize results by type of tree, metric and parameter
 ############################################################
-approaches <- c("TB", "ND", "DR", "BAMM", "ClaDS", "MiSSEbest", "MiSSEavg", )
+approaches <- c("TB", "ND", "DR", "BAMM", "ClaDS", "MiSSEbest", "MiSSEavg")
 parameters <- c("mu", "lambda", "netDiv", "turnover", "extinctionFraction")
 error.measurements <- c("RMSE","absoluteError.mean","absoluteError.median")
 all_trees <- unique(subset_results$treeName)
@@ -1113,10 +1114,10 @@ plot_lambda1 <- ggplot(lambda1, aes(x=parameter, y=value, fill=parameter)) +
   #scale_fill_brewer(palette=pal) +
   scale_fill_manual(values=pal) +
   #geom_boxplot(width=0.1) +
-  coord_flip(ylim = c(0.001,10)) +
-  theme(axis.title.y=element_blank(),
-      axis.text.y=element_blank(),
-      axis.ticks.y=element_blank())
+  coord_flip(ylim = c(0.001,10)) #+
+  #theme(axis.title.y=element_blank(),
+  #    axis.text.y=element_blank(),
+  #    axis.ticks.y=element_blank())
 
   
   lambda2 <- organize_table(results_all_trees, one_tree_type[2], parameters[parameters=="lambda"], error.measurements[error.measurements==one.error.measurement])
@@ -1134,10 +1135,10 @@ plot_lambda1 <- ggplot(lambda1, aes(x=parameter, y=value, fill=parameter)) +
     scale_x_discrete("",  drop=FALSE) +
     #scale_fill_brewer(palette=pal) +
     scale_fill_manual(values=pal) +
-    coord_flip(ylim = c(0.001,10)) +
-    theme(axis.title.y=element_blank(),
-          axis.text.y=element_blank(),
-          axis.ticks.y=element_blank())
+    coord_flip(ylim = c(0.001,10)) #+
+    #theme(axis.title.y=element_blank(),
+    #      axis.text.y=element_blank(),
+    #      axis.ticks.y=element_blank())
   
   lambda3 <- organize_table(results_all_trees, one_tree_type[3], parameters[parameters=="lambda"], error.measurements[error.measurements==one.error.measurement])
   plot_lambda3 <- ggplot(lambda3, aes(x=parameter, y=value, fill=parameter)) +
@@ -1154,10 +1155,10 @@ plot_lambda1 <- ggplot(lambda1, aes(x=parameter, y=value, fill=parameter)) +
     scale_x_discrete("",  drop=FALSE) +
     #scale_fill_brewer(palette=pal) +
     scale_fill_manual(values=pal) +
-    coord_flip(ylim = c(0.001,10)) +
-    theme(axis.title.y=element_blank(),
-          axis.text.y=element_blank(),
-          axis.ticks.y=element_blank())
+    coord_flip(ylim = c(0.001,10)) #+
+    #theme(axis.title.y=element_blank(),
+    #      axis.text.y=element_blank(),
+    #      axis.ticks.y=element_blank())
   
   lambda4 <- organize_table(results_all_trees, one_tree_type[4], parameters[parameters=="lambda"], error.measurements[error.measurements==one.error.measurement])
   plot_lambda4 <- ggplot(lambda4, aes(x=parameter, y=value, fill=parameter)) +
@@ -1174,10 +1175,10 @@ plot_lambda1 <- ggplot(lambda1, aes(x=parameter, y=value, fill=parameter)) +
     scale_x_discrete("",  drop=FALSE) +
     #scale_fill_brewer(palette=pal) +
     scale_fill_manual(values=pal) +
-    coord_flip(ylim = c(0.001,10)) +
-    theme(axis.title.y=element_blank(),
-          axis.text.y=element_blank(),
-          axis.ticks.y=element_blank())
+    coord_flip(ylim = c(0.001,10)) #+
+    #theme(axis.title.y=element_blank(),
+    #      axis.text.y=element_blank(),
+    #      axis.ticks.y=element_blank())
   
   lambda5 <- organize_table(results_all_trees, one_tree_type[5], parameters[parameters=="lambda"], error.measurements[error.measurements==one.error.measurement])
   plot_lambda5 <- ggplot(lambda5, aes(x=parameter, y=value, fill=parameter)) +
@@ -1193,10 +1194,10 @@ plot_lambda1 <- ggplot(lambda1, aes(x=parameter, y=value, fill=parameter)) +
     scale_x_discrete("",  drop=FALSE) +
     #scale_fill_brewer(palette=pal) +
     scale_fill_manual(values=pal) +
-    coord_flip(ylim = c(0.001,10)) +
-    theme(axis.title.y=element_blank(),
-          axis.text.y=element_blank(),
-          axis.ticks.y=element_blank())
+    coord_flip(ylim = c(0.001,10)) #+
+    #theme(axis.title.y=element_blank(),
+    #      axis.text.y=element_blank(),
+    #      axis.ticks.y=element_blank())
   
   lambda6 <- organize_table(results_all_trees, one_tree_type[6], parameters[parameters=="lambda"], error.measurements[error.measurements==one.error.measurement])
   plot_lambda6 <- ggplot(lambda6, aes(x=parameter, y=value, fill=parameter)) +
@@ -1213,10 +1214,10 @@ plot_lambda1 <- ggplot(lambda1, aes(x=parameter, y=value, fill=parameter)) +
     scale_x_discrete("",  drop=FALSE) +
     #scale_fill_brewer(palette=pal) +
     scale_fill_manual(values=pal) +
-    coord_flip(ylim = c(0.001,10)) +
-    theme(axis.title.y=element_blank(),
-          axis.text.y=element_blank(),
-          axis.ticks.y=element_blank())
+    coord_flip(ylim = c(0.001,10)) #+
+    #theme(axis.title.y=element_blank(),
+    #      axis.text.y=element_blank(),
+    #      axis.ticks.y=element_blank())
   
   lambda7 <- organize_table(results_all_trees, one_tree_type[7], parameters[parameters=="lambda"], error.measurements[error.measurements==one.error.measurement])
   plot_lambda7 <- ggplot(lambda7, aes(x=parameter, y=value, fill=parameter)) +
@@ -1233,10 +1234,10 @@ plot_lambda1 <- ggplot(lambda1, aes(x=parameter, y=value, fill=parameter)) +
     scale_x_discrete("",  drop=FALSE) +
     #scale_fill_brewer(palette=pal) +
     scale_fill_manual(values=pal) +
-    coord_flip(ylim = c(0.001,10)) +
-    theme(axis.title.y=element_blank(),
-          axis.text.y=element_blank(),
-          axis.ticks.y=element_blank())
+    coord_flip(ylim = c(0.001,10)) #+
+    #theme(axis.title.y=element_blank(),
+    #      axis.text.y=element_blank(),
+    #      axis.ticks.y=element_blank())
   
   lambda8 <- organize_table(results_all_trees, one_tree_type[8], parameters[parameters=="lambda"], error.measurements[error.measurements==one.error.measurement])
   plot_lambda8 <- ggplot(lambda8, aes(x=parameter, y=value, fill=parameter)) +
@@ -1253,10 +1254,10 @@ plot_lambda1 <- ggplot(lambda1, aes(x=parameter, y=value, fill=parameter)) +
     scale_x_discrete("",  drop=FALSE) +
     #scale_fill_brewer(palette=pal) +
     scale_fill_manual(values=pal) +
-    coord_flip(ylim = c(0.001,10)) +
-    theme(axis.title.y=element_blank(),
-          axis.text.y=element_blank(),
-          axis.ticks.y=element_blank())
+    coord_flip(ylim = c(0.001,10)) #+
+    #theme(axis.title.y=element_blank(),
+    #      axis.text.y=element_blank(),
+    #      axis.ticks.y=element_blank())
   
 
   mu1 <- organize_table(results_all_trees, one_tree_type[1], parameters[parameters=="mu"], error.measurements[error.measurements==one.error.measurement])
@@ -1893,7 +1894,7 @@ plot_lambda1 <- ggplot(lambda1, aes(x=parameter, y=value, fill=parameter)) +
 
 
 ######################################################
-# (2) Krual-wallis
+# (2) Kruskal-wallis
 ######################################################
 all_tables <- list(lambda1, mu1, netDiv1, turnover1, extinctionFraction1,
                    lambda2, mu2, netDiv2, turnover2, extinctionFraction2,
