@@ -187,7 +187,7 @@ for(k in 1:length(groups)) {
 base.dir <- "/Users/thaisvasconcelos/Desktop/misse_mme_paper/missecomparison/ClaDScomparison"
 new_tree_path <- paste0(base.dir, "/original_trees/trees/ClaDS2")
 tree_files <- list.files(new_tree_path)[grep(".tre$", list.files(new_tree_path))]
-labels_all <- gsub(".tre","",tree_files)
+labels_all <- gsub(".tre$","",tree_files)
 
 base.dir <- "/home/tvasconcelos/missecomparison/ClaDScomparison"
 new_tree_path <- paste0(base.dir, "/original_trees/trees/ClaDS2")
