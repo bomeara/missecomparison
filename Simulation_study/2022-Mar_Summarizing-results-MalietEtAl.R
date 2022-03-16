@@ -63,6 +63,8 @@ treeTipMerge <- function(x) {
   return(x)
 }
 
+true_clads_tiprates <- get.true.ratesClaDS2(path="/MalietEtAlRuns/MalietEtAl_ClaDS2_trees/")
+  
 all_results <- data.frame()
 model_average_results <- data.frame()
 best_results <- data.frame()
