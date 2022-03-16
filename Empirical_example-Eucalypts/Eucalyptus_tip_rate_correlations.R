@@ -20,7 +20,7 @@ tree_misse <- model.recons_ml1[[1]]$phy
 # Load BAMM results
 ################################################
 tree_bamm <- read.tree("BAMM_files/ML1_modified-Thornhill_et_al_2019.tre")
-event_data <- getEventData(tree_bamm, "BAMM_files/event_data.txt", nsamples = 45000) 
+event_data <- getEventData(tree_bamm, "BAMM_files/event_data.txt", nsamples = 400) 
 bamm_tiprates <- getTipRates(event_data)
 
 # Getting BAMM net-turnover rates
@@ -123,8 +123,8 @@ height_max <- as.numeric(cleaned_table$max_height_m)
 
 # Plotting
 {
-pdf("Eucalypts_comparison.pdf", width=3.5, height=8)
-color_breaks = 4 
+pdf("Eucalypts_comparison.pdf", width=4.5, height=8)
+color_breaks = 4
 layout.matrix <- matrix(c(1,2,3,4), nrow = 1, ncol = 4)
 layout(mat = layout.matrix,widths = c(2,1,1,1))
 par(mar=c(5,0.5,3,0.5))
@@ -133,11 +133,12 @@ plot(tree_pruned, show.tip.label=F, edge.width=0.2, adj=1, cex=0.08)
 title(main="Eucalypts")
 ape::axisPhylo()
 
-palette_name = "Inferno"
+palette_name1 = "Cold"
+palette_name2 = "Inferno"
 
 # Plant height
 rounded_rates <- round(height_max, color_breaks)
-pal <- hcl.colors(length(levels(as.factor(rounded_rates))), palette = palette_name, alpha = 0.75)
+pal <- hcl.colors(length(levels(as.factor(rounded_rates))), palette = palette_name1, alpha = 0.75)
 pal <- pal[match(rounded_rates, as.numeric(levels(as.factor(rounded_rates))))] 
 x <- 1:length(height_max)
 plot(height_max, x,  lwd = 0.2, xlim=range(c(min(height_max), max(height_max))),
@@ -147,7 +148,7 @@ segments(min(height_max), 1:length(height_max), height_max[1:length(height_max)]
 # Turnover MiSSE
 turnover.mean <- as.numeric(cleaned_table$turnover)
 rounded_rates <- round(turnover.mean, color_breaks)
-pal <- hcl.colors(length(levels(as.factor(rounded_rates))), palette = palette_name, alpha = 0.75)
+pal <- hcl.colors(length(levels(as.factor(rounded_rates))), palette = palette_name2, alpha = 0.75)
 pal <- pal[match(rounded_rates, as.numeric(levels(as.factor(rounded_rates))))] 
 x <- 1:length(turnover.mean)
 plot(turnover.mean, x,  lwd = 0.2, xlim=c(0,6), 
@@ -155,14 +156,14 @@ plot(turnover.mean, x,  lwd = 0.2, xlim=c(0,6),
 segments(min(turnover.mean), 1:length(turnover.mean), turnover.mean[1:length(turnover.mean)], 1:length(turnover.mean), col= pal,lwd = 0.2)
 
 # Turnover BAMM
-turnover.bamm <- as.numeric(cleaned_table$turnover.bamm)
-rounded_rates <- round(turnover.bamm, color_breaks)
-pal <- hcl.colors(length(levels(as.factor(rounded_rates))), palette = palette_name, alpha = 0.75)
-pal <- pal[match(rounded_rates, as.numeric(levels(as.factor(rounded_rates))))] 
-x <- 1:length(turnover.bamm)
-plot(turnover.bamm, x,  lwd = 0.2, xlim=c(0,6),
-     pch=19, yaxt = "n", xlab="turnover.bamm", ylab="", frame.plot=T, cex=0.75, col=pal)
-segments(min(turnover.bamm), 1:length(turnover.bamm), turnover.bamm[1:length(turnover.bamm)], 1:length(turnover.bamm), col= pal,lwd = 0.2)
+# turnover.bamm <- as.numeric(cleaned_table$turnover.bamm)
+# rounded_rates <- round(turnover.bamm, color_breaks)
+# pal <- hcl.colors(length(levels(as.factor(rounded_rates))), palette = palette_name, alpha = 0.75)
+# pal <- pal[match(rounded_rates, as.numeric(levels(as.factor(rounded_rates))))] 
+# x <- 1:length(turnover.bamm)
+# plot(turnover.bamm, x,  lwd = 0.2, xlim=c(0,6),
+#      pch=19, yaxt = "n", xlab="turnover.bamm", ylab="", frame.plot=T, cex=0.75, col=pal)
+#segments(min(turnover.bamm), 1:length(turnover.bamm), turnover.bamm[1:length(turnover.bamm)], 1:length(turnover.bamm), col= pal,lwd = 0.2)
 
 dev.off()
 }
