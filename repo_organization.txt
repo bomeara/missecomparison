@@ -1,0 +1,72 @@
+# Testing tip-rate estimates using a sample of generating models
+
+- Tip rates: what, why, how
+- MiSSE as a new metric
+
+# Simulation studies
+- huge influence from underlying model 
+
+
+# Empirical example:
+
+- suggestion on how to use pic with tip rates
+- compare how long it takes to run each of the three methods: misse, bamm and clads on the same tree.
+- compare output size
+
+# MiSSE_Example_code-Lupinus_quick_run
+- example of how to run MiSSE
+
+
+./bamm -c myControlFile.txt
+
+nohup /usr/bin/time r script
+
+mv beaulieulab4_done_recon_ClaDS2tree_100_1_1_newrun.rda /media/tvasconcelos/CDCB-4299/misse_clads_sims_results
+mv beaulieulab4_done_recon_ClaDS2tree_100_1_2_newrun.rda /media/tvasconcelos/CDCB-4299/misse_clads_sims_results
+mv beaulieulab4_done_recon_ClaDS2tree_100_1_3_newrun.rda /media/tvasconcelos/CDCB-4299/misse_clads_sims_results
+mv beaulieulab4_done_recon_ClaDS2tree_100_1_4_newrun.rda /media/tvasconcelos/CDCB-4299/misse_clads_sims_results
+mv beaulieulab4_done_recon_ClaDS2tree_100_1_5_newrun.rda /media/tvasconcelos/CDCB-4299/misse_clads_sims_results
+mv beaulieulab4_done_recon_ClaDS2tree_100_2_1_newrun.rda /media/tvasconcelos/CDCB-4299/misse_clads_sims_results
+mv beaulieulab4_done_recon_ClaDS2tree_100_2_2_newrun.rda /media/tvasconcelos/CDCB-4299/misse_clads_sims_results
+mv beaulieulab4_done_recon_ClaDS2tree_100_2_3_newrun.rda /media/tvasconcelos/CDCB-4299/misse_clads_sims_results
+mv beaulieulab4_done_recon_ClaDS2tree_100_2_4_newrun.rda /media/tvasconcelos/CDCB-4299/misse_clads_sims_results
+mv beaulieulab4_done_recon_ClaDS2tree_100_2_5_newrun.rda /media/tvasconcelos/CDCB-4299/misse_clads_sims_results
+mv beaulieulab4_done_recon_ClaDS2tree_100_3_1_newrun.rda /media/tvasconcelos/CDCB-4299/misse_clads_sims_results
+mv beaulieulab4_done_recon_ClaDS2tree_100_3_2_newrun.rda /media/tvasconcelos/CDCB-4299/misse_clads_sims_results
+mv beaulieulab4_done_recon_ClaDS2tree_100_3_3_newrun.rda /media/tvasconcelos/CDCB-4299/misse_clads_sims_results
+mv beaulieulab4_done_recon_ClaDS2tree_100_3_4_newrun.rda /media/tvasconcelos/CDCB-4299/misse_clads_sims_results
+mv beaulieulab4_done_recon_ClaDS2tree_100_3_5_newrun.rda /media/tvasconcelos/CDCB-4299/misse_clads_sims_results
+mv beaulieulab4_done_recon_ClaDS2tree_100_4_1_newrun.rda /media/tvasconcelos/CDCB-4299/misse_clads_sims_results
+mv beaulieulab4_done_recon_ClaDS2tree_100_4_2_newrun.rda /media/tvasconcelos/CDCB-4299/misse_clads_sims_results
+mv beaulieulab4_done_recon_ClaDS2tree_100_4_3_newrun.rda /media/tvasconcelos/CDCB-4299/misse_clads_sims_results
+mv beaulieulab4_done_recon_ClaDS2tree_100_4_4_newrun.rda /media/tvasconcelos/CDCB-4299/misse_clads_sims_results
+mv beaulieulab4_done_recon_ClaDS2tree_100_4_5_newrun.rda /media/tvasconcelos/CDCB-4299/misse_clads_sims_results
+mv beaulieulab4_done_recon_ClaDS2tree_100_5_1_newrun.rda /media/tvasconcelos/CDCB-4299/misse_clads_sims_results
+mv beaulieulab4_done_recon_ClaDS2tree_100_5_2_newrun.rda /media/tvasconcelos/CDCB-4299/misse_clads_sims_results
+mv beaulieulab4_done_recon_ClaDS2tree_100_5_3_newrun.rda /media/tvasconcelos/CDCB-4299/misse_clads_sims_results
+mv beaulieulab4_done_recon_ClaDS2tree_100_5_4_newrun.rda /media/tvasconcelos/CDCB-4299/misse_clads_sims_results
+mv beaulieulab4_done_recon_ClaDS2tree_100_5_5_newrun.rda /media/tvasconcelos/CDCB-4299/misse_clads_sims_results
+mv beaulieulab4_done_recon_ClaDS2tree_100_6_1_newrun.rda /media/tvasconcelos/CDCB-4299/misse_clads_sims_results
+mv beaulieulab4_done_recon_ClaDS2tree_100_6_2_newrun.rda /media/tvasconcelos/CDCB-4299/misse_clads_sims_results
+mv beaulieulab4_done_recon_ClaDS2tree_100_6_3_newrun.rda /media/tvasconcelos/CDCB-4299/misse_clads_sims_results
+mv beaulieulab4_done_recon_ClaDS2tree_100_6_4_newrun.rda /media/tvasconcelos/CDCB-4299/misse_clads_sims_results
+mv beaulieulab4_done_recon_ClaDS2tree_100_6_5_newrun.rda /media/tvasconcelos/CDCB-4299/misse_clads_sims_results
+mv beaulieulab4_done_recon_ClaDS2tree_100_7_1_newrun.rda /media/tvasconcelos/CDCB-4299/misse_clads_sims_results
+mv beaulieulab4_done_recon_ClaDS2tree_100_7_2_newrun.rda /media/tvasconcelos/CDCB-4299/misse_clads_sims_results
+mv beaulieulab4_done_recon_ClaDS2tree_100_7_3_newrun.rda /media/tvasconcelos/CDCB-4299/misse_clads_sims_results
+mv beaulieulab4_done_recon_ClaDS2tree_100_7_4_newrun.rda /media/tvasconcelos/CDCB-4299/misse_clads_sims_results
+mv beaulieulab4_done_recon_ClaDS2tree_100_7_5_newrun.rda /media/tvasconcelos/CDCB-4299/misse_clads_sims_results
+mv beaulieulab4_done_recon_ClaDS2tree_100_8_1_newrun.rda /media/tvasconcelos/CDCB-4299/misse_clads_sims_results
+mv beaulieulab4_done_recon_ClaDS2tree_100_8_2_newrun.rda /media/tvasconcelos/CDCB-4299/misse_clads_sims_results
+mv beaulieulab4_done_recon_ClaDS2tree_100_8_3_newrun.rda /media/tvasconcelos/CDCB-4299/misse_clads_sims_results
+mv beaulieulab4_done_recon_ClaDS2tree_100_8_4_newrun.rda /media/tvasconcelos/CDCB-4299/misse_clads_sims_results
+mv beaulieulab4_done_recon_ClaDS2tree_100_8_5_newrun.rda /media/tvasconcelos/CDCB-4299/misse_clads_sims_results
+
+#------
+missing:
+
+[11] "MalietEtAlRuns/MiSSE_files/misse_results/beaulieulab4_done_recon_ClaDS2tree_100_3_2_newrun.rda"
+[15] "MalietEtAlRuns/MiSSE_files/misse_results/beaulieulab4_done_recon_ClaDS2tree_100_4_1_newrun.rda"
+"MalietEtAlRuns/MiSSE_files/misse_results/beaulieulab4_done_recon_ClaDS2tree_100_6_2_newrun.rda""MalietEtAlRuns/MiSSE_files/misse_results/beaulieulab4_done_recon_ClaDS2tree_100_7_4
+
+

@@ -1,0 +1,12 @@
+BAMM 2.5.0 (2015-11-01)
+Copyright (C) 2012-2014 Daniel Rabosky
+BAMM is distributed under the GNU General Public License.
+See http://bamm-project.org for more information.
+
+Random seed: 1646514821
+
+Model type: Speciation/Extinction
+
+Reading tree from file </Users/thaisvasconcelos/Desktop/misse_mme_paper/missecomparison/ClaDScomparison/original_trees/trees/ClaDS2/ClaDS2tree_100_1_2.tre>.
+[31m
+ERROR: [39mTree is not ultrametric.

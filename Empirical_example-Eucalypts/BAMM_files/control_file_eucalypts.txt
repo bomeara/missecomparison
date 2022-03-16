@@ -16,10 +16,11 @@
 modeltype = speciationextinction        
 # Specify "speciationextinction" or "trait" analysis
                                   
-treefile = ML1_modified-Thornhill_et_al_2019
+treefile = /Users/thaisvasconcelos/Desktop/misse_mme_paper/missecomparison/MiSSE_Example_code-Lupinus_quick_run/Lupinus.tre
+
 # File name of the phylogenetic tree to be analyzed
 
-runInfoFilename = run_info_eucalypts_bamm.txt
+runInfoFilename = run_info_lup_bamm.txt
 # File name to output general information about this run
 
 sampleFromPriorOnly = 0                 

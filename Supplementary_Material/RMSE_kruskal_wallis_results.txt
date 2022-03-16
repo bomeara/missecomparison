@@ -80,11 +80,11 @@ P value adjustment method: holm
 data:  one_table$value and one_table$parameter 
 
           TB      ND      DR      BAMM    MiSSEbest
-ND        0.00056 -       -       -       -        
-DR        0.00076 1.00000 -       -       -        
-BAMM      3.2e-14 1.4e-05 9.5e-06 -       -        
-MiSSEbest 5.7e-10 0.00997 0.00834 0.20383 -        
-MiSSEavg  7.5e-11 0.00348 0.00269 0.37233 1.00000  
+ND        0.00028 -       -       -       -        
+DR        0.00053 1.00000 -       -       -        
+BAMM      1.4e-15 2.9e-06 1.3e-06 -       -        
+MiSSEbest 2.4e-11 0.00258 0.00158 0.23339 -        
+MiSSEavg  3.5e-12 0.00090 0.00053 0.39432 1.00000  
 
 P value adjustment method: holm 
 [1] "------------------------"
@@ -111,8 +111,8 @@ P value adjustment method: holm
 data:  one_table$value and one_table$parameter 
 
           BAMM MiSSEbest
-MiSSEbest 0.63 -        
-MiSSEavg  0.63 0.98     
+MiSSEbest 0.56 -        
+MiSSEavg  0.56 0.98     
 
 P value adjustment method: holm 
 [1] "------------------------"
@@ -125,8 +125,8 @@ P value adjustment method: holm
 data:  one_table$value and one_table$parameter 
 
           BAMM MiSSEbest
-MiSSEbest 0.54 -        
-MiSSEavg  0.54 0.81     
+MiSSEbest 0.53 -        
+MiSSEavg  0.55 0.79     
 
 P value adjustment method: holm 
 [1] "------------------------"
@@ -518,11 +518,11 @@ P value adjustment method: holm
 data:  one_table$value and one_table$parameter 
 
           TB      ND      DR      BAMM    MiSSEbest
-ND        6.7e-11 -       -       -       -        
-DR        9.6e-09 1.00000 -       -       -        
-BAMM      < 2e-16 0.00114 4.3e-05 -       -        
-MiSSEbest < 2e-16 0.00552 0.00033 1.00000 -        
-MiSSEavg  < 2e-16 0.00425 0.00022 1.00000 1.00000  
+ND        1.3e-11 -       -       -       -        
+DR        5.2e-09 1.00000 -       -       -        
+BAMM      < 2e-16 0.00054 8.5e-06 -       -        
+MiSSEbest < 2e-16 0.00484 0.00015 1.00000 -        
+MiSSEavg  < 2e-16 0.00258 6.1e-05 1.00000 1.00000  
 
 P value adjustment method: holm 
 [1] "------------------------"
