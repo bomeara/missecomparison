@@ -44,7 +44,7 @@ load.all.trees <- function(base.dir, where=c("local","labcomputer"), ref=c("titl
       path <- "/Users/thaisvasconcelos/Desktop/misse_mme_paper/missecomparison/Simulation_study/MalietEtAlRuns/MalietEtAl_ClaDS2_trees/"
     }
     if(where=="labcomputer") {
-      path <- "/home/tvasconcelos/misse_mme_paper/missecomparison/Simulation_study/MalietEtAlRuns/MalietEtAl_ClaDS2_trees/"
+      path <- "/home/tvasconcelos/missecomparison/Simulation_study/MalietEtAlRuns/MalietEtAl_ClaDS2_trees/"
     }
     tree_files <- list.files(path)
     tree_files <- tree_files[grep(".Rdata", tree_files)]
