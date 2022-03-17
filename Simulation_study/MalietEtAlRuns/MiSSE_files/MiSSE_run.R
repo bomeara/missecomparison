@@ -43,6 +43,6 @@ cl <- future::makeClusterPSOCK(workers=c(rep(c("10.4.9.34"),48)), rscript="/usr/
 
 sessionInfo() 
 future::plan(cluster, workers = cl)
-cache_run_crashed <- drake::new_cache(path = "drake_cache_misse_on_clads", hash_algorithm = "md5")
+cache_run_crashed <- drake::new_cache(path = "drake_cache_misse_on_clads_crashed", hash_algorithm = "md5")
 make(run_misse_on_clads_crashed, cache=cache_run_crashed, parallelism="future", jobs=96)
 parallel::stopCluster(cl)
