@@ -20,6 +20,25 @@ library(parallel)
 library(data.table)
 
 
+load.subset <- function(subset_trees1) {
+    path <- "/home/tvasconcelos/missecomparison/Simulation_study/MalietEtAlRuns/MalietEtAl_ClaDS2_trees/"
+    trees <- list()
+    tree_files <- list.files(path)
+    tree_files <- subset(tree_files, grepl(paste0(subset_trees1,collapse = "|"),
+                                          tree_files))
+    tree_files <- tree_files[grep(".Rdata", tree_files)]
+    for(i in 1:length(tree_files)){
+      load(paste0(path, tree_files[i]))
+      if(exists("tree")){
+        trees[[i]] <- tree
+        rm("tree")
+      }
+    }
+    tree_names <- gsub(".Rdata","", tree_files)
+    names(trees) <- tree_names
+    return(trees)
+}
+
 # Loading all trees
 load.all.trees <- function(base.dir, where=c("local","labcomputer"), ref=c("title_rabosky","maliet")) {
   if(ref=="title_rabosky") {
@@ -408,13 +427,11 @@ run_misse_on_clads <- drake_plan(
 run_misse_on_clads_crashed <- drake_plan(
   base.dir = "/home/tvasconcelos/missecomparison/Simulation_study/TitleRaboskyRuns",
   #base.dir = "/Users/thaisvasconcelos/Desktop/misse_mme_paper/missecomparison/TitleRaboskyRuns",
-  all_trees = load.all.trees(base.dir, where="labcomputer", ref="maliet"),
-  #all_trees = load.all.trees(base.dir, where="local", ref="maliet"),
   #tree_names = names(all_trees),
   subset_trees1 = c("ClaDS2tree_100_3_2","ClaDS2tree_100_4_1","ClaDS2tree_100_6_2","ClaDS2tree_100_7_4"),
+  trees_subset = load.subset(subset_trees1),
   target(DoSingleRun_new(dir=subset_trees1, 
-                         phy=all_trees, 
+                         phy=trees_subset, 
                          root_type="madfitz", n.cores=NULL), dynamic=map(subset_trees1))
 )
-
 
