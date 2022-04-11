@@ -104,4 +104,9 @@ save(model.set_pruned_ml1,
      possible.combos_ml1, 
      file="Eucalypts_example_ml1_tree.Rsave")
 
+load("Eucalypts_example_ml1_tree.Rsave")
+
+
+all_results <- data.frame(AICc=unlist(lapply(model.set_ml1, "[[", "AICc")), n_rates=unlist(lapply(model.set_ml1, "[[", "hidden.states")))
+GetAICWeights(model.set_pruned_ml1)
 

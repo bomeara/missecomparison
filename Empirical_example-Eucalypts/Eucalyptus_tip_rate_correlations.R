@@ -4,7 +4,6 @@
 # rm(list=ls())
 library(ape)
 library(hisse)
-library(BAMMtools)
 library(gridExtra)
 library(viridis)
 library(ggplot2)
@@ -16,21 +15,6 @@ library(ggplot2)
 load("MiSSE_files/Eucalypts_example_ml1_tree.Rsave") # load results
 tree_misse <- model.recons_ml1[[1]]$phy
 
-################################################
-# Load BAMM results
-################################################
-tree_bamm <- read.tree("BAMM_files/ML1_modified-Thornhill_et_al_2019.tre")
-event_data <- getEventData(tree_bamm, "BAMM_files/event_data.txt", nsamples = 400) 
-bamm_tiprates <- getTipRates(event_data)
-
-# Getting BAMM net-turnover rates
-lambda <- bamm_tiprates$lambda.avg
-mu <- bamm_tiprates$mu.avg
-bamm_tiprates_final <- data.frame(species=names(lambda), lambda=unname(lambda), mu=unname(mu))
-colnames(bamm_tiprates_final) <- c("species","speciation.bamm","extinction.bamm")
-bamm_tiprates_final$turnover.bamm <- bamm_tiprates_final$speciation.bamm + bamm_tiprates_final$extinction.bamm
-#write.csv(bamm_tiprates_final, file="bamm_tiprates_final.csv")
-
 ###############################################
 # Tip-correlation with plant height
 ###############################################
@@ -39,7 +23,6 @@ heights <- heights[heights$max_height_m!="no_info_yet",]
 
 # Combining heights and rates
 full_table_ml1 <- merge(tip.rates_ml1, heights, by.x="taxon",by.y="species")
-full_table_ml1 <- merge(full_table_ml1, bamm_tiprates_final, by.x="taxon",by.y="species")
 full_table_ml1$max_height_m <- as.numeric(full_table_ml1$max_height_m)
 rownames(full_table_ml1) <- full_table_ml1$taxon
 
@@ -56,9 +39,6 @@ names(plant_height) <- full_table_ml1$taxon
 
 pic_w_cherries_misse <- hisse::TipCorrelation(tree_pruned, misse_turnover, plant_height, log=TRUE, remove.cherries=FALSE, scaled=TRUE, positivise=TRUE, use.lmorigin=TRUE) 
 pic_wo_cherries_misse <- hisse::TipCorrelation(tree_pruned, misse_turnover, plant_height, log=TRUE, remove.cherries=TRUE, scaled=TRUE, positivise=TRUE, use.lmorigin=TRUE) 
-pic_w_cherries_bamm <- hisse::TipCorrelation(tree_pruned, bamm_turnover, plant_height, log=TRUE, remove.cherries=FALSE, scaled=TRUE, positivise=TRUE, use.lmorigin=TRUE) 
-pic_wo_cherries_bamm <- hisse::TipCorrelation(tree_pruned, bamm_turnover, plant_height, log=TRUE, remove.cherries=TRUE, scaled=TRUE, positivise=TRUE, use.lmorigin=TRUE) 
-
 
 sink(paste0("../Supplementary_Material/PIC_results.txt"))
 cat("MiSSE: Results including cherries")
@@ -67,12 +47,6 @@ print(pic_w_cherries_misse$correlation)
 cat("MiSSE: Results pruning cherries")
 cat("------------------------------")
 print(pic_wo_cherries_misse$correlation)
-cat("BAMM: Results including cherries")
-cat("------------------------------")
-print(pic_w_cherries_bamm$correlation)
-cat("BAMM: Results pruning cherries")
-cat("------------------------------")
-print(pic_wo_cherries_bamm$correlation)
 sink()
 
 ###############################################
@@ -154,16 +128,6 @@ x <- 1:length(turnover.mean)
 plot(turnover.mean, x,  lwd = 0.2, xlim=c(0,6), 
      pch=19, yaxt = "n", xlab="turnover.misse", ylab="", frame.plot=T, cex=0.75, col=pal) #xlim=range(c(min(turnover.mean), max(turnover.mean)))
 segments(min(turnover.mean), 1:length(turnover.mean), turnover.mean[1:length(turnover.mean)], 1:length(turnover.mean), col= pal,lwd = 0.2)
-
-# Turnover BAMM
-# turnover.bamm <- as.numeric(cleaned_table$turnover.bamm)
-# rounded_rates <- round(turnover.bamm, color_breaks)
-# pal <- hcl.colors(length(levels(as.factor(rounded_rates))), palette = palette_name, alpha = 0.75)
-# pal <- pal[match(rounded_rates, as.numeric(levels(as.factor(rounded_rates))))] 
-# x <- 1:length(turnover.bamm)
-# plot(turnover.bamm, x,  lwd = 0.2, xlim=c(0,6),
-#      pch=19, yaxt = "n", xlab="turnover.bamm", ylab="", frame.plot=T, cex=0.75, col=pal)
-#segments(min(turnover.bamm), 1:length(turnover.bamm), turnover.bamm[1:length(turnover.bamm)], 1:length(turnover.bamm), col= pal,lwd = 0.2)
 
 dev.off()
 }
