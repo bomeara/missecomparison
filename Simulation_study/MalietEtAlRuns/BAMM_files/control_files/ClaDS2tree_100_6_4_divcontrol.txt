@@ -16,10 +16,10 @@
 modeltype = speciationextinction        
 # Specify "speciationextinction" or "trait" analysis
                                   
-treefile = /Users/thaisvasconcelos/Desktop/misse_mme_paper/missecomparison/ClaDScomparison/original_trees/trees/ClaDS2/ClaDS2tree_100_6_4.tre
+treefile = /Users/thaisvasconcelos/Desktop/misse_mme_paper/missecomparison/Simulation_study/MalietEtAlRuns/MalietEtAl_ClaDS2_trees/ClaDS2tree_100_6_4.tre
 # File name of the phylogenetic tree to be analyzed
 
-runInfoFilename = /Users/thaisvasconcelos/Desktop/misse_mme_paper/missecomparison/ClaDScomparison/BAMM_ClaDS_comparison/all_results/ClaDS2tree_100_6_4_run_info.txt
+runInfoFilename = /Users/thaisvasconcelos/Desktop/misse_mme_paper/missecomparison/Simulation_study/MalietEtAlRuns/BAMM_files/all_results/ClaDS2tree_100_6_4_run_info.txt
 # File name to output general information about this run
 
 sampleFromPriorOnly = 0                 
@@ -92,14 +92,14 @@ lambdaIsTimeVariablePrior = 1
 numberOfGenerations = 10000000
 # Number of generations to perform MCMC simulation
 
-mcmcOutfile = /Users/thaisvasconcelos/Desktop/misse_mme_paper/missecomparison/ClaDScomparison/BAMM_ClaDS_comparison/all_results/ClaDS2tree_100_6_4_mcmc_out.txt
+mcmcOutfile = /Users/thaisvasconcelos/Desktop/misse_mme_paper/missecomparison/Simulation_study/MalietEtAlRuns/BAMM_files/all_results/ClaDS2tree_100_6_4_mcmc_out.txt
 # File name for the MCMC output, which only includes summary information about
 # MCMC simulation (e.g., log-likelihoods, log-prior, number of processes)
 
 mcmcWriteFreq = 1000
 # Frequency in which to write the MCMC output to a file
 
-eventDataOutfile = /Users/thaisvasconcelos/Desktop/misse_mme_paper/missecomparison/ClaDScomparison/BAMM_ClaDS_comparison/all_results/ClaDS2tree_100_6_4_event_data.txt
+eventDataOutfile = /Users/thaisvasconcelos/Desktop/misse_mme_paper/missecomparison/Simulation_study/MalietEtAlRuns/BAMM_files/all_results/ClaDS2tree_100_6_4_event_data.txt
 # The raw event data (these are the main results). ALL of the results are
 # contained in this file, and all branch-specific speciation rates, shift
 # positions, marginal distributions etc can be reconstructed from this output.

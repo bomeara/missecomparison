@@ -24,6 +24,7 @@ all_results <- data.frame()
 model_average_results <- data.frame()
 best_results <- data.frame()
 dones <- c(list.files("TitleRaboskyRuns/results", pattern="done_recon", full.names=TRUE), list.files("TitleRaboskyRuns/new_results", pattern="done_recon", full.names=TRUE))
+dones <- dones[!grepl("ClaDS", dones)]
 
 for (i in seq_along(dones)) {
   print(paste0("Loading ", i, " of ", length(dones)))
@@ -86,15 +87,15 @@ rates.combined$extinctionFractionBAMM <- rates.combined$muBAMM / rates.combined$
 
 # get rid of NAs and weird values for now
 rates.cleaned <- rates.combined
-rates.cleaned <- rates.cleaned[!is.na(rates.cleaned$netDivBAMM),]
-rates.cleaned <- rates.cleaned[(rates.cleaned$lambdaTRUE>0),] #yeah, not sure why there'd be no speciation in reality for a tree with >2 taxa
+#rates.cleaned <- rates.cleaned[!is.na(rates.cleaned$netDivBAMM),]
+#rates.cleaned <- rates.cleaned[(rates.cleaned$lambdaTRUE>0),] #yeah, not sure why there'd be no speciation in reality for a tree with >2 taxa
 
 #unique(rates.cleaned$treeName)
 
 ############################################################
 # Include ClaDS results
 ############################################################
-clads.dir <- "/Volumes/NO NAME/ClaDS_results" # they are very heavy
+clads.dir <- "/Volumes/NO NAME/ClaDS_results" # these are big files (not in the repo)
 clads.results <- list.files(clads.dir)
 
 clads_tip_rates <- list()
@@ -118,6 +119,5 @@ tree_labels <- gsub("_clads_results.Rdata","", clads.results)
 subset_results <- subset(rates.cleaned, rates.cleaned$treeName %in% tree_labels)
 subset_results <- merge(subset_results, all_clads_tip_rates,  by=c("treeName","tipName"))
 
-write.csv(subset_results, file=paste0(getwd(), Sys.Date(), "_preliminary_results_titlerabosky.csv"), row.names=F)
-
+write.csv(subset_results, file=paste0(getwd(),"/", Sys.Date(), "_preliminary_results_titlerabosky.csv"), row.names=F)
 

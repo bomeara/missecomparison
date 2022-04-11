@@ -9,11 +9,10 @@ library(PMCMR)
 # (1) Loading tables
 
 
-subset_results_titlerabosky <- as.data.frame(fread("Simulation_study2022-03-07_preliminary_results_titlerabosky.csv"))
-subset_results_malietetal <- as.data.frame(fread("Simulation_study2022-03-08_preliminary_results_malietetal.csv"))
+subset_results_titlerabosky <- as.data.frame(fread("2022-03-29_preliminary_results_titlerabosky.csv"))
+subset_results_malietetal <- as.data.frame(fread("2022-03-28_preliminary_results_malietetal.csv"))
 
 subset_results_titlerabosky <- subset_results_titlerabosky[,-which(!colnames(subset_results_titlerabosky) %in% colnames(subset_results_malietetal))]
-
 subset_results_titlerabosky <- subset_results_titlerabosky[order(match(colnames(subset_results_titlerabosky), colnames(subset_results_malietetal)))]
 
 all_results <- rbind(subset_results_titlerabosky, subset_results_malietetal)
@@ -48,14 +47,13 @@ for (i in seq_along(all_trees)) {
     }
   }
   results_all_trees <- rbind(results_all_trees, results_one_approach)
-  print(i)
+  cat(i, "\r")
 }
 
 #rownames(results_all_trees) <- all_trees
 results_all_trees <- as.data.frame(results_all_trees)
 colnames(results_all_trees) <- c("tree_name","error","parameter","value")
 results_all_trees$value <- as.numeric(results_all_trees$value)
-
 
 types_of_trees <- unique(unlist(lapply(strsplit(results_all_trees$tree_name, "_"),"[[",1)))
 length_tree_type <- c()
@@ -124,10 +122,10 @@ one.error.measurement = "absoluteError.mean" # any of c("RMSE","absoluteError.me
     #scale_fill_brewer(palette=pal) +
     scale_fill_manual(values=pal) +
     #geom_boxplot(width=0.1) +
-    coord_flip(ylim = c(0.001,10)) #+
-  #theme(axis.title.y=element_blank(),
-  #    axis.text.y=element_blank(),
-  #    axis.ticks.y=element_blank())
+    coord_flip(ylim = c(0.001,10)) +
+    theme(axis.title.y=element_blank(),
+    axis.text.y=element_blank(),
+    axis.ticks.y=element_blank())
   
   
   lambda2 <- organize_table(results_all_trees, one_tree_type[2], parameters[parameters=="lambda"], error.measurements[error.measurements==one.error.measurement])
@@ -145,10 +143,10 @@ one.error.measurement = "absoluteError.mean" # any of c("RMSE","absoluteError.me
     scale_x_discrete("",  drop=FALSE) +
     #scale_fill_brewer(palette=pal) +
     scale_fill_manual(values=pal) +
-    coord_flip(ylim = c(0.001,10)) #+
-  #theme(axis.title.y=element_blank(),
-  #      axis.text.y=element_blank(),
-  #      axis.ticks.y=element_blank())
+    coord_flip(ylim = c(0.001,10))  +
+    theme(axis.title.y=element_blank(),
+          axis.text.y=element_blank(),
+          axis.ticks.y=element_blank())
   
   lambda3 <- organize_table(results_all_trees, one_tree_type[3], parameters[parameters=="lambda"], error.measurements[error.measurements==one.error.measurement])
   plot_lambda3 <- ggplot(lambda3, aes(x=parameter, y=value, fill=parameter)) +
@@ -165,10 +163,10 @@ one.error.measurement = "absoluteError.mean" # any of c("RMSE","absoluteError.me
     scale_x_discrete("",  drop=FALSE) +
     #scale_fill_brewer(palette=pal) +
     scale_fill_manual(values=pal) +
-    coord_flip(ylim = c(0.001,10)) #+
-  #theme(axis.title.y=element_blank(),
-  #      axis.text.y=element_blank(),
-  #      axis.ticks.y=element_blank())
+    coord_flip(ylim = c(0.001,10))  +
+    theme(axis.title.y=element_blank(),
+          axis.text.y=element_blank(),
+          axis.ticks.y=element_blank())
   
   lambda4 <- organize_table(results_all_trees, one_tree_type[4], parameters[parameters=="lambda"], error.measurements[error.measurements==one.error.measurement])
   plot_lambda4 <- ggplot(lambda4, aes(x=parameter, y=value, fill=parameter)) +
@@ -185,10 +183,10 @@ one.error.measurement = "absoluteError.mean" # any of c("RMSE","absoluteError.me
     scale_x_discrete("",  drop=FALSE) +
     #scale_fill_brewer(palette=pal) +
     scale_fill_manual(values=pal) +
-    coord_flip(ylim = c(0.001,10)) #+
-  #theme(axis.title.y=element_blank(),
-  #      axis.text.y=element_blank(),
-  #      axis.ticks.y=element_blank())
+    coord_flip(ylim = c(0.001,10))  +
+    theme(axis.title.y=element_blank(),
+          axis.text.y=element_blank(),
+          axis.ticks.y=element_blank())
   
   lambda5 <- organize_table(results_all_trees, one_tree_type[5], parameters[parameters=="lambda"], error.measurements[error.measurements==one.error.measurement])
   plot_lambda5 <- ggplot(lambda5, aes(x=parameter, y=value, fill=parameter)) +
@@ -204,10 +202,10 @@ one.error.measurement = "absoluteError.mean" # any of c("RMSE","absoluteError.me
     scale_x_discrete("",  drop=FALSE) +
     #scale_fill_brewer(palette=pal) +
     scale_fill_manual(values=pal) +
-    coord_flip(ylim = c(0.001,10)) #+
-  #theme(axis.title.y=element_blank(),
-  #      axis.text.y=element_blank(),
-  #      axis.ticks.y=element_blank())
+    coord_flip(ylim = c(0.001,10))  +
+    theme(axis.title.y=element_blank(),
+          axis.text.y=element_blank(),
+          axis.ticks.y=element_blank())
   
   lambda6 <- organize_table(results_all_trees, one_tree_type[6], parameters[parameters=="lambda"], error.measurements[error.measurements==one.error.measurement])
   plot_lambda6 <- ggplot(lambda6, aes(x=parameter, y=value, fill=parameter)) +
@@ -224,10 +222,10 @@ one.error.measurement = "absoluteError.mean" # any of c("RMSE","absoluteError.me
     scale_x_discrete("",  drop=FALSE) +
     #scale_fill_brewer(palette=pal) +
     scale_fill_manual(values=pal) +
-    coord_flip(ylim = c(0.001,10)) #+
-  #theme(axis.title.y=element_blank(),
-  #      axis.text.y=element_blank(),
-  #      axis.ticks.y=element_blank())
+    coord_flip(ylim = c(0.001,10))  +
+    theme(axis.title.y=element_blank(),
+          axis.text.y=element_blank(),
+          axis.ticks.y=element_blank())
   
   lambda7 <- organize_table(results_all_trees, one_tree_type[7], parameters[parameters=="lambda"], error.measurements[error.measurements==one.error.measurement])
   plot_lambda7 <- ggplot(lambda7, aes(x=parameter, y=value, fill=parameter)) +
@@ -244,10 +242,10 @@ one.error.measurement = "absoluteError.mean" # any of c("RMSE","absoluteError.me
     scale_x_discrete("",  drop=FALSE) +
     #scale_fill_brewer(palette=pal) +
     scale_fill_manual(values=pal) +
-    coord_flip(ylim = c(0.001,10)) #+
-  #theme(axis.title.y=element_blank(),
-  #      axis.text.y=element_blank(),
-  #      axis.ticks.y=element_blank())
+    coord_flip(ylim = c(0.001,10))  +
+    theme(axis.title.y=element_blank(),
+          axis.text.y=element_blank(),
+          axis.ticks.y=element_blank())
   
   lambda8 <- organize_table(results_all_trees, one_tree_type[8], parameters[parameters=="lambda"], error.measurements[error.measurements==one.error.measurement])
   plot_lambda8 <- ggplot(lambda8, aes(x=parameter, y=value, fill=parameter)) +
@@ -264,10 +262,10 @@ one.error.measurement = "absoluteError.mean" # any of c("RMSE","absoluteError.me
     scale_x_discrete("",  drop=FALSE) +
     #scale_fill_brewer(palette=pal) +
     scale_fill_manual(values=pal) +
-    coord_flip(ylim = c(0.001,10)) #+
-  #theme(axis.title.y=element_blank(),
-  #      axis.text.y=element_blank(),
-  #      axis.ticks.y=element_blank())
+    coord_flip(ylim = c(0.001,10))  +
+    theme(axis.title.y=element_blank(),
+          axis.text.y=element_blank(),
+          axis.ticks.y=element_blank())
   
   lambda9 <- organize_table(results_all_trees, one_tree_type[9], parameters[parameters=="lambda"], error.measurements[error.measurements==one.error.measurement])
   plot_lambda9 <- ggplot(lambda9, aes(x=parameter, y=value, fill=parameter)) +
@@ -284,10 +282,10 @@ one.error.measurement = "absoluteError.mean" # any of c("RMSE","absoluteError.me
     scale_x_discrete("",  drop=FALSE) +
     #scale_fill_brewer(palette=pal) +
     scale_fill_manual(values=pal) +
-    coord_flip(ylim = c(0.001,10)) #+
-  #theme(axis.title.y=element_blank(),
-  #      axis.text.y=element_blank(),
-  #      axis.ticks.y=element_blank())
+    coord_flip(ylim = c(0.001,10))  +
+    theme(axis.title.y=element_blank(),
+          axis.text.y=element_blank(),
+          axis.ticks.y=element_blank())
   
   mu1 <- organize_table(results_all_trees, one_tree_type[1], parameters[parameters=="mu"], error.measurements[error.measurements==one.error.measurement])
   plot_mu1 <- ggplot(mu1, aes(x=parameter, y=value, fill=parameter)) +

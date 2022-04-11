@@ -113,7 +113,6 @@ colnames(rates.ours.model.average)[which(colnames(rates.ours.model.average)=="ex
 rates.combined <- merge(rates.ours.best, rates.ours.model.average)
 rates.combined <- merge(rates.combined, true_clads_tiprates)
 
-
 # Retriving ClaDS results:
 clads.results <- list.files("MalietEtAlRuns/ClaDS_files/clads", full.names = T)
 
@@ -155,7 +154,7 @@ for(tree_index in 1:length(tree.files)){
   one_result <- results_files[grep(label, results_files)]
   if(length(one_result)!=0) {
     tree_bamm <- read.tree(paste0(tree.dir, tree.files[tree_index]))
-    event_data <- getEventData(tree_bamm, paste0(result.dir, one_result), nsamples = 7500) # increase when running final version
+    event_data <- getEventData(tree_bamm, paste0(result.dir, one_result), nsamples = 9000) # increase when running final version
     bamm_tiprates <- getTipRates(event_data)    
     # Getting BAMM rates
     lambda <- bamm_tiprates$lambda.avg
@@ -332,3 +331,5 @@ nonparametric_results <- merge(partial_results, TB, by=c("treeName","tipName"))
 
 final_results <- merge(subset_results, nonparametric_results, by=c("treeName","tipName"))
 write.csv(final_results, file=paste0(getwd(),"/", Sys.Date(), "_preliminary_results_malietetal.csv"), row.names=F)
+
+

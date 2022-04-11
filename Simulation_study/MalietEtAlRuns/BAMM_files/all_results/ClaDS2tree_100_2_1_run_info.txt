@@ -1,7 +1,7 @@
-Command line: bamm -c /Users/thaisvasconcelos/Desktop/misse_mme_paper/missecomparison/ClaDScomparison/BAMM_ClaDS_comparison/control_files/ClaDS2tree_100_2_1_divcontrol.txt
+Command line: bamm -c /Users/thaisvasconcelos/Desktop/misse_mme_paper/missecomparison/Simulation_study/MalietEtAlRuns/BAMM_files/control_files/ClaDS2tree_100_2_1_divcontrol.txt
 Git commit id: 
-Random seed: 1646519761
-Start time: Sat Mar  5 16:36:01 2022
+Random seed: 1647701060
+Start time: Sat Mar 19 09:44:20 2022
 
 Current parameter settings:
        acceptanceInfoFileName    acceptance_info.txt
@@ -15,7 +15,7 @@ Current parameter settings:
           conditionOnSurvival    -1
                        deltaT    0.1
               eventDataInfile    event_data_in.txt
-             eventDataOutfile    /Users/thaisvasconcelos/Desktop/misse_mme_paper/missecomparison/ClaDScomparison/BAMM_ClaDS_comparison/all_results/ClaDS2tree_100_2_1_event_data.txt
+             eventDataOutfile    /Users/thaisvasconcelos/Desktop/misse_mme_paper/missecomparison/Simulation_study/MalietEtAlRuns/BAMM_files/all_results/ClaDS2tree_100_2_1_event_data.txt
            eventDataWriteFreq    1000
        expectedNumberOfShifts    1
             extinctionProbMax    0.9999
@@ -37,7 +37,7 @@ fastSimulatePrior_Generations    5000000
                 loadEventData    0
          localGlobalMoveRatio    10.0
               maxNumberEvents    5000
-                  mcmcOutfile    /Users/thaisvasconcelos/Desktop/misse_mme_paper/missecomparison/ClaDScomparison/BAMM_ClaDS_comparison/all_results/ClaDS2tree_100_2_1_mcmc_out.txt
+                  mcmcOutfile    /Users/thaisvasconcelos/Desktop/misse_mme_paper/missecomparison/Simulation_study/MalietEtAlRuns/BAMM_files/all_results/ClaDS2tree_100_2_1_mcmc_out.txt
                 mcmcWriteFreq    1000
          minCladeSizeForShift    1
                     modeltype    speciationextinction
@@ -61,7 +61,7 @@ fastSimulatePrior_Generations    5000000
                     printFreq    1000
           priorOutputFileName    prior_probs.txt
  priorSim_IntervalGenerations    5000
-              runInfoFilename    /Users/thaisvasconcelos/Desktop/misse_mme_paper/missecomparison/ClaDScomparison/BAMM_ClaDS_comparison/all_results/ClaDS2tree_100_2_1_run_info.txt
+              runInfoFilename    /Users/thaisvasconcelos/Desktop/misse_mme_paper/missecomparison/Simulation_study/MalietEtAlRuns/BAMM_files/all_results/ClaDS2tree_100_2_1_run_info.txt
                       runMCMC    1
           sampleFromPriorOnly    0
           sampleProbsFilename    sample_probs.txt
@@ -69,7 +69,7 @@ fastSimulatePrior_Generations    5000000
                     segLength    0.02
           simulatePriorShifts    0
                    swapPeriod    1000
-                     treefile    /Users/thaisvasconcelos/Desktop/misse_mme_paper/missecomparison/ClaDScomparison/original_trees/trees/ClaDS2/ClaDS2tree_100_2_1.tre
+                     treefile    /Users/thaisvasconcelos/Desktop/misse_mme_paper/missecomparison/Simulation_study/MalietEtAlRuns/MalietEtAl_ClaDS2_trees/ClaDS2tree_100_2_1.tre
      updateEventLocationScale    0.05
          updateEventRateScale    4.0
         updateLambdaInitScale    2.0

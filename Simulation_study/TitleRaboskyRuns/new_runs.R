@@ -1,5 +1,5 @@
 # recovering trees that crashed
-# setwd("/Users/thaisvasconcelos/Desktop/misse_mme_paper/missecomparison/TitleRaboskyRuns")
+#setwd("/Users/thaisvasconcelos/Desktop/misse_mme_paper/missecomparison/Simulation_study/TitleRaboskyRuns")
 # rm(list=ls())
 
 library(tidyverse)
@@ -319,7 +319,7 @@ Second_sim_runs_beaulieu3 <- drake_plan( # all done
 
 Third_sim_runs_beaulieu4 <- drake_plan(
   base.dir = "/home/tvasconcelos/missecomparison/TitleRaboskyRuns",
-  #base.dir = "/Users/thaisvasconcelos/Desktop/misse_mme_paper/missecomparison/TitleRaboskyRuns",
+  #base.dir = "/Users/thaisvasconcelos/Desktop/misse_mme_paper/missecomparison/Simulation_study/TitleRaboskyRuns",
   all_trees = load.all.trees(base.dir, where="local"),
   tree_names = names(all_trees),
   subset_trees5 = tree_names[483:521],
