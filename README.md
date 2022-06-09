@@ -1,5 +1,7 @@
 # missecomparison
 
+[![DOI](https://zenodo.org/badge/172795398.svg)](https://zenodo.org/badge/latestdoi/172795398)
+
 Codes and data linked to the paper:
 
 A flexible method for estimating tip diversification rates across a range of speciation and extinction scenarios
