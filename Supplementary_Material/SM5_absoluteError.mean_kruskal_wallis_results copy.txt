@@ -1,0 +1,702 @@
+[1] "evolvingRates"
+[1] "lambda"
+
+	Pairwise comparisons using Conover's-test for multiple	
+                         comparisons of independent samples 
+
+data:  one_table$value and one_table$parameter 
+
+          TB      ND      DR      BAMM ClaDS MiSSEbest
+ND        < 2e-16 -       -       -    -     -        
+DR        < 2e-16 1       -       -    -     -        
+BAMM      < 2e-16 2.9e-12 < 2e-16 -    -     -        
+ClaDS     < 2e-16 1.7e-11 6.3e-16 1    -     -        
+MiSSEbest < 2e-16 4.6e-11 2.1e-15 1    1     -        
+MiSSEavg  < 2e-16 1.6e-11 5.3e-16 1    1     1        
+
+P value adjustment method: holm 
+[1] "------------------------"
+[1] "evolvingRates"
+[1] "mu"
+
+	Pairwise comparisons using Conover's-test for multiple	
+                         comparisons of independent samples 
+
+data:  one_table$value and one_table$parameter 
+
+          BAMM ClaDS MiSSEbest
+ClaDS     0.13 -     -        
+MiSSEbest 0.95 0.95  -        
+MiSSEavg  0.95 0.92  0.95     
+
+P value adjustment method: holm 
+[1] "------------------------"
+[1] "evolvingRates"
+[1] "netDiv"
+
+	Pairwise comparisons using Conover's-test for multiple	
+                         comparisons of independent samples 
+
+data:  one_table$value and one_table$parameter 
+
+          BAMM ClaDS MiSSEbest
+ClaDS     0.66 -     -        
+MiSSEbest 1.00 1.00  -        
+MiSSEavg  1.00 1.00  1.00     
+
+P value adjustment method: holm 
+[1] "------------------------"
+[1] "evolvingRates"
+[1] "turnover"
+
+	Pairwise comparisons using Conover's-test for multiple	
+                         comparisons of independent samples 
+
+data:  one_table$value and one_table$parameter 
+
+          BAMM ClaDS MiSSEbest
+ClaDS     1    -     -        
+MiSSEbest 1    1     -        
+MiSSEavg  1    1     1        
+
+P value adjustment method: holm 
+[1] "------------------------"
+[1] "evolvingRates"
+[1] "extinctionFraction"
+
+	Pairwise comparisons using Conover's-test for multiple	
+                         comparisons of independent samples 
+
+data:  one_table$value and one_table$parameter 
+
+          BAMM  ClaDS MiSSEbest
+ClaDS     0.039 -     -        
+MiSSEbest 0.322 0.655 -        
+MiSSEavg  0.986 0.039 0.322    
+
+P value adjustment method: holm 
+[1] "------------------------"
+[1] "fossilBAMM"
+[1] "lambda"
+
+	Pairwise comparisons using Conover's-test for multiple	
+                         comparisons of independent samples 
+
+data:  one_table$value and one_table$parameter 
+
+          TB      ND      DR      BAMM    ClaDS   MiSSEbest
+ND        0.00380 -       -       -       -       -        
+DR        0.00203 1.00000 -       -       -       -        
+BAMM      3.1e-16 4.3e-08 1.3e-07 -       -       -        
+ClaDS     1.8e-10 0.00144 0.00281 0.09757 -       -        
+MiSSEbest 1.5e-11 0.00029 0.00065 0.27807 1.00000 -        
+MiSSEavg  1.5e-11 0.00029 0.00065 0.27807 1.00000 1.00000  
+
+P value adjustment method: holm 
+[1] "------------------------"
+[1] "fossilBAMM"
+[1] "mu"
+
+	Pairwise comparisons using Conover's-test for multiple	
+                         comparisons of independent samples 
+
+data:  one_table$value and one_table$parameter 
+
+          BAMM ClaDS MiSSEbest
+ClaDS     1    -     -        
+MiSSEbest 1    1     -        
+MiSSEavg  1    1     1        
+
+P value adjustment method: holm 
+[1] "------------------------"
+[1] "fossilBAMM"
+[1] "netDiv"
+
+	Pairwise comparisons using Conover's-test for multiple	
+                         comparisons of independent samples 
+
+data:  one_table$value and one_table$parameter 
+
+          BAMM ClaDS MiSSEbest
+ClaDS     0.43 -     -        
+MiSSEbest 0.71 1.00  -        
+MiSSEavg  0.54 1.00  1.00     
+
+P value adjustment method: holm 
+[1] "------------------------"
+[1] "fossilBAMM"
+[1] "turnover"
+
+	Pairwise comparisons using Conover's-test for multiple	
+                         comparisons of independent samples 
+
+data:  one_table$value and one_table$parameter 
+
+          BAMM ClaDS MiSSEbest
+ClaDS     1    -     -        
+MiSSEbest 1    1     -        
+MiSSEavg  1    1     1        
+
+P value adjustment method: holm 
+[1] "------------------------"
+[1] "fossilBAMM"
+[1] "extinctionFraction"
+
+	Pairwise comparisons using Conover's-test for multiple	
+                         comparisons of independent samples 
+
+data:  one_table$value and one_table$parameter 
+
+          BAMM ClaDS MiSSEbest
+ClaDS     1    -     -        
+MiSSEbest 1    1     -        
+MiSSEavg  1    1     1        
+
+P value adjustment method: holm 
+[1] "------------------------"
+[1] "lambdaConstantVariance"
+[1] "lambda"
+
+	Pairwise comparisons using Conover's-test for multiple	
+                         comparisons of independent samples 
+
+data:  one_table$value and one_table$parameter 
+
+          TB      ND      DR      BAMM    ClaDS   MiSSEbest
+ND        < 2e-16 -       -       -       -       -        
+DR        < 2e-16 1       -       -       -       -        
+BAMM      < 2e-16 < 2e-16 < 2e-16 -       -       -        
+ClaDS     < 2e-16 < 2e-16 < 2e-16 4.9e-08 -       -        
+MiSSEbest < 2e-16 < 2e-16 < 2e-16 1       9.3e-07 -        
+MiSSEavg  < 2e-16 < 2e-16 < 2e-16 1       4.2e-06 1        
+
+P value adjustment method: holm 
+[1] "------------------------"
+[1] "lambdaConstantVariance"
+[1] "mu"
+
+	Pairwise comparisons using Conover's-test for multiple	
+                         comparisons of independent samples 
+
+data:  one_table$value and one_table$parameter 
+
+          BAMM ClaDS MiSSEbest
+ClaDS     1    -     -        
+MiSSEbest 1    1     -        
+MiSSEavg  1    1     1        
+
+P value adjustment method: holm 
+[1] "------------------------"
+[1] "lambdaConstantVariance"
+[1] "netDiv"
+
+	Pairwise comparisons using Conover's-test for multiple	
+                         comparisons of independent samples 
+
+data:  one_table$value and one_table$parameter 
+
+          BAMM  ClaDS MiSSEbest
+ClaDS     0.476 -     -        
+MiSSEbest 0.975 0.089 -        
+MiSSEavg  0.975 0.975 0.579    
+
+P value adjustment method: holm 
+[1] "------------------------"
+[1] "lambdaConstantVariance"
+[1] "turnover"
+
+	Pairwise comparisons using Conover's-test for multiple	
+                         comparisons of independent samples 
+
+data:  one_table$value and one_table$parameter 
+
+          BAMM ClaDS MiSSEbest
+ClaDS     0.95 -     -        
+MiSSEbest 0.98 0.19  -        
+MiSSEavg  0.98 0.19  0.98     
+
+P value adjustment method: holm 
+[1] "------------------------"
+[1] "lambdaConstantVariance"
+[1] "extinctionFraction"
+
+	Pairwise comparisons using Conover's-test for multiple	
+                         comparisons of independent samples 
+
+data:  one_table$value and one_table$parameter 
+
+          BAMM  ClaDS MiSSEbest
+ClaDS     0.609 -     -        
+MiSSEbest 0.744 0.744 -        
+MiSSEavg  0.707 0.054 0.190    
+
+P value adjustment method: holm 
+[1] "------------------------"
+[1] "MitchellRabosky2016"
+[1] "lambda"
+
+	Pairwise comparisons using Conover's-test for multiple	
+                         comparisons of independent samples 
+
+data:  one_table$value and one_table$parameter 
+
+          TB      ND    DR    BAMM  ClaDS MiSSEbest
+ND        0.024   -     -     -     -     -        
+DR        0.052   1.000 -     -     -     -        
+BAMM      5.7e-07 0.052 0.024 -     -     -        
+ClaDS     6.9e-05 0.705 0.391 1.000 -     -        
+MiSSEbest 9.5e-07 0.061 0.032 1.000 1.000 -        
+MiSSEavg  2.4e-06 0.110 0.054 1.000 1.000 1.000    
+
+P value adjustment method: holm 
+[1] "------------------------"
+[1] "MitchellRabosky2016"
+[1] "mu"
+
+	Pairwise comparisons using Conover's-test for multiple	
+                         comparisons of independent samples 
+
+data:  one_table$value and one_table$parameter 
+
+          BAMM ClaDS MiSSEbest
+ClaDS     1    -     -        
+MiSSEbest 1    1     -        
+MiSSEavg  1    1     1        
+
+P value adjustment method: holm 
+[1] "------------------------"
+[1] "MitchellRabosky2016"
+[1] "netDiv"
+
+	Pairwise comparisons using Conover's-test for multiple	
+                         comparisons of independent samples 
+
+data:  one_table$value and one_table$parameter 
+
+          BAMM ClaDS MiSSEbest
+ClaDS     0.62 -     -        
+MiSSEbest 1.00 0.35  -        
+MiSSEavg  1.00 0.62  1.00     
+
+P value adjustment method: holm 
+[1] "------------------------"
+[1] "MitchellRabosky2016"
+[1] "turnover"
+
+	Pairwise comparisons using Conover's-test for multiple	
+                         comparisons of independent samples 
+
+data:  one_table$value and one_table$parameter 
+
+          BAMM ClaDS MiSSEbest
+ClaDS     1    -     -        
+MiSSEbest 1    1     -        
+MiSSEavg  1    1     1        
+
+P value adjustment method: holm 
+[1] "------------------------"
+[1] "MitchellRabosky2016"
+[1] "extinctionFraction"
+
+	Pairwise comparisons using Conover's-test for multiple	
+                         comparisons of independent samples 
+
+data:  one_table$value and one_table$parameter 
+
+          BAMM ClaDS MiSSEbest
+ClaDS     1    -     -        
+MiSSEbest 1    1     -        
+MiSSEavg  1    1     1        
+
+P value adjustment method: holm 
+[1] "------------------------"
+[1] "MooreEtAl2016"
+[1] "lambda"
+
+	Pairwise comparisons using Conover's-test for multiple	
+                         comparisons of independent samples 
+
+data:  one_table$value and one_table$parameter 
+
+          TB      ND     DR     BAMM   ClaDS  MiSSEbest
+ND        0.0237  -      -      -      -      -        
+DR        0.0111  1.0000 -      -      -      -        
+BAMM      2.0e-07 0.0179 0.0364 -      -      -        
+ClaDS     2.1e-06 0.0696 0.1424 1.0000 -      -        
+MiSSEbest 1.7e-08 0.0029 0.0079 1.0000 1.0000 -        
+MiSSEavg  2.0e-07 0.0179 0.0364 1.0000 1.0000 1.0000   
+
+P value adjustment method: holm 
+[1] "------------------------"
+[1] "MooreEtAl2016"
+[1] "mu"
+
+	Pairwise comparisons using Conover's-test for multiple	
+                         comparisons of independent samples 
+
+data:  one_table$value and one_table$parameter 
+
+          BAMM ClaDS MiSSEbest
+ClaDS     1    -     -        
+MiSSEbest 1    1     -        
+MiSSEavg  1    1     1        
+
+P value adjustment method: holm 
+[1] "------------------------"
+[1] "MooreEtAl2016"
+[1] "netDiv"
+
+	Pairwise comparisons using Conover's-test for multiple	
+                         comparisons of independent samples 
+
+data:  one_table$value and one_table$parameter 
+
+          BAMM ClaDS MiSSEbest
+ClaDS     1.00 -     -        
+MiSSEbest 0.99 1.00  -        
+MiSSEavg  1.00 1.00  1.00     
+
+P value adjustment method: holm 
+[1] "------------------------"
+[1] "MooreEtAl2016"
+[1] "turnover"
+
+	Pairwise comparisons using Conover's-test for multiple	
+                         comparisons of independent samples 
+
+data:  one_table$value and one_table$parameter 
+
+          BAMM ClaDS MiSSEbest
+ClaDS     1    -     -        
+MiSSEbest 1    1     -        
+MiSSEavg  1    1     1        
+
+P value adjustment method: holm 
+[1] "------------------------"
+[1] "MooreEtAl2016"
+[1] "extinctionFraction"
+
+	Pairwise comparisons using Conover's-test for multiple	
+                         comparisons of independent samples 
+
+data:  one_table$value and one_table$parameter 
+
+          BAMM ClaDS MiSSEbest
+ClaDS     0.99 -     -        
+MiSSEbest 0.99 0.99  -        
+MiSSEavg  0.85 0.18  0.18     
+
+P value adjustment method: holm 
+[1] "------------------------"
+[1] "netDivConstantVariance"
+[1] "lambda"
+
+	Pairwise comparisons using Conover's-test for multiple	
+                         comparisons of independent samples 
+
+data:  one_table$value and one_table$parameter 
+
+          TB      ND      DR      BAMM    ClaDS  MiSSEbest
+ND        < 2e-16 -       -       -       -      -        
+DR        2.1e-15 1.0000  -       -       -      -        
+BAMM      < 2e-16 < 2e-16 < 2e-16 -       -      -        
+ClaDS     < 2e-16 9.7e-06 5.0e-07 2.5e-05 -      -        
+MiSSEbest < 2e-16 6.7e-16 < 2e-16 0.9839  0.0014 -        
+MiSSEavg  < 2e-16 3.1e-14 4.2e-16 0.5321  0.0079 1.0000   
+
+P value adjustment method: holm 
+[1] "------------------------"
+[1] "netDivConstantVariance"
+[1] "mu"
+
+	Pairwise comparisons using Conover's-test for multiple	
+                         comparisons of independent samples 
+
+data:  one_table$value and one_table$parameter 
+
+          BAMM ClaDS MiSSEbest
+ClaDS     0.54 -     -        
+MiSSEbest 1.00 0.38  -        
+MiSSEavg  1.00 0.54  1.00     
+
+P value adjustment method: holm 
+[1] "------------------------"
+[1] "netDivConstantVariance"
+[1] "netDiv"
+
+	Pairwise comparisons using Conover's-test for multiple	
+                         comparisons of independent samples 
+
+data:  one_table$value and one_table$parameter 
+
+          BAMM   ClaDS  MiSSEbest
+ClaDS     0.5947 -      -        
+MiSSEbest 0.0816 0.0037 -        
+MiSSEavg  0.5947 0.3049 0.2813   
+
+P value adjustment method: holm 
+[1] "------------------------"
+[1] "netDivConstantVariance"
+[1] "turnover"
+
+	Pairwise comparisons using Conover's-test for multiple	
+                         comparisons of independent samples 
+
+data:  one_table$value and one_table$parameter 
+
+          BAMM  ClaDS MiSSEbest
+ClaDS     0.044 -     -        
+MiSSEbest 1.000 0.049 -        
+MiSSEavg  1.000 0.099 1.000    
+
+P value adjustment method: holm 
+[1] "------------------------"
+[1] "netDivConstantVariance"
+[1] "extinctionFraction"
+
+	Pairwise comparisons using Conover's-test for multiple	
+                         comparisons of independent samples 
+
+data:  one_table$value and one_table$parameter 
+
+          BAMM ClaDS MiSSEbest
+ClaDS     1.00 -     -        
+MiSSEbest 1.00 0.35  -        
+MiSSEavg  1.00 1.00  0.21     
+
+P value adjustment method: holm 
+[1] "------------------------"
+[1] "Rabosky2014"
+[1] "lambda"
+
+	Pairwise comparisons using Conover's-test for multiple	
+                         comparisons of independent samples 
+
+data:  one_table$value and one_table$parameter 
+
+          TB      ND      DR      BAMM    ClaDS   MiSSEbest
+ND        3.9e-12 -       -       -       -       -        
+DR        < 2e-16 9.6e-15 -       -       -       -        
+BAMM      < 2e-16 < 2e-16 < 2e-16 -       -       -        
+ClaDS     < 2e-16 < 2e-16 < 2e-16 0.44    -       -        
+MiSSEbest < 2e-16 < 2e-16 < 2e-16 1.7e-12 2.5e-09 -        
+MiSSEavg  < 2e-16 < 2e-16 < 2e-16 6.4e-10 4.1e-07 0.44     
+
+P value adjustment method: holm 
+[1] "------------------------"
+[1] "Rabosky2014"
+[1] "mu"
+
+	Pairwise comparisons using Conover's-test for multiple	
+                         comparisons of independent samples 
+
+data:  one_table$value and one_table$parameter 
+
+          BAMM    ClaDS   MiSSEbest
+ClaDS     2.1e-09 -       -        
+MiSSEbest 0.19603 1.2e-05 -        
+MiSSEavg  0.04982 0.00026 0.45315  
+
+P value adjustment method: holm 
+[1] "------------------------"
+[1] "Rabosky2014"
+[1] "netDiv"
+
+	Pairwise comparisons using Conover's-test for multiple	
+                         comparisons of independent samples 
+
+data:  one_table$value and one_table$parameter 
+
+          BAMM    ClaDS   MiSSEbest
+ClaDS     0.00081 -       -        
+MiSSEbest 7.5e-16 2.4e-06 -        
+MiSSEavg  5.3e-14 3.2e-05 0.54321  
+
+P value adjustment method: holm 
+[1] "------------------------"
+[1] "Rabosky2014"
+[1] "turnover"
+
+	Pairwise comparisons using Conover's-test for multiple	
+                         comparisons of independent samples 
+
+data:  one_table$value and one_table$parameter 
+
+          BAMM    ClaDS MiSSEbest
+ClaDS     4.8e-11 -     -        
+MiSSEbest 2.1e-07 0.41  -        
+MiSSEavg  1.3e-08 0.69  0.69     
+
+P value adjustment method: holm 
+[1] "------------------------"
+[1] "Rabosky2014"
+[1] "extinctionFraction"
+
+	Pairwise comparisons using Conover's-test for multiple	
+                         comparisons of independent samples 
+
+data:  one_table$value and one_table$parameter 
+
+          BAMM ClaDS MiSSEbest
+ClaDS     1    -     -        
+MiSSEbest 1    1     -        
+MiSSEavg  1    1     1        
+
+P value adjustment method: holm 
+[1] "------------------------"
+[1] "RaboskyEtAl2017"
+[1] "lambda"
+
+	Pairwise comparisons using Conover's-test for multiple	
+                         comparisons of independent samples 
+
+data:  one_table$value and one_table$parameter 
+
+          TB      ND      DR      BAMM    ClaDS   MiSSEbest
+ND        9.0e-09 -       -       -       -       -        
+DR        3.1e-08 1.00000 -       -       -       -        
+BAMM      < 2e-16 0.00032 0.00013 -       -       -        
+ClaDS     < 2e-16 0.01077 0.00551 1.00000 -       -        
+MiSSEbest < 2e-16 0.00208 0.00099 1.00000 1.00000 -        
+MiSSEavg  < 2e-16 0.00099 0.00042 1.00000 1.00000 1.00000  
+
+P value adjustment method: holm 
+[1] "------------------------"
+[1] "RaboskyEtAl2017"
+[1] "mu"
+
+	Pairwise comparisons using Conover's-test for multiple	
+                         comparisons of independent samples 
+
+data:  one_table$value and one_table$parameter 
+
+          BAMM ClaDS MiSSEbest
+ClaDS     1    -     -        
+MiSSEbest 1    1     -        
+MiSSEavg  1    1     1        
+
+P value adjustment method: holm 
+[1] "------------------------"
+[1] "RaboskyEtAl2017"
+[1] "netDiv"
+
+	Pairwise comparisons using Conover's-test for multiple	
+                         comparisons of independent samples 
+
+data:  one_table$value and one_table$parameter 
+
+          BAMM ClaDS MiSSEbest
+ClaDS     1    -     -        
+MiSSEbest 1    1     -        
+MiSSEavg  1    1     1        
+
+P value adjustment method: holm 
+[1] "------------------------"
+[1] "RaboskyEtAl2017"
+[1] "turnover"
+
+	Pairwise comparisons using Conover's-test for multiple	
+                         comparisons of independent samples 
+
+data:  one_table$value and one_table$parameter 
+
+          BAMM ClaDS MiSSEbest
+ClaDS     1    -     -        
+MiSSEbest 1    1     -        
+MiSSEavg  1    1     1        
+
+P value adjustment method: holm 
+[1] "------------------------"
+[1] "RaboskyEtAl2017"
+[1] "extinctionFraction"
+
+	Pairwise comparisons using Conover's-test for multiple	
+                         comparisons of independent samples 
+
+data:  one_table$value and one_table$parameter 
+
+          BAMM ClaDS MiSSEbest
+ClaDS     1    -     -        
+MiSSEbest 1    1     -        
+MiSSEavg  1    1     1        
+
+P value adjustment method: holm 
+[1] "------------------------"
+[1] "ClaDS2tree"
+[1] "lambda"
+
+	Pairwise comparisons using Conover's-test for multiple	
+                         comparisons of independent samples 
+
+data:  one_table$value and one_table$parameter 
+
+          TB      ND      DR      BAMM    ClaDS   MiSSEbest
+ND        0.01528 -       -       -       -       -        
+DR        0.00058 1.00000 -       -       -       -        
+BAMM      2.1e-09 0.00792 0.11939 -       -       -        
+ClaDS     2.6e-09 0.00877 0.12364 1.00000 -       -        
+MiSSEbest 3.2e-09 0.00955 0.12538 1.00000 1.00000 -        
+MiSSEavg  3.2e-09 0.00955 0.12538 1.00000 1.00000 1.00000  
+
+P value adjustment method: holm 
+[1] "------------------------"
+[1] "ClaDS2tree"
+[1] "mu"
+
+	Pairwise comparisons using Conover's-test for multiple	
+                         comparisons of independent samples 
+
+data:  one_table$value and one_table$parameter 
+
+          BAMM ClaDS MiSSEbest
+ClaDS     0.20 -     -        
+MiSSEbest 0.98 1.00  -        
+MiSSEavg  1.00 1.00  1.00     
+
+P value adjustment method: holm 
+[1] "------------------------"
+[1] "ClaDS2tree"
+[1] "netDiv"
+
+	Pairwise comparisons using Conover's-test for multiple	
+                         comparisons of independent samples 
+
+data:  one_table$value and one_table$parameter 
+
+          BAMM ClaDS MiSSEbest
+ClaDS     1    -     -        
+MiSSEbest 1    1     -        
+MiSSEavg  1    1     1        
+
+P value adjustment method: holm 
+[1] "------------------------"
+[1] "ClaDS2tree"
+[1] "turnover"
+
+	Pairwise comparisons using Conover's-test for multiple	
+                         comparisons of independent samples 
+
+data:  one_table$value and one_table$parameter 
+
+          BAMM ClaDS MiSSEbest
+ClaDS     1    -     -        
+MiSSEbest 1    1     -        
+MiSSEavg  1    1     1        
+
+P value adjustment method: holm 
+[1] "------------------------"
+[1] "ClaDS2tree"
+[1] "extinctionFraction"
+
+	Pairwise comparisons using Conover's-test for multiple	
+                         comparisons of independent samples 
+
+data:  one_table$value and one_table$parameter 
+
+          BAMM    ClaDS   MiSSEbest
+ClaDS     0.00068 -       -        
+MiSSEbest 0.17796 0.17796 -        
+MiSSEavg  0.17796 0.13121 0.77210  
+
+P value adjustment method: holm 
+[1] "------------------------"
